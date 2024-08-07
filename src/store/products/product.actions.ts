@@ -8,9 +8,7 @@ export const getAllProducts = createAsyncThunk<WooCommerceSingleProduct[]>(
 	'auth/login',
 	async (_, thunkApi) => {
 		try {
-			console.log(ProductService.getAllProducts())
 			const response = await ProductService.getAllProducts()
-			console.log(response)
 			return response.data
 		} catch (error) {
 			return thunkApi.rejectWithValue(error)

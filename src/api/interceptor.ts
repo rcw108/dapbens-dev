@@ -5,7 +5,7 @@ import Cookies from 'js-cookie'
 import { errorCatch, getContentType } from './api.heplers'
 
 const base64BasicAuthToken = btoa(
-	`${process.env.WOO_USER_KEY}:${process.env.WOO_USER_API_KEY}`
+	`${process.env.NEXT_PUBLIC_WOO_USER_KEY}:${process.env.NEXT_PUBLIC_WOO_USER_API_KEY}`
 )
 
 export const axiosClassic = axios.create({

@@ -21,7 +21,15 @@ const Home: FC<{ data: IHome }> = ({ data }) => {
 		if (products !== null && isLoading === false) console.log(products)
 	}, [isLoading])
 
-	return <div className={styles.home}>Home</div>
+	return (
+		<div className={styles.home}>
+			{products && products[0].in_stock === true ? (
+				<h1>В наличии</h1>
+			) : (
+				<h1>Нет в наличии</h1>
+			)}
+		</div>
+	)
 }
 
 export default Home

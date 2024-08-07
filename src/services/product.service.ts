@@ -4,7 +4,9 @@ import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 
 export const ProductService = {
 	async getAllProducts() {
-		return axiosClassic.get<WooCommerceSingleProduct[]>(productUrl)
+		return axiosClassic.get<WooCommerceSingleProduct[]>(
+			`${productUrl}?per_page=60`
+		)
 	},
 
 	async getSingleProduct(id: number) {

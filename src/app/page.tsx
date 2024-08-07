@@ -3,7 +3,7 @@ import { homePageUrl } from '@/configs/page.config'
 import { IHome } from '@/types/homepage.interface'
 import { FC } from 'react'
 
-export const homePageDataResponse = async () => {
+const homePageDataResponse = async () => {
 	try {
 		const data: IHome = await fetch(homePageUrl, {
 			next: { revalidate: 3600 }

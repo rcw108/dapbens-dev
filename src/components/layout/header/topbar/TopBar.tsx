@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import styles from './Topbar.module.scss'
+import styles from './TopBar.module.scss'
 
 const TopBar: FC = () => {
 	return (

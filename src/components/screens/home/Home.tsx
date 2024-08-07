@@ -2,6 +2,7 @@
 
 import { useActions } from '@/hooks/useActions'
 import { useProducts } from '@/hooks/useProducts'
+import { ProductService } from '@/services/product.service'
 import { IHome } from '@/types/homepage.interface'
 import { FC, useEffect } from 'react'
 import styles from './Home.module.scss'
@@ -12,6 +13,10 @@ const Home: FC<{ data: IHome }> = ({ data }) => {
 	useEffect(() => {
 		getAllProducts()
 	}, [])
+
+	const dataS = ProductService.getAllProducts()
+
+	console.log(dataS)
 
 	const { products, isLoading } = useProducts()
 

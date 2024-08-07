@@ -15,6 +15,8 @@ const Home: FC<{ data: IHome }> = ({ data }) => {
 
 	const { products, isLoading } = useProducts()
 
+	console.log(products, isLoading)
+
 	useEffect(() => {
 		if (products !== null && isLoading === false) console.log(products)
 	}, [isLoading])

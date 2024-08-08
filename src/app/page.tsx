@@ -5,7 +5,7 @@ import { FC } from 'react'
 
 const homePageDataResponse = async () => {
 	try {
-		const data: IHome = await fetch(homePageUrl, {
+		const data: IHome = await fetch(`${homePageUrl}?acf_format=standard`, {
 			next: { revalidate: 3600 }
 		}).then(res => res.json())
 		return data

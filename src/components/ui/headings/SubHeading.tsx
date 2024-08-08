@@ -1,12 +1,12 @@
 import { FC, JSXElementConstructor, ReactElement } from 'react'
 
-interface IHeading {
+interface ISubHeading {
 	title: string | ReactElement<any, string | JSXElementConstructor<any>>[]
 	className?: string
 }
 
-const Heading: FC<IHeading> = ({ title, className }) => {
-	return <h1 className={className}>{title}</h1>
+const SubHeading: FC<ISubHeading> = ({ title, className }) => {
+	return <h2 className={className}>{title}</h2>
 }
 
-export default Heading
+export default SubHeading

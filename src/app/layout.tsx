@@ -1,4 +1,5 @@
 import MainProvider from '@/providers/MainProvider'
+import clsx from 'clsx'
 import type { Metadata } from 'next'
 import { Oswald, Sofia_Sans } from 'next/font/google'
 import './globals.scss'
@@ -27,7 +28,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body>
+			<body className={clsx(sofia.className, oswald.className)}>
 				<MainProvider>{children}</MainProvider>
 			</body>
 		</html>

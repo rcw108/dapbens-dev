@@ -5,7 +5,7 @@ import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 
 // getAllProducts
 export const getAllProducts = createAsyncThunk<WooCommerceSingleProduct[]>(
-	'auth/login',
+	'all products',
 	async (_, thunkApi) => {
 		try {
 			const response = await ProductService.getAllProducts()

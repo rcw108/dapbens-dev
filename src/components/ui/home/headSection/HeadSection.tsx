@@ -54,16 +54,18 @@ const HeadSection: FC<HeadSectionData> = ({
 									title={ReactHtmlParser(hero_section_title)}
 								/>
 							)}
-							{advantages &&
-								advantages.map((advantage, index) => {
-									return (
-										<SingleAdvantage
-											icon={advantage.icon}
-											text={advantage.text}
-											key={index}
-										/>
-									)
-								})}
+							<div className={styles.advantages}>
+								{advantages &&
+									advantages.map((advantage, index) => {
+										return (
+											<SingleAdvantage
+												icon={advantage.icon}
+												text={advantage.text}
+												key={index}
+											/>
+										)
+									})}
+							</div>
 							<div className={styles.btn}>
 								<Button
 									target={button_link.target}

@@ -1,5 +1,6 @@
 import HeadSection from '@/components/ui/home/headSection/HeadSection'
 import ProductLoader from '@/components/ui/home/products/ProductLoader'
+import SkeletonLoader from '@/components/ui/SkeletonLoader'
 import { IHome } from '@/types/homepage.interface'
 import { FC, Suspense } from 'react'
 import styles from './Home.module.scss'
@@ -18,7 +19,9 @@ const Home: FC<{ data: IHome }> = ({ data }) => {
 				move_line_background_image={data.acf.move_line_background_image}
 				move_line_content={data.acf.move_line_content}
 			/>
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense
+				fallback={<SkeletonLoader count={5} width={'20%'} height={600} />}
+			>
 				<ProductLoader />
 			</Suspense>
 		</main>

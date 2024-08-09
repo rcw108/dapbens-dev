@@ -1,10 +1,27 @@
+import SkeletonLoader from '@/components/ui/SkeletonLoader'
+import Image from 'next/image'
 import { FC } from 'react'
 import styles from './TopBar.module.scss'
+import { useTopBar } from './useTopBar'
 
 const TopBar: FC = () => {
+	const { data, isLoading } = useTopBar()
+
 	return (
 		<div className={styles.topbar}>
-			<h2>TopBar</h2>
+			{isLoading ? (
+				<SkeletonLoader count={1} width={400} height={28} />
+			) : data ? (
+				<div className='flex gap-2'>
+					<Image
+						src={data.icon_topbar}
+						alt={data.text_topbar}
+						width={28}
+						height={28}
+					/>
+					<h6>{data.text_topbar}</h6>
+				</div>
+			) : null}
 		</div>
 	)
 }

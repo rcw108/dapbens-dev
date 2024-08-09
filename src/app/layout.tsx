@@ -12,13 +12,15 @@ export const metadata: Metadata = {
 const sofia = Sofia_Sans({
 	subsets: ['latin'],
 	display: 'swap',
-	weight: ['300', '400', '500', '600', '700']
+	weight: ['300', '400', '500', '600', '700'],
+	variable: '--font-sofia-sans'
 })
 
 const oswald = Oswald({
 	subsets: ['latin'],
 	display: 'swap',
-	weight: ['300', '400', '500', '600', '700']
+	weight: ['300', '400', '500', '600', '700'],
+	variable: '--font-oswald'
 })
 
 export default function RootLayout({
@@ -28,7 +30,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body className={clsx(sofia.className, oswald.className)}>
+			<body className={clsx(sofia.variable, oswald.variable)}>
 				<MainProvider>{children}</MainProvider>
 			</body>
 		</html>

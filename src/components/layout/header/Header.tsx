@@ -1,7 +1,9 @@
 import clsx from 'clsx'
-import Link from 'next/link'
+import Image from 'next/image'
 import { FC } from 'react'
 import styles from './Header.module.scss'
+import Logotype from './logotype/Logotype'
+import Menu from './menu/Menu'
 import TopBar from './topbar/TopBar'
 
 const Header: FC = () => {
@@ -9,25 +11,15 @@ const Header: FC = () => {
 		<header>
 			<TopBar />
 			<div className={clsx('header-line', styles.main)}>
-				<div className={styles.logo}>Dabpens</div>
-				<nav>
-					<ul>
-						<li>
-							<Link href='/'>Home</Link>
-						</li>
-						<li>Shop</li>
-						<li>My Account</li>
-						<li>
-							<Link href='/faq'>FAQ</Link>
-						</li>
-						<li>Contact</li>
-						<li>Testing</li>
-						<li>Reviews</li>
-					</ul>
-				</nav>
+				<Logotype />
+				<Menu />
 				<div className={styles.details}>
-					<div className={styles.search}></div>
-					<div className={styles.account}></div>
+					<div className={clsx('cursor-pointer', styles.search)}>
+						<Image src='/search.svg' alt='search' width={26} height={26} />
+					</div>
+					<div className={clsx('cursor-pointer', styles.profile)}>
+						<Image src='/user.svg' alt='profile' width={26} height={26} />
+					</div>
 					<div className={styles.cart}></div>
 				</div>
 			</div>

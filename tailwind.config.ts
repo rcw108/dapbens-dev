@@ -15,6 +15,10 @@ const config: Config = {
 				'green-accent': '#00E131',
 				'black-sm': '#0D0D0D99',
 				'orange-color': '#F87212'
+			},
+			fontFamily: {
+				oswald: ['var(--font-oswald)'],
+				'sofia-sans': ['var(--font-sofia-sans)']
 			}
 		}
 	},

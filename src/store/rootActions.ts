@@ -1,5 +1,6 @@
-import { pushAllProducts } from './products/product.slice'
+import { pushAllProducts, setPopularCategories } from './products/product.slice'
 
 export const allActions = {
-	pushAllProducts
+	pushAllProducts,
+	setPopularCategories
 }

@@ -2,3 +2,29 @@
 	display: flex;
 	gap: 20px;
 }
+
+.cart {
+	width: 28px;
+	height: 28px;
+	padding: 5px;
+	border: 1px solid #fff;
+	position: relative;
+	&::after {
+		position: absolute;
+		bottom: 90%;
+		left: 55%;
+		width: 10px;
+		height: 6px;
+		margin-bottom: 1px;
+		margin-left: -6px;
+		border: 1px solid #fff;
+		border-bottom-width: 1px;
+		border-bottom-style: solid;
+		border-bottom: 0;
+		border-top-left-radius: 99px;
+		border-top-right-radius: 99px;
+		content: '';
+		transition: all 0.2s;
+		pointer-events: none;
+	}
+}

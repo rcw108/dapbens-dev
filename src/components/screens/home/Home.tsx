@@ -1,8 +1,7 @@
 import HeadSection from '@/components/ui/home/headSection/HeadSection'
-import ProductLoader from '@/components/ui/home/products/ProductLoader'
-import SkeletonLoader from '@/components/ui/SkeletonLoader'
+import PeekSection from '@/components/ui/home/peekSection/PeekSection'
 import { IHome } from '@/types/homepage.interface'
-import { FC, Suspense } from 'react'
+import { FC } from 'react'
 import styles from './Home.module.scss'
 
 const Home: FC<{ data: IHome }> = ({ data }) => {
@@ -19,11 +18,12 @@ const Home: FC<{ data: IHome }> = ({ data }) => {
 				move_line_background_image={data.acf.move_line_background_image}
 				move_line_content={data.acf.move_line_content}
 			/>
-			<Suspense
-				fallback={<SkeletonLoader count={5} width={'20%'} height={600} />}
-			>
-				<ProductLoader />
-			</Suspense>
+			<PeekSection
+				title={data.acf.title_pr}
+				description={data.acf.text_pr}
+				tabFirst={data.acf.tab1_pr}
+				tabSecond={data.acf.tab2_pr}
+			/>
 		</main>
 	)
 }

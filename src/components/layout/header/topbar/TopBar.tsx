@@ -1,6 +1,7 @@
 import SkeletonLoader from '@/components/ui/SkeletonLoader'
 import Image from 'next/image'
 import { FC } from 'react'
+import ReactHtmlParser from 'react-html-parser'
 import styles from './TopBar.module.scss'
 import { useTopBar } from './useTopBar'
 
@@ -19,7 +20,7 @@ const TopBar: FC = () => {
 						width={28}
 						height={28}
 					/>
-					<h6>{data.text_topbar}</h6>
+					<h6>{ReactHtmlParser(data.text_topbar)}</h6>
 				</div>
 			) : null}
 		</div>

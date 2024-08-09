@@ -1,0 +1,15 @@
+.menu {
+	li,
+	a {
+		font-size: 18px;
+		font-weight: 300;
+		@apply font-sofia-sans;
+		text-transform: capitalize;
+	}
+
+	ul {
+		span {
+			@apply flex gap-6 items-center;
+		}
+	}
+}

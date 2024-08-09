@@ -1,5 +1,5 @@
-import * as productAction from './products/product.actions'
+import { pushAllProducts } from './products/product.slice'
 
 export const allActions = {
-	...productAction
+	pushAllProducts
 }

@@ -1,14 +1,10 @@
-'use client'
-
 import HeadSection from '@/components/ui/home/headSection/HeadSection'
-import { useProducts } from '@/hooks/useProducts'
+import ProductLoader from '@/components/ui/home/products/ProductLoader'
 import { IHome } from '@/types/homepage.interface'
-import { FC } from 'react'
+import { FC, Suspense } from 'react'
 import styles from './Home.module.scss'
 
 const Home: FC<{ data: IHome }> = ({ data }) => {
-	const { products, isLoading } = useProducts()
-	console.log(data.acf)
 	return (
 		<main className={styles.home}>
 			<HeadSection
@@ -22,6 +18,9 @@ const Home: FC<{ data: IHome }> = ({ data }) => {
 				move_line_background_image={data.acf.move_line_background_image}
 				move_line_content={data.acf.move_line_content}
 			/>
+			<Suspense fallback={<div>Loading...</div>}>
+				<ProductLoader />
+			</Suspense>
 		</main>
 	)
 }

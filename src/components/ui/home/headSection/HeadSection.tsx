@@ -23,7 +23,6 @@ const HeadSection: FC<HeadSectionData> = ({
 	start_image,
 	start_text
 }) => {
-	console.log(background_image)
 	return (
 		<section className={styles.head}>
 			<div className='container'>

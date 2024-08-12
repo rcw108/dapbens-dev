@@ -81,6 +81,7 @@ const HeadSection: FC<HeadSectionData> = ({
 									alt='background'
 									fill
 									draggable={false}
+									unoptimized
 								/>
 							)}
 						</div>

@@ -1,0 +1,22 @@
+.singleStep {
+	padding: 10px 41px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	.img {
+		margin-bottom: 40px;
+
+		img {
+			border-radius: 50%;
+		}
+	}
+
+	.title {
+		@apply mb-5 text-center text-text-black;
+	}
+
+	.descr {
+		@apply text-center text-text-black;
+	}
+}

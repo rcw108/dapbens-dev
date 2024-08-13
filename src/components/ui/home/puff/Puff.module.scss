@@ -1,0 +1,37 @@
+.puff {
+	padding-top: 74px;
+	.box {
+		@apply flex justify-between items-center mx-auto;
+		max-width: 1318px;
+
+		.left {
+			width: 50%;
+			.rate {
+				@apply flex gap-[10px] mb-5;
+			}
+			.title {
+				@apply mb-5 uppercase text-text-white;
+			}
+
+			.descr {
+				@apply text-text-white;
+				max-width: 624px;
+				p {
+					@apply mb-5;
+				}
+			}
+		}
+
+		.right {
+			width: 50%;
+			height: 100%;
+			display: flex;
+			justify-content: flex-end;
+			.img {
+				width: 550px;
+				height: 550px;
+				position: relative;
+			}
+		}
+	}
+}

@@ -80,3 +80,36 @@ h5 {
 	border-radius: 0 0 30px 30px;
 	overflow: hidden;
 }
+
+.screen-reader-text {
+	display: none;
+}
+
+// .swiper-horizontal {
+// 	overflow-y: visible !important;
+// 	overflow-x: hidden !important;
+// 	height: 100% !important;
+// }
+
+body .swiper-pagination-bullets {
+	position: relative !important;
+	margin-top: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.swiper-pagination-bullet {
+	background: rgba(255, 255, 255, 0.5) !important;
+	width: 20px !important;
+	height: 6px !important;
+	display: block !important;
+	border-radius: 39px !important;
+	color: transparent;
+	text-indent: -9999px !important;
+	margin: 0 4.5px !important;
+}
+
+.swiper-pagination-bullet-active {
+	background: #00e131 !important;
+}

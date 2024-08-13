@@ -1,7 +1,8 @@
 'use client'
 
+import { useActions } from '@/hooks/useActions'
 import Image from 'next/image'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import Marquee from 'react-fast-marquee'
 import ReactHtmlParser from 'react-html-parser'
 import Button from '../../button/Button'
@@ -12,7 +13,12 @@ import SingleAdvantage from './advantage/SingleAdvantage'
 import { HeadSectionData } from './headSection.interface'
 import MarqueeItem from './marqueeItem/MarqueeItem'
 
-const HeadSection: FC<HeadSectionData> = ({
+interface IHeadSection extends HeadSectionData {
+	tabFirst: string
+	tabSecond: string
+}
+
+const HeadSection: FC<IHeadSection> = ({
 	hero_section_title,
 	advantages,
 	button_link,
@@ -21,8 +27,16 @@ const HeadSection: FC<HeadSectionData> = ({
 	move_line_content,
 	right_image,
 	start_image,
-	start_text
+	start_text,
+	tabFirst,
+	tabSecond
 }) => {
+	const { setPopularCategories } = useActions()
+
+	useEffect(() => {
+		setPopularCategories([tabFirst, tabSecond])
+	}, [])
+
 	return (
 		<section className={styles.head}>
 			<div className='container'>
@@ -91,7 +105,7 @@ const HeadSection: FC<HeadSectionData> = ({
 						style={{ backgroundImage: `url(${move_line_background_image})` }}
 					>
 						{move_line_content && (
-							<Marquee speed={100}>
+							<Marquee speed={50}>
 								{move_line_content.map((item, index) => {
 									return <MarqueeItem key={index} {...item} />
 								})}

@@ -1,5 +1,7 @@
 'use server'
 
+import { homePageUrl } from '@/configs/page.config'
+import { IHome } from '@/types/homepage.interface'
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 import { cache } from 'react'
 
@@ -10,11 +12,19 @@ const api = new WooCommerceRestApi({
 	version: 'wc/v3'
 })
 
-export const getAllProducts = cache(async (per_page: number = 50) => {
+export const getAllProducts = cache(async (per_page: number = 100) => {
 	const response = await api.get('products', {
 		per_page
 	})
-	return response.data
+
+	const categories: IHome = await fetch(homePageUrl).then(res => res.json())
+
+	const categoriesArray = [categories.acf.tab1_pr, categories.acf.tab2_pr]
+
+	return {
+		products: response.data,
+		popularCategories: categoriesArray
+	}
 })
 
 export const getSingleProductBySlug = cache(async (slug: string = '') => {

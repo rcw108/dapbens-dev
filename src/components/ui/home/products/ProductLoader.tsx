@@ -2,8 +2,10 @@ import { getAllProducts } from './productActions'
 import ProductList from './ProductList'
 
 const ProductLoader = async () => {
-	const products = await getAllProducts()
-	return <ProductList products={products} />
+	const { products, popularCategories } = await getAllProducts()
+	return (
+		<ProductList products={products} popularCategories={popularCategories} />
+	)
 }
 
 export default ProductLoader

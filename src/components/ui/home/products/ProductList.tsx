@@ -17,25 +17,38 @@ import ProductSliderCard from './productSliderCard/ProductSliderCard'
 
 interface ProductListProps {
 	products: WooCommerceSingleProduct[]
+	popularCategories: string[]
 }
 
-const ProductList: FC<ProductListProps> = ({ products }) => {
+const ProductList: FC<ProductListProps> = ({ products, popularCategories }) => {
 	const [activeTab, setActiveTab] = useState<'first' | 'second'>('first')
+	const [firstCategoryList, setFirstCategoryList] = useState<
+		WooCommerceSingleProduct[]
+	>([])
+	const [secondCategoryList, setSecondCategoryList] = useState<
+		WooCommerceSingleProduct[]
+	>([])
+
+	console.log(firstCategoryList.length, secondCategoryList.length)
 
 	const { pushAllProducts } = useActions()
-	const { products: allProducts, popularCategories } = useProducts()
+	const { products: allProducts } = useProducts()
 	useEffect(() => {
 		if (allProducts) return
 		pushAllProducts(products)
+
+		setFirstCategoryList(
+			sortByRatingCount(
+				sortProductsByCategories(popularCategories[0], products)
+			)
+		)
+
+		setSecondCategoryList(
+			sortByRatingCount(
+				sortProductsByCategories(popularCategories[1], products)
+			)
+		)
 	}, [])
-
-	const firstCategoryList = sortByRatingCount(
-		sortProductsByCategories(popularCategories[0], products)
-	)
-
-	const secondCategoryList = sortByRatingCount(
-		sortProductsByCategories(popularCategories[1], products)
-	)
 
 	const handleTabClick = () => {
 		if (activeTab === 'first') {
@@ -72,7 +85,7 @@ const ProductList: FC<ProductListProps> = ({ products }) => {
 					[styles.active]: activeTab === 'first'
 				})}
 			>
-				{firstCategoryList && (
+				{firstCategoryList && firstCategoryList.length > 0 && (
 					<>
 						<Swiper
 							modules={[Navigation, Pagination]}
@@ -110,7 +123,7 @@ const ProductList: FC<ProductListProps> = ({ products }) => {
 					[styles.active]: activeTab === 'second'
 				})}
 			>
-				{secondCategoryList && (
+				{secondCategoryList && secondCategoryList.length > 0 && (
 					<Swiper
 						modules={[Navigation, Pagination]}
 						pagination={{ clickable: true }}

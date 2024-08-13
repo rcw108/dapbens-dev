@@ -25,7 +25,7 @@ const ProductSliderCard: FC<{
 
 			<div className={styles.info}>
 				<div className={styles.stars}>
-					{[...Array(+product.average_rating)].map((_, index) => (
+					{[...Array(Math.round(+product.average_rating))].map((_, index) => (
 						<div className={styles.starItem} key={index}>
 							<Image src={'/star.svg'} alt={'star'} fill draggable={false} />
 						</div>

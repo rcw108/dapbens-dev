@@ -1,3 +1,5 @@
+'use client'
+
 import BestProduct from '@/components/ui/home/bestProduct/BestProduct'
 import DifferenceSection from '@/components/ui/home/differenceSection/DifferenceSection'
 import FlavorsSection from '@/components/ui/home/flavorsSection/FlavorsSection'
@@ -5,11 +7,25 @@ import HeadSection from '@/components/ui/home/headSection/HeadSection'
 import PeekSection from '@/components/ui/home/peekSection/PeekSection'
 import Puff from '@/components/ui/home/puff/Puff'
 import Steps from '@/components/ui/home/steps/Steps'
+import { useActions } from '@/hooks/useActions'
+import { useProducts } from '@/hooks/useProducts'
 import { IHome } from '@/types/homepage.interface'
-import { FC } from 'react'
+import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
+import { FC, useEffect } from 'react'
 import styles from './Home.module.scss'
 
-const Home: FC<{ data: IHome }> = ({ data }) => {
+const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
+	data,
+	products
+}) => {
+	const { pushAllProducts } = useActions()
+	const { products: allProducts } = useProducts()
+
+	useEffect(() => {
+		if (allProducts) return
+		pushAllProducts(products)
+	}, [])
+
 	return (
 		<main className={styles.home}>
 			<HeadSection
@@ -30,6 +46,8 @@ const Home: FC<{ data: IHome }> = ({ data }) => {
 				description={data.acf.text_pr}
 				tabFirst={data.acf.tab1_pr}
 				tabSecond={data.acf.tab2_pr}
+				popularCategories={[data.acf.tab1_pr, data.acf.tab2_pr]}
+				products={products}
 			/>
 			<Steps
 				link_st={data.acf.link_st}

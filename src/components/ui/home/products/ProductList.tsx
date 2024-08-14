@@ -1,19 +1,15 @@
 'use client'
-import { useActions } from '@/hooks/useActions'
-import { useProducts } from '@/hooks/useProducts'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import { sortByRatingCount } from '@/utils/sortByRatingCount'
 import { sortProductsByCategories } from '@/utils/sortProductsByCategory'
 import clsx from 'clsx'
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-import { Navigation, Pagination } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import SliderButton from '../../button/sliderButton/SliderButton'
 import styles from './ProductList.module.scss'
-import ProductSliderCard from './productSliderCard/ProductSliderCard'
+import SliderComponent from './SliderComponent'
+import { useProductList } from './useProductList'
 
 interface ProductListProps {
 	products: WooCommerceSingleProduct[]
@@ -21,43 +17,27 @@ interface ProductListProps {
 }
 
 const ProductList: FC<ProductListProps> = ({ products, popularCategories }) => {
-	const [activeTab, setActiveTab] = useState<'first' | 'second'>('first')
-	const [firstCategoryList, setFirstCategoryList] = useState<
-		WooCommerceSingleProduct[]
-	>([])
-	const [secondCategoryList, setSecondCategoryList] = useState<
-		WooCommerceSingleProduct[]
-	>([])
+	const {
+		activeTab,
+		firstCategoryList,
+		handleTabClick,
+		secondCategoryList,
+		setFirstCategoryList,
+		setSecondCategoryList
+	} = useProductList()
 
-	console.log(firstCategoryList.length, secondCategoryList.length)
-
-	const { pushAllProducts } = useActions()
-	const { products: allProducts } = useProducts()
 	useEffect(() => {
-		if (allProducts) return
-		pushAllProducts(products)
-
 		setFirstCategoryList(
 			sortByRatingCount(
 				sortProductsByCategories(popularCategories[0], products)
 			)
 		)
-
 		setSecondCategoryList(
 			sortByRatingCount(
 				sortProductsByCategories(popularCategories[1], products)
 			)
 		)
 	}, [])
-
-	const handleTabClick = () => {
-		if (activeTab === 'first') {
-			setActiveTab('second')
-		} else {
-			setActiveTab('first')
-		}
-	}
-
 	return (
 		<>
 			<div className={styles.tabs}>
@@ -86,36 +66,7 @@ const ProductList: FC<ProductListProps> = ({ products, popularCategories }) => {
 				})}
 			>
 				{firstCategoryList && firstCategoryList.length > 0 && (
-					<>
-						<Swiper
-							modules={[Navigation, Pagination]}
-							pagination={{ clickable: true }}
-							slidesPerView={4}
-							centeredSlides
-							autoplay
-							initialSlide={2}
-							loop
-							spaceBetween={32}
-						>
-							<SliderButton variant='left' />
-							{firstCategoryList.slice(0, 6).map(product => {
-								if (product.catalog_visibility === 'hidden') return
-								return (
-									<SwiperSlide key={product.id}>
-										{({ isActive }) => {
-											return (
-												<ProductSliderCard
-													slideState={isActive}
-													product={product}
-												/>
-											)
-										}}
-									</SwiperSlide>
-								)
-							})}
-							<SliderButton variant='right' />
-						</Swiper>
-					</>
+					<SliderComponent list={firstCategoryList} />
 				)}
 			</div>
 			<div
@@ -124,34 +75,7 @@ const ProductList: FC<ProductListProps> = ({ products, popularCategories }) => {
 				})}
 			>
 				{secondCategoryList && secondCategoryList.length > 0 && (
-					<Swiper
-						modules={[Navigation, Pagination]}
-						pagination={{ clickable: true }}
-						slidesPerView={4}
-						centeredSlides
-						autoplay
-						initialSlide={2}
-						loop
-						spaceBetween={32}
-					>
-						<SliderButton variant='left' />
-						{secondCategoryList.slice(0, 6).map(product => {
-							if (product.catalog_visibility === 'hidden') return
-							return (
-								<SwiperSlide key={product.id}>
-									{({ isActive }) => {
-										return (
-											<ProductSliderCard
-												slideState={isActive}
-												product={product}
-											/>
-										)
-									}}
-								</SwiperSlide>
-							)
-						})}
-						<SliderButton variant='right' />
-					</Swiper>
+					<SliderComponent list={secondCategoryList} />
 				)}
 			</div>
 		</>

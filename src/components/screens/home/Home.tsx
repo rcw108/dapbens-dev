@@ -1,3 +1,4 @@
+import BestProduct from '@/components/ui/home/bestProduct/BestProduct'
 import DifferenceSection from '@/components/ui/home/differenceSection/DifferenceSection'
 import FlavorsSection from '@/components/ui/home/flavorsSection/FlavorsSection'
 import HeadSection from '@/components/ui/home/headSection/HeadSection'
@@ -61,7 +62,7 @@ const Home: FC<{ data: IHome }> = ({ data }) => {
 				text_d={data.acf.text_d}
 				title_d={data.acf.title_d}
 			/>
-			{/* <BestProduct
+			<BestProduct
 				bg_bp={data.acf.bg_bp}
 				img_bp={data.acf.img_bp}
 				link_bp={data.acf.link_bp}
@@ -71,7 +72,7 @@ const Home: FC<{ data: IHome }> = ({ data }) => {
 				star_text_bp={data.acf.star_text_bp}
 				text_bp={data.acf.text_bp}
 				title_bp={data.acf.title_bp}
-			/> */}
+			/>
 		</main>
 	)
 }

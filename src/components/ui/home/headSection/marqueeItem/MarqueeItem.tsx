@@ -1,14 +1,25 @@
 import Description from '@/components/ui/headings/Description'
 import { MoveLineContent } from '@/types/homepage.interface'
+import clsx from 'clsx'
 import Image from 'next/image'
 import { FC } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import styles from './MarqueeItem.module.scss'
 
-const MarqueeItem: FC<MoveLineContent> = ({ icon, text }) => {
+interface MarqueeItem extends MoveLineContent {
+	className?: string
+	classNameImage?: string
+}
+
+const MarqueeItem: FC<MarqueeItem> = ({
+	icon,
+	text,
+	className,
+	classNameImage
+}) => {
 	return (
-		<div className={styles.item}>
-			<div className={styles.img}>
+		<div className={clsx(styles.item, className)}>
+			<div className={clsx(styles.icon, classNameImage)}>
 				{icon && typeof icon === 'string' && (
 					<Image draggable={false} src={icon} alt='advantage' fill />
 				)}

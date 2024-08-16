@@ -86,12 +86,16 @@ export interface HomeACF {
 	bg_f: string | boolean
 	text_f: string
 	faqs_f: SingleFaq[]
-	bg_img_left_sv: string | boolean
-	bg_img_right_sv: string | boolean
+	bg_img_left_sv: string
+	bg_img_right_sv: string
 	star_img_sv: string
 	star_text_sv: string
 	sub_title_sv: string
 	title_sv: string
+	text_sv: string
+	background_image_form: string
+	form_title: string
+	form_description: string
 }
 
 export interface IHome {

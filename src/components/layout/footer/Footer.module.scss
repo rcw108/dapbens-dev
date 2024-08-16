@@ -1,0 +1,76 @@
+.footer {
+	margin-top: 88px;
+	.container {
+		max-width: 1275px;
+		padding: 0 15px;
+		margin: 0 auto;
+
+		.top {
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			margin: 0 -49px;
+			padding: 0 0 50px;
+			.firstCol {
+				width: 37.41%;
+				padding: 0 49px;
+
+				.firstColLogo {
+					@apply mb-[35px];
+				}
+
+				.firstColText {
+					font-size: 16px;
+					line-height: 1.4;
+					font-weight: 300;
+				}
+
+				.firstColBanks {
+					@apply my-[29px];
+				}
+
+				.firstColCopy {
+					font-weight: 700;
+					font-size: 16px;
+					line-height: 1.4;
+				}
+			}
+			.secondCol {
+				width: 18.38%;
+				padding: 0 49px;
+			}
+			.thirdCol {
+				width: 26.11%;
+				padding: 0 49px;
+			}
+			.fourthCol {
+				width: 18.1%;
+				padding: 0 49px;
+			}
+		}
+	}
+
+	.bottom {
+		padding: 50px 0 88px;
+		border-top: 1px solid rgb(255 255 255 / 20%);
+
+		.bottomTitle {
+			@apply text-text-white mb-5;
+			font-size: 22px;
+			font-weight: 700;
+		}
+
+		.bottomText {
+			font-size: 14px;
+			font-weight: 300;
+			line-height: 1.4;
+		}
+	}
+
+	.colTitle {
+		@apply text-text-white mb-[35px] font-oswald;
+		font-size: 22px;
+		font-weight: 700;
+		line-height: 1;
+	}
+}

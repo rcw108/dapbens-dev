@@ -2,10 +2,14 @@
 
 import BestProduct from '@/components/ui/home/bestProduct/BestProduct'
 import DifferenceSection from '@/components/ui/home/differenceSection/DifferenceSection'
+import FaqSection from '@/components/ui/home/faqSection/FaqSection'
 import FlavorsSection from '@/components/ui/home/flavorsSection/FlavorsSection'
+import FormSection from '@/components/ui/home/formSection/FormSection'
 import HeadSection from '@/components/ui/home/headSection/HeadSection'
 import PeekSection from '@/components/ui/home/peekSection/PeekSection'
 import Puff from '@/components/ui/home/puff/Puff'
+import ReviewsSection from '@/components/ui/home/reviewsSection/ReviewsSection'
+import SaveSection from '@/components/ui/home/saveSection/SaveSection'
 import Steps from '@/components/ui/home/steps/Steps'
 import { useActions } from '@/hooks/useActions'
 import { useProducts } from '@/hooks/useProducts'
@@ -90,6 +94,31 @@ const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
 				star_text_bp={data.acf.star_text_bp}
 				text_bp={data.acf.text_bp}
 				title_bp={data.acf.title_bp}
+			/>
+			<ReviewsSection
+				reviews_r={data.acf.reviews_r}
+				text_r={data.acf.text_r}
+				title_r={data.acf.title_r}
+			/>
+			<FaqSection
+				bg_f={data.acf.bg_f}
+				faqs_f={data.acf.faqs_f}
+				text_f={data.acf.text_f}
+				title_f={data.acf.title_f}
+			/>
+			<SaveSection
+				bg_img_left_sv={data.acf.bg_img_left_sv}
+				bg_img_right_sv={data.acf.bg_img_right_sv}
+				star_img_sv={data.acf.star_img_sv}
+				star_text_sv={data.acf.star_text_sv}
+				sub_title_sv={data.acf.sub_title_sv}
+				text_sv={data.acf.text_sv}
+				title_sv={data.acf.title_sv}
+			/>
+			<FormSection
+				background_image_form={data.acf.background_image_form}
+				form_description={data.acf.form_description}
+				form_title={data.acf.form_title}
 			/>
 		</main>
 	)

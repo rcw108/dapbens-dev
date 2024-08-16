@@ -23,18 +23,23 @@ const SliderComponent: FC<SliderComponentProps> = ({ list }) => {
 				spaceBetween={32}
 			>
 				<SliderButton variant='left' />
-				{list.slice(0, 6).map(product => {
-					if (product.catalog_visibility === 'hidden') return
-					return (
-						<SwiperSlide key={product.id}>
-							{({ isActive }) => {
-								return (
-									<ProductSliderCard slideState={isActive} product={product} />
-								)
-							}}
-						</SwiperSlide>
-					)
-				})}
+				{list
+					.filter(product => product.catalog_visibility !== 'hidden')
+					.slice(0, 6)
+					.map(product => {
+						return (
+							<SwiperSlide key={product.id}>
+								{({ isActive }) => {
+									return (
+										<ProductSliderCard
+											slideState={isActive}
+											product={product}
+										/>
+									)
+								}}
+							</SwiperSlide>
+						)
+					})}
 				<SliderButton variant='right' />
 			</Swiper>
 		</>

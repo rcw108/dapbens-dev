@@ -18,7 +18,8 @@ const config: Config = {
 			},
 			fontFamily: {
 				oswald: ['var(--font-oswald)'],
-				'sofia-sans': ['var(--font-sofia-sans)']
+				'sofia-sans': ['var(--font-sofia-sans)'],
+				mont: ['var(--font-mont)']
 			}
 		}
 	},

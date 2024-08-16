@@ -1,0 +1,67 @@
+.faq {
+	transition: all 0.8s ease-in-out;
+	transform-origin: bottom;
+	margin-top: 70px;
+	.wrapper {
+		background-repeat: no-repeat;
+		background-size: cover;
+		border-radius: 30px;
+		overflow: hidden;
+		padding: 67px 30px 68px 30px;
+
+		.title {
+			@apply text-center uppercase mb-5;
+		}
+
+		.descr {
+			@apply text-center mb-10;
+		}
+
+		.box {
+			.item {
+				cursor: pointer;
+				padding: 16px 26px;
+				background-color: #fff;
+				border-radius: 15px;
+				margin-bottom: 12px;
+				margin-top: 20px;
+				transition: all 0.8s ease-in-out;
+
+				.top {
+					@apply flex justify-between items-center;
+
+					.tabTitle {
+						font-size: 26px;
+						font-weight: 500;
+					}
+
+					.icon {
+						@apply cursor-pointer;
+					}
+				}
+
+				.bottom {
+					max-height: 0;
+					overflow: hidden;
+					transition: all 0.8s ease-in-out;
+
+					.text {
+						@apply text-text-black;
+						font-weight: 300;
+						padding-top: 15px;
+						padding-bottom: 15px;
+						a {
+							text-decoration: underline;
+						}
+					}
+				}
+
+				&.active {
+					.bottom {
+						max-height: 1000px;
+					}
+				}
+			}
+		}
+	}
+}

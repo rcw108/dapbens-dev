@@ -1,0 +1,45 @@
+.save {
+	margin-top: 77px;
+	margin-bottom: 78px;
+
+	.box {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.center {
+			width: 62%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			.rate {
+				display: flex;
+				align-items: center;
+				font-weight: 300;
+				margin-bottom: 20px;
+				.rateTitle {
+					margin-left: 20px;
+				}
+			}
+			.title {
+				@apply uppercase text-center text-text-white mb-5;
+				font-size: 52px;
+				line-height: 1.3;
+				letter-spacing: 2.6px;
+			}
+
+			.subtitle {
+				@apply text-green-accent uppercase text-center mb-5 font-sofia-sans;
+				letter-spacing: 1.6px;
+				font-size: 32px;
+				font-weight: 700;
+			}
+
+			.descr {
+				max-width: 655px;
+				@apply text-center;
+			}
+		}
+	}
+}

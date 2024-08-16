@@ -99,7 +99,8 @@ body .swiper-pagination-bullets {
 	align-items: center;
 }
 
-.swiper-pagination-bullet {
+.swiper-pagination-bullet,
+ul.swiper-pagination-bullet li {
 	background: rgba(255, 255, 255, 0.5) !important;
 	width: 20px !important;
 	height: 6px !important;
@@ -108,6 +109,20 @@ body .swiper-pagination-bullets {
 	color: transparent;
 	text-indent: -9999px !important;
 	margin: 0 4.5px !important;
+}
+
+.slick-ul li {
+	background: rgba(255, 255, 255, 0.2) !important;
+	width: 20px !important;
+	height: 6px !important;
+	margin: 0 4.5px !important;
+	border-radius: 39px !important;
+}
+
+.slick-ul li.slick-active {
+	background: #00e131 !important;
+	width: 20px !important;
+	height: 6px !important;
 }
 
 .swiper-pagination-bullet-active {
@@ -124,4 +139,10 @@ body .swiper-pagination-bullets {
 	align-items: center;
 	border-radius: 30px 30px 0 0;
 	padding: 0 5px;
+}
+
+.slick-dots {
+	margin-top: 40px !important;
+	position: relative !important;
+	bottom: auto !important;
 }

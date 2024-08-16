@@ -98,7 +98,7 @@ export interface HomeACF {
 	form_description: string
 }
 
-export interface IHome {
+export interface BasePageInfo {
 	id: number
 	date: string
 	date_gmt: string
@@ -133,5 +133,8 @@ export interface IHome {
 		_acf_changed: boolean
 		footnotes: string
 	}
+}
+
+export interface IHome extends BasePageInfo {
 	acf: HomeACF
 }

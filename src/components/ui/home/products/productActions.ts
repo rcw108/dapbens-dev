@@ -19,13 +19,8 @@ export const getAllProducts = cache(async (per_page: number = 100) => {
 		}
 	)
 
-	// const categories: IHome = await fetch(homePageUrl).then(res => res.json())
-
-	// const categoriesArray = [categories.acf.tab1_pr, categories.acf.tab2_pr]
-
 	return {
 		products: response.data
-		// popularCategories: categoriesArray
 	}
 })
 

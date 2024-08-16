@@ -4,10 +4,12 @@ import { homePageUrl } from '@/configs/page.config'
 import { IHome } from '@/types/homepage.interface'
 import { FC } from 'react'
 
+export const revalidate = 1800
+
 const getHomeData = async () => {
-	const data: IHome = await fetch(`${homePageUrl}?acf_format=standard`, {
-		next: { revalidate: 3600 }
-	}).then(res => res.json())
+	const data: IHome = await fetch(`${homePageUrl}?acf_format=standard`).then(
+		res => res.json()
+	)
 	return data
 }
 

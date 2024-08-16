@@ -9,13 +9,15 @@ import styles from './MarqueeItem.module.scss'
 interface MarqueeItem extends MoveLineContent {
 	className?: string
 	classNameImage?: string
+	classNameText?: string
 }
 
 const MarqueeItem: FC<MarqueeItem> = ({
 	icon,
 	text,
 	className,
-	classNameImage
+	classNameImage,
+	classNameText
 }) => {
 	return (
 		<div className={clsx(styles.item, className)}>
@@ -24,7 +26,7 @@ const MarqueeItem: FC<MarqueeItem> = ({
 					<Image draggable={false} src={icon} alt='advantage' fill />
 				)}
 			</div>
-			<Description title={ReactHtmlParser(text)} />
+			<Description className={classNameText} title={ReactHtmlParser(text)} />
 		</div>
 	)
 }

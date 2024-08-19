@@ -18,6 +18,10 @@ const fetchShopData = async () => {
 	return response
 }
 
+export const metadata = {
+	title: 'Shop - DABPENS'
+}
+
 const ShopPage: FC = async () => {
 	const { products } = await getAllProducts()
 	const categories = await getProductCategories()

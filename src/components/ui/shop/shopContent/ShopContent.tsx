@@ -239,7 +239,7 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 								<button
 									className={styles.btn}
 									onClick={() => {
-										handleReset
+										handleReset()
 									}}
 								>
 									Reset Filters

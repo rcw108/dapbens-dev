@@ -178,6 +178,7 @@ export const useShopContent = () => {
 		setAvailabilityActive('stock')
 		setCategoriesActive('')
 		setTagActive('')
+		setSortedProducts(products)
 	}
 
 	return {

@@ -1,0 +1,111 @@
+.card {
+	border-radius: 14px;
+	border: 1px solid rgb(255 255 255 / 20%);
+	-webkit-transition: all 0.5s ease-out;
+	-o-transition: all 0.5s ease-out;
+	transition: all 0.5s ease-out;
+	position: relative;
+	overflow: hidden;
+	text-align: center;
+	height: 100%;
+
+	&:hover {
+		background-image: url('/product-bg.webp');
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+
+		.img {
+			img {
+				width: 226px;
+				height: 226px;
+			}
+		}
+
+		.content {
+			.title {
+				color: #0a0a0a;
+			}
+		}
+		.btn {
+			display: inline-flex;
+		}
+
+		.price {
+			del {
+				color: rgb(10 10 10 / 50%);
+				span {
+					color: rgb(10 10 10 / 50%);
+				}
+			}
+			ins {
+				color: #000;
+				span {
+					color: #000;
+				}
+			}
+		}
+	}
+
+	.img {
+		padding: 4px 7px;
+		img {
+			margin: 0 auto;
+		}
+	}
+
+	.content {
+		padding: 10px 26px 30px;
+
+		.title {
+			@apply text-text-white text-center my-[22px] font-oswald font-semibold;
+			font-size: 22px;
+			line-height: 33px;
+			display: block;
+		}
+
+		.price {
+			del {
+				color: #ffffff80;
+				font-size: 20px;
+				font-weight: 700;
+				span {
+					color: #ffffff80;
+				}
+			}
+			ins {
+				color: #fff;
+				text-decoration: none;
+				font-size: 20px;
+				font-weight: 700;
+				span {
+					color: #fff;
+					text-decoration: none;
+				}
+			}
+		}
+	}
+
+	.btn {
+		margin-top: 15px;
+		width: 100%;
+		font-size: 22px;
+		padding: 13px 25px;
+		color: #fff;
+		display: inline-flex;
+		background: #f87212;
+		padding: 14px 25px;
+		border-radius: 11px;
+		@apply font-sofia-sans;
+		font-weight: 700;
+		font-size: 22px;
+		line-height: 1;
+		align-items: center;
+		justify-content: center;
+		text-transform: uppercase;
+		display: none;
+		img {
+			margin-left: 13px;
+		}
+	}
+}

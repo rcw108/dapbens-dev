@@ -1,0 +1,59 @@
+.shop {
+	margin-top: 60px;
+	.wrapper {
+		max-width: 1246px;
+		margin: 0 auto;
+		.top {
+			display: flex;
+			justify-content: flex-end;
+			gap: 20px;
+			margin-bottom: 40px;
+
+			h5 {
+				font-size: 21px;
+				font-weight: 600;
+				line-height: 31px;
+			}
+
+			.select {
+				width: 210px;
+				height: 49px;
+				border: 1px solid rgb(255 255 255 / 40%);
+				border-top-color: rgba(255, 255, 255, 0.4);
+				border-right-color: rgba(255, 255, 255, 0.4);
+				border-bottom-color: rgba(255, 255, 255, 0.4);
+				border-left-color: rgba(255, 255, 255, 0.4);
+				@apply font-sofia-sans;
+				font-size: 18px;
+				font-weight: 400;
+				letter-spacing: 0em;
+				text-align: left;
+				color: #fff;
+				padding: 0 18px;
+				line-height: normal;
+				appearance: none;
+				background: transparent;
+				--webkit-appearance: none;
+				-moz-appearance: none;
+				border-radius: 8px;
+			}
+		}
+		.center {
+			display: flex;
+			justify-content: space-between;
+			.filters {
+				width: 25%;
+			}
+
+			.content {
+				width: 75%;
+				padding-left: 40px;
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				grid-template-rows: minmax(350px, auto);
+				grid-auto-rows: minmax(350px, auto);
+				gap: 22px;
+			}
+		}
+	}
+}

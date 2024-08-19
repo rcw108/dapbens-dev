@@ -1,6 +1,10 @@
 'use server'
 
-import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
+import {
+	Category,
+	Tag,
+	WooCommerceSingleProduct
+} from '@/types/wooCommerce.interface'
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 import { cache } from 'react'
 
@@ -29,4 +33,14 @@ export const getSingleProductBySlug = cache(async (slug: string = '') => {
 		slug: slug
 	})
 	return response.data[0]
+})
+
+export const getProductTags = cache(async () => {
+	const response: { data: Tag[] } = await api.get('products/tags')
+	return response.data
+})
+
+export const getProductCategories = cache(async () => {
+	const response: { data: Category[] } = await api.get('products/categories')
+	return response.data
 })

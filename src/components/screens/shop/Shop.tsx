@@ -10,14 +10,8 @@ import { useProducts } from '@/hooks/useProducts'
 import { Category, Tag } from '@/store/products/product.interface'
 import { IShopPage } from '@/types/shopPage.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
-import dynamic from 'next/dynamic'
 import { FC, Suspense, useEffect } from 'react'
 import styles from './Shop.module.scss'
-
-const DynamicShopContent = dynamic(
-	() => import('@/components/ui/shop/shopContent/ShopContent'),
-	{}
-)
 
 interface IShop {
 	products: WooCommerceSingleProduct[]

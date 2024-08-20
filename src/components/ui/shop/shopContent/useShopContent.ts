@@ -14,6 +14,13 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
 export const useShopContent = () => {
+	// Pagination States
+
+	const [currentPagination, setCurrentPagination] = useState(0)
+	const [progressPagination, setProgressPagination] = useState(12)
+
+	const [loading, setLoading] = useState(false)
+
 	const [products, setProducts] = useState<WooCommerceSingleProduct[]>([])
 	const [sortBy, setSortBy] = useState('Default Sorting')
 	const [availableTags, setAvailableTags] = useState<
@@ -75,17 +82,22 @@ export const useShopContent = () => {
 
 	const handleSortBy = useCallback(
 		(value: string) => {
+			setLoading(true)
 			setSortBy(value)
 			router.push(pathname + '?' + createQueryString('sort', value), {
 				scroll: false
 			})
 			setSortedProducts(prevProducts => sortProducts(prevProducts, value))
+			setCurrentPagination(0)
+			setProgressPagination(12)
+			setLoading(false)
 		},
 		[pathname, router, createQueryString, sortProducts, products]
 	)
 
 	const handleSortAvailability = useCallback(
 		(value: 'stock' | 'out') => {
+			setLoading(true)
 			setAvailabilityActive(value)
 
 			const valueToFilter = value === 'stock' ? 'instock' : 'outofstock'
@@ -94,26 +106,37 @@ export const useShopContent = () => {
 				scroll: false
 			})
 			setSortedProducts(sortAvailable(sortedProducts, valueToFilter))
+			setCurrentPagination(0)
+			setProgressPagination(12)
+			setLoading(false)
 		},
 		[pathname, router, createQueryString, products]
 	)
 
 	const handleSortCategory = useCallback(
 		(value: string) => {
+			setLoading(true)
 			setSelectCategory(value)
 			const updatedQuery = createQueryString('category', value)
 			router.push(pathname + '?' + updatedQuery, { scroll: false })
 			setSortedProducts(filterByCategory(sortedProducts, value))
+			setCurrentPagination(0)
+			setProgressPagination(12)
+			setLoading(false)
 		},
 		[pathname, router, createQueryString, sortedProducts]
 	)
 
 	const handleSortTag = useCallback(
 		(value: string) => {
+			setLoading(true)
 			setSelectTag(value)
 			const updatedQuery = createQueryString('tag', value)
 			router.push(pathname + '?' + updatedQuery, { scroll: false })
 			setSortedProducts(filterByTag(sortedProducts, value))
+			setCurrentPagination(0)
+			setProgressPagination(12)
+			setLoading(false)
 		},
 		[pathname, router, createQueryString, sortedProducts]
 	)
@@ -171,6 +194,7 @@ export const useShopContent = () => {
 	}, [products])
 
 	const handleReset = () => {
+		setLoading(true)
 		router.push(pathname, { scroll: false })
 		setSortBy('Default Sorting')
 		setSelectCategory('')
@@ -179,6 +203,45 @@ export const useShopContent = () => {
 		setCategoriesActive('')
 		setTagActive('')
 		setSortedProducts(products)
+		setLoading(false)
+	}
+
+	const togglePagination = (index: number) => {
+		if (index === currentPagination) return
+		if (index !== 0) {
+			setCurrentPagination(index * 12)
+			setProgressPagination(index * 12 + 12)
+		} else {
+			setCurrentPagination(index)
+			setProgressPagination(index + 12)
+		}
+	}
+
+	const handleCategories = (category: string) => {
+		console.log(category, categoriesActive)
+		if (category === categoriesActive) {
+			setCategoriesActive('')
+		} else {
+			setCategoriesActive(category)
+		}
+	}
+
+	const handleTags = (tag: string) => {
+		console.log(tag, tagActive)
+		if (tag === tagActive) {
+			setTagActive('')
+		} else {
+			setTagActive(tag)
+		}
+	}
+
+	const totalPagesCount = () => {
+		const filteredProducts = sortedProducts.filter(
+			product =>
+				product.status !== 'private' && product.catalog_visibility !== 'hidden'
+		)
+
+		return Math.ceil(filteredProducts.length / 12)
 	}
 
 	return {
@@ -209,6 +272,15 @@ export const useShopContent = () => {
 		tagTab,
 		setTagTab,
 		tagActive,
-		setTagActive
+		setTagActive,
+		currentPagination,
+		setCurrentPagination,
+		progressPagination,
+		setProgressPagination,
+		loading,
+		togglePagination,
+		handleCategories,
+		handleTags,
+		totalPagesCount
 	}
 }

@@ -68,6 +68,19 @@
 				grid-template-rows: minmax(350px, auto);
 				grid-auto-rows: minmax(350px, auto);
 				gap: 22px;
+				.skeleton {
+					span {
+						display: grid;
+						grid-template-columns: repeat(3, 1fr);
+						grid-template-rows: minmax(350px, auto);
+						grid-auto-rows: minmax(350px, auto);
+						gap: 22px;
+
+						br {
+							display: none;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -188,6 +201,46 @@
 			&:hover {
 				background-color: #f87212;
 				color: #fff;
+			}
+		}
+	}
+
+	.bottom {
+		width: 73.35%;
+		margin-left: auto;
+		.pagination {
+			margin-top: 70px;
+			@apply flex items-center justify-center gap-5;
+
+			.paginationBtn {
+				border-radius: 50%;
+				border: 1px solid #fff;
+				@apply font-sofia-sans flex items-center justify-center w-10 h-10 text-center text-white;
+				font-size: 16px;
+				font-weight: 700;
+				line-height: 19px;
+				letter-spacing: 0em;
+
+				&.activePagination {
+					background-color: #fff;
+					color: #000;
+				}
+			}
+		}
+
+		.prevBtn,
+		.nextBtn {
+			border-radius: 50%;
+			border: 1px solid #00e131;
+			@apply font-sofia-sans flex items-center justify-center w-10 h-10 text-center text-white;
+			font-size: 16px;
+			font-weight: 700;
+			line-height: 19px;
+			letter-spacing: 0em;
+			background: #00e131;
+
+			&.disabled {
+				display: none;
 			}
 		}
 	}

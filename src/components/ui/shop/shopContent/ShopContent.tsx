@@ -4,9 +4,9 @@ import { useProducts } from '@/hooks/useProducts'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
-import { useSearchParams } from 'next/navigation'
 import { FC, useEffect } from 'react'
 import ReactHtmlParser from 'react-html-parser'
+import SkeletonLoader from '../../SkeletonLoader'
 import styles from './ShopContent.module.scss'
 import SingleProductCard from './singleProductCard/SingleProductCard'
 import { sortData } from './sortBy.data'
@@ -15,21 +15,14 @@ import { useShopContent } from './useShopContent'
 const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 	products
 }) => {
-	const { categories, isLoading, tags } = useProducts()
-	const searchParams = useSearchParams()
-
+	const { categories, tags } = useProducts()
 	const {
-		availableTags,
+		currentPagination,
+		progressPagination,
 		handleSortBy,
-		selectCategory,
-		selectTag,
 		sortedProducts,
-		setAvailableTags,
-		setSelectCategory,
-		setSelectTag,
 		sortBy,
 		setProducts,
-		defaultProducts,
 		setSortedProducts,
 		stockStatus,
 		handleReset,
@@ -37,39 +30,23 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 		availabilityTab,
 		categiriesTab,
 		categoriesActive,
-		createQueryString,
 		setAvailabilityActive,
 		setAvailabilityTab,
 		setCategiriesTab,
-		setCategoriesActive,
-		setTagActive,
 		setTagTab,
 		tagActive,
-		tagTab
+		tagTab,
+		togglePagination,
+		handleCategories,
+		handleTags,
+		totalPagesCount,
+		loading
 	} = useShopContent()
 
 	useEffect(() => {
 		setProducts(products)
 		setSortedProducts(products)
 	}, [products, setProducts])
-
-	const handleCategories = (category: string) => {
-		console.log(category, categoriesActive)
-		if (category === categoriesActive) {
-			setCategoriesActive('')
-		} else {
-			setCategoriesActive(category)
-		}
-	}
-
-	const handleTags = (tag: string) => {
-		console.log(tag, tagActive)
-		if (tag === tagActive) {
-			setTagActive('')
-		} else {
-			setTagActive(tag)
-		}
-	}
 
 	return (
 		<section className={styles.shop}>
@@ -246,20 +223,92 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 								</button>
 							</div>
 						</div>
-						<div className={styles.content}>
-							{sortedProducts.length > 0 ? (
-								sortedProducts.map(product => {
-									if (product.status === 'private') return null
-									if (product.catalog_visibility === 'hidden') return null
+						<div className={styles.content} id='products'>
+							{loading ? (
+								<div className={styles.skeleton}>
+									{<SkeletonLoader count={12} width={300} height={300} />}
+								</div>
+							) : sortedProducts.length > 0 ? (
+								sortedProducts
+									.filter(
+										product =>
+											product.status !== 'private' &&
+											product.catalog_visibility !== 'hidden'
+									)
+									.slice(currentPagination, progressPagination)
+									.map(product => {
+										if (product.status === 'private') return null
+										if (product.catalog_visibility === 'hidden') return null
 
-									return <SingleProductCard key={product.id} {...product} />
-								})
+										return <SingleProductCard key={product.id} {...product} />
+									})
 							) : (
 								<div>No products</div>
 							)}
 						</div>
 					</div>
-					<div className={styles.bottom}></div>
+					<div className={styles.bottom}>
+						<div className={styles.pagination}>
+							<div className={styles.prev}>
+								<button
+									className={clsx(styles.prevBtn, {
+										[styles.disabled]: currentPagination === 0
+									})}
+									onClick={() => {
+										togglePagination(currentPagination / 12 - 1)
+									}}
+								>
+									<Image
+										style={{ transform: 'rotate(180deg)' }}
+										src={'/arrow.svg'}
+										alt='arrow'
+										width={15}
+										height={15}
+									/>
+								</button>
+							</div>
+							{[...Array(totalPagesCount())].map((_, index) => (
+								<button
+									className={clsx(styles.paginationBtn, {
+										[styles.activePagination]:
+											index * 12 === currentPagination ||
+											index === currentPagination
+									})}
+									onClick={() => togglePagination(index)}
+									key={index}
+								>
+									{index + 1}
+								</button>
+							))}
+							<div className={styles.next}>
+								<button
+									className={clsx(styles.nextBtn, {
+										[styles.disabled]:
+											progressPagination ===
+												sortedProducts.filter(
+													product =>
+														product.status !== 'private' &&
+														product.catalog_visibility !== 'hidden'
+												).length ||
+											progressPagination >=
+												sortedProducts.filter(
+													product =>
+														product.status !== 'private' &&
+														product.catalog_visibility !== 'hidden'
+												).length
+									})}
+									onClick={() => togglePagination(currentPagination / 12 + 1)}
+								>
+									<Image
+										src={'/arrow.svg'}
+										alt='arrow'
+										width={15}
+										height={15}
+									/>
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>

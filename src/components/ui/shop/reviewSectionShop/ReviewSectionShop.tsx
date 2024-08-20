@@ -11,6 +11,7 @@ import SlickButton from '../../button/slickButtom/SlickButton'
 import Description from '../../headings/Description'
 import SubHeading from '../../headings/SubHeading'
 import stylesReviewSection from '../../home/reviewsSection/ReviewsSection.module.scss'
+import SkeletonLoader from '../../SkeletonLoader'
 import styles from './ReviewSectionShop.module.scss'
 import ReviewShopCard from './reviewShopCard/ReviewShopCard'
 
@@ -28,11 +29,13 @@ const ReviewsSectionShop: FC<Review> = ({
 	let sliderRef = useRef<Slider | null>(null)
 
 	const goToSlide = useCallback((index: number) => {
-		console.log(index)
 		if (sliderRef.current) {
 			sliderRef.current.slickGoTo(index)
 		}
 	}, [])
+
+	if (sliderRef === null)
+		return <SkeletonLoader count={1} width={'100%'} height={300} />
 
 	return (
 		<section className={clsx(stylesReviewSection.reviews, styles.section)}>

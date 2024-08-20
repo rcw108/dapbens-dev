@@ -64,7 +64,7 @@ const ShopContent: FC<IShopContent> = ({ products, tags, categories }) => {
 	}
 
 	return (
-		<section className={styles.shop}>
+		<section className={clsx(styles.shop, { [styles.loading]: loading })}>
 			<div className='container'>
 				<div className={styles.wrapper}>
 					<div className={styles.top}>

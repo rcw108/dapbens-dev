@@ -3,6 +3,7 @@
 import FormSection from '@/components/ui/home/formSection/FormSection'
 import MarqueeLineSection from '@/components/ui/shop/marqueeLineSection/MarqueeLineSection'
 import ReviewsSectionShop from '@/components/ui/shop/reviewSectionShop/ReviewSectionShop'
+import ShopContent from '@/components/ui/shop/shopContent/ShopContent'
 import ShopHead from '@/components/ui/shop/shopHead/ShopHead'
 import { useActions } from '@/hooks/useActions'
 import { useProducts } from '@/hooks/useProducts'
@@ -59,11 +60,7 @@ const Shop: FC<IShop> = ({ data, products, categories, tags }) => {
 				title_head={data.acf.title_head}
 			/>
 			<Suspense>
-				<DynamicShopContent
-					categories={categories}
-					tags={tags}
-					products={products}
-				/>
+				<ShopContent categories={categories} tags={tags} products={products} />
 			</Suspense>
 			<MarqueeLineSection
 				marquee_line_bg={data.acf.marquee_line_bg}

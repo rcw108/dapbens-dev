@@ -15,7 +15,7 @@ import { useShopContent } from './useShopContent'
 const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 	products
 }) => {
-	const { categories, tags } = useProducts()
+	const { categories, isLoading, tags } = useProducts()
 	const {
 		currentPagination,
 		progressPagination,
@@ -40,13 +40,18 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 		handleCategories,
 		handleTags,
 		totalPagesCount,
-		loading
+		loading,
+		setLoading
 	} = useShopContent()
 
 	useEffect(() => {
+		setLoading(true)
 		setProducts(products)
 		setSortedProducts(products)
+		setLoading(false)
 	}, [products, setProducts])
+
+	if (!products.length) return <h1>loading</h1>
 
 	return (
 		<section className={styles.shop}>

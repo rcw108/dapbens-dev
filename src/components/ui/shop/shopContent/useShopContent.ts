@@ -19,7 +19,7 @@ export const useShopContent = () => {
 	const [currentPagination, setCurrentPagination] = useState(0)
 	const [progressPagination, setProgressPagination] = useState(12)
 
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(true)
 
 	const [products, setProducts] = useState<WooCommerceSingleProduct[]>([])
 	const [sortBy, setSortBy] = useState('Default Sorting')
@@ -281,6 +281,7 @@ export const useShopContent = () => {
 		togglePagination,
 		handleCategories,
 		handleTags,
-		totalPagesCount
+		totalPagesCount,
+		setLoading
 	}
 }

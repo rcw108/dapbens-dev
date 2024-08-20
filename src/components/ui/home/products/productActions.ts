@@ -1,10 +1,7 @@
 'use server'
 
-import {
-	Category,
-	Tag,
-	WooCommerceSingleProduct
-} from '@/types/wooCommerce.interface'
+import { Category, Tag } from '@/store/products/product.interface'
+import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 import { cache } from 'react'
 

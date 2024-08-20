@@ -1,21 +1,26 @@
 'use client'
 
-import { useProducts } from '@/hooks/useProducts'
+import { Category, Tag } from '@/store/products/product.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { FC, useEffect } from 'react'
-import ReactHtmlParser from 'react-html-parser'
 import SkeletonLoader from '../../SkeletonLoader'
+import FilterHeader from './filterHeader/FilterHeader'
+import FilterItem from './filterItem/FilterItem'
+import PaginationButton from './paginationButton/PaginationButton'
 import styles from './ShopContent.module.scss'
 import SingleProductCard from './singleProductCard/SingleProductCard'
 import { sortData } from './sortBy.data'
 import { useShopContent } from './useShopContent'
 
-const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
-	products
-}) => {
-	const { categories, isLoading, tags } = useProducts()
+interface IShopContent {
+	products: WooCommerceSingleProduct[]
+	categories: Category[]
+	tags: Tag[]
+}
+
+const ShopContent: FC<IShopContent> = ({ products, tags, categories }) => {
 	const {
 		currentPagination,
 		progressPagination,
@@ -51,6 +56,13 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 		setLoading(false)
 	}, [products, setProducts])
 
+	const filteredProducts = () => {
+		return sortedProducts.filter(
+			product =>
+				product.status !== 'private' && product.catalog_visibility !== 'hidden'
+		)
+	}
+
 	return (
 		<section className={styles.shop}>
 			<div className='container'>
@@ -83,18 +95,13 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 								/>
 							</div>
 							<div className={styles.availability}>
-								<div
+								<FilterHeader
+									title='Availability'
 									className={styles.availTop}
-									onClick={() => setAvailabilityTab(!availabilityTab)}
-								>
-									<h4>Availability</h4>
-									<Image
-										src='/select.svg'
-										alt='select'
-										width={18}
-										height={18}
-									/>
-								</div>
+									handler={setAvailabilityTab}
+									handlerValue={availabilityTab}
+								/>
+
 								<div
 									className={clsx(
 										styles.choice,
@@ -137,83 +144,32 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 							</div>
 
 							<div className={styles.categories}>
-								<div
+								<FilterHeader
+									title='Categories'
 									className={styles.catTop}
-									onClick={() => setCategiriesTab(!categiriesTab)}
-								>
-									<h4>Categories</h4>
-									<Image
-										src='/select.svg'
-										alt='select'
-										width={18}
-										height={18}
-									/>
-								</div>
-								<div
-									className={clsx(
-										styles.choice,
-										categiriesTab && styles.active
-									)}
-								>
-									{categories &&
-										categories.map(category => {
-											if (category.count === 0) return null
-
-											return (
-												<div
-													key={category.id}
-													onClick={() => handleCategories(category.name)}
-													className={clsx(styles.item, {
-														[styles.active]: categoriesActive === category.name
-													})}
-												>
-													<div
-														className={clsx(styles.circle, {
-															[styles.active]:
-																categoriesActive === category.name
-														})}
-													></div>
-													<h5>{ReactHtmlParser(category.name)}</h5>
-												</div>
-											)
-										})}
-								</div>
+									handler={setCategiriesTab}
+									handlerValue={categiriesTab}
+								/>
+								<FilterItem
+									itemsArray={categories}
+									handler={handleCategories}
+									active={categoriesActive}
+									tab={categiriesTab}
+								/>
 							</div>
 							<div className={styles.tags}>
-								<div
+								<FilterHeader
+									title='Tags'
 									className={styles.tagTop}
-									onClick={() => setTagTab(!tagTab)}
-								>
-									<h4>Tags</h4>
-									<Image
-										src='/select.svg'
-										alt='select'
-										width={18}
-										height={18}
-									/>
-								</div>
-								<div className={clsx(styles.choice, tagTab && styles.active)}>
-									{tags &&
-										tags.map(tag => {
-											if (tag.count === 0) return null
-											return (
-												<div
-													key={tag.id}
-													onClick={() => handleTags(tag.name)}
-													className={clsx(styles.item, {
-														[styles.active]: tagActive === tag.name
-													})}
-												>
-													<div
-														className={clsx(styles.circle, {
-															[styles.active]: tagActive === tag.name
-														})}
-													></div>
-													<h5>{ReactHtmlParser(tag.name)}</h5>
-												</div>
-											)
-										})}
-								</div>
+									handler={setTagTab}
+									handlerValue={tagTab}
+								/>
+								<FilterItem
+									itemsArray={tags}
+									handler={handleTags}
+									active={tagActive}
+									tab={tagTab}
+								/>
 							</div>
 							<div className={styles.reset}>
 								<button
@@ -232,12 +188,7 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 									{<SkeletonLoader count={12} width={300} height={300} />}
 								</div>
 							) : sortedProducts.length > 0 ? (
-								sortedProducts
-									.filter(
-										product =>
-											product.status !== 'private' &&
-											product.catalog_visibility !== 'hidden'
-									)
+								filteredProducts()
 									.slice(currentPagination, progressPagination)
 									.map(product => {
 										if (product.status === 'private') return null
@@ -252,24 +203,13 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 					</div>
 					<div className={styles.bottom}>
 						<div className={styles.pagination}>
-							<div className={styles.prev}>
-								<button
-									className={clsx(styles.prevBtn, {
-										[styles.disabled]: currentPagination === 0
-									})}
-									onClick={() => {
-										togglePagination(currentPagination / 12 - 1)
-									}}
-								>
-									<Image
-										style={{ transform: 'rotate(180deg)' }}
-										src={'/arrow.svg'}
-										alt='arrow'
-										width={15}
-										height={15}
-									/>
-								</button>
-							</div>
+							<PaginationButton
+								filteredProducts={filteredProducts}
+								progressPagination={progressPagination}
+								variant='prev'
+								currentPagination={currentPagination}
+								togglePagination={togglePagination}
+							/>
 							{[...Array(totalPagesCount())].map((_, index) => (
 								<button
 									className={clsx(styles.paginationBtn, {
@@ -283,33 +223,13 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 									{index + 1}
 								</button>
 							))}
-							<div className={styles.next}>
-								<button
-									className={clsx(styles.nextBtn, {
-										[styles.disabled]:
-											progressPagination ===
-												sortedProducts.filter(
-													product =>
-														product.status !== 'private' &&
-														product.catalog_visibility !== 'hidden'
-												).length ||
-											progressPagination >=
-												sortedProducts.filter(
-													product =>
-														product.status !== 'private' &&
-														product.catalog_visibility !== 'hidden'
-												).length
-									})}
-									onClick={() => togglePagination(currentPagination / 12 + 1)}
-								>
-									<Image
-										src={'/arrow.svg'}
-										alt='arrow'
-										width={15}
-										height={15}
-									/>
-								</button>
-							</div>
+							<PaginationButton
+								filteredProducts={filteredProducts}
+								progressPagination={progressPagination}
+								variant='next'
+								currentPagination={currentPagination}
+								togglePagination={togglePagination}
+							/>
 						</div>
 					</div>
 				</div>

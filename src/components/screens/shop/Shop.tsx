@@ -6,12 +6,9 @@ import ReviewsSectionShop from '@/components/ui/shop/reviewSectionShop/ReviewSec
 import ShopHead from '@/components/ui/shop/shopHead/ShopHead'
 import { useActions } from '@/hooks/useActions'
 import { useProducts } from '@/hooks/useProducts'
+import { Category, Tag } from '@/store/products/product.interface'
 import { IShopPage } from '@/types/shopPage.interface'
-import {
-	Category,
-	Tag,
-	WooCommerceSingleProduct
-} from '@/types/wooCommerce.interface'
+import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import dynamic from 'next/dynamic'
 import { FC, Suspense, useEffect } from 'react'
 
@@ -62,7 +59,11 @@ const Shop: FC<IShop> = ({ data, products, categories, tags }) => {
 				title_head={data.acf.title_head}
 			/>
 			<Suspense>
-				<DynamicShopContent products={products} />
+				<DynamicShopContent
+					categories={categories}
+					tags={tags}
+					products={products}
+				/>
 			</Suspense>
 			<MarqueeLineSection
 				marquee_line_bg={data.acf.marquee_line_bg}

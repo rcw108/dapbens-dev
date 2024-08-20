@@ -12,6 +12,7 @@ import { IShopPage } from '@/types/shopPage.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import dynamic from 'next/dynamic'
 import { FC, Suspense, useEffect } from 'react'
+import styles from './Shop.module.scss'
 
 const DynamicShopContent = dynamic(
 	() => import('@/components/ui/shop/shopContent/ShopContent'),
@@ -59,9 +60,15 @@ const Shop: FC<IShop> = ({ data, products, categories, tags }) => {
 				rate_stars_description={data.acf.rate_stars_description}
 				title_head={data.acf.title_head}
 			/>
-			<Suspense>
-				<ShopContent categories={categories} tags={tags} products={products} />
-			</Suspense>
+			<div className={styles.shop}>
+				<Suspense>
+					<ShopContent
+						categories={categories}
+						tags={tags}
+						products={products}
+					/>
+				</Suspense>
+			</div>
 			<MarqueeLineSection
 				marquee_line_bg={data.acf.marquee_line_bg}
 				marquee_line_repeater={data.acf.marquee_line_repeater}

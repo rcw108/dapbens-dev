@@ -51,8 +51,6 @@ const ShopContent: FC<{ products: WooCommerceSingleProduct[] }> = ({
 		setLoading(false)
 	}, [products, setProducts])
 
-	if (!products.length) return <h1>loading</h1>
-
 	return (
 		<section className={styles.shop}>
 			<div className='container'>

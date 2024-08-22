@@ -114,7 +114,13 @@ const Cart: FC = () => {
 					</>
 				) : (
 					<div className={styles.emptyCart}>
-						{/* <Image /> */}
+						<Image
+							className='inline mb-5 text-center ml-[-15px]'
+							src='/empty-cart.svg'
+							alt='empty cart'
+							width={70}
+							height={70}
+						/>
 						<h4>No products in the cart.</h4>
 					</div>
 				)}

@@ -5,7 +5,7 @@ import {
 	setPopularCategories
 } from './products/product.slice'
 
-import { addToCart, toggleCartProduct } from './cart/cart.slice'
+import { addCartArray, addToCart, toggleCartProduct } from './cart/cart.slice'
 
 export const allActions = {
 	pushAllProducts,
@@ -13,5 +13,6 @@ export const allActions = {
 	pushTags,
 	pushCategories,
 	toggleCartProduct,
-	addToCart
+	addToCart,
+	addCartArray
 }

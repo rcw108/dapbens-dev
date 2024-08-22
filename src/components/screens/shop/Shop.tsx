@@ -7,6 +7,7 @@ import ShopContent from '@/components/ui/shop/shopContent/ShopContent'
 import ShopHead from '@/components/ui/shop/shopHead/ShopHead'
 import { useActions } from '@/hooks/useActions'
 import { useProducts } from '@/hooks/useProducts'
+import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { Category, Tag } from '@/store/products/product.interface'
 import { IShopPage } from '@/types/shopPage.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
@@ -32,6 +33,8 @@ const Shop: FC<IShop> = ({ data, products, categories, tags }) => {
 		if (allProducts) return
 		pushAllProducts(products)
 	}, [])
+
+	usePushCookieUserCart()
 
 	useEffect(() => {
 		if (allCategories) return

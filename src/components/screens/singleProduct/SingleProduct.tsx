@@ -1,16 +1,27 @@
 'use client'
 
 import { useActions } from '@/hooks/useActions'
-import { useCart } from '@/hooks/useCart'
+import { useProducts } from '@/hooks/useProducts'
+import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import Image from 'next/image'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import styles from './SingleProduct.module.scss'
 
-const SingleProduct: FC<{ data: WooCommerceSingleProduct }> = ({ data }) => {
-	const { addToCart } = useActions()
-	const { userCart } = useCart()
+const SingleProduct: FC<{
+	data: WooCommerceSingleProduct
+	allProducts: WooCommerceSingleProduct[]
+}> = ({ data, allProducts }) => {
+	const { addToCart, pushAllProducts, addCartArray } = useActions()
+	const { products } = useProducts()
+
+	useEffect(() => {
+		if (products) return
+		pushAllProducts(allProducts)
+	}, [])
+
+	usePushCookieUserCart()
 
 	const [count, setCount] = useState(1)
 

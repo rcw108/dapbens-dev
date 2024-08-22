@@ -13,6 +13,7 @@ import SaveSection from '@/components/ui/home/saveSection/SaveSection'
 import Steps from '@/components/ui/home/steps/Steps'
 import { useActions } from '@/hooks/useActions'
 import { useProducts } from '@/hooks/useProducts'
+import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { IHome } from '@/types/homepage.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import { FC, useEffect } from 'react'
@@ -29,6 +30,8 @@ const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
 		if (allProducts) return
 		pushAllProducts(products)
 	}, [])
+
+	usePushCookieUserCart()
 
 	return (
 		<main className={styles.home}>

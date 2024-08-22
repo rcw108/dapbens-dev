@@ -4,6 +4,13 @@
 }
 
 .cart {
+	font-size: 12px;
+	line-height: 22px;
+	font-family: 'Alexandria', sans-serif;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	width: 28px;
 	height: 28px;
 	padding: 5px;
@@ -29,4 +36,9 @@
 		transition: all 0.2s;
 		pointer-events: none;
 	}
+}
+
+.main {
+	position: relative;
+	overflow: hidden;
 }

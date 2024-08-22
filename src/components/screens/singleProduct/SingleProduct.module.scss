@@ -1,0 +1,29 @@
+.single {
+	@apply flex justify-center flex-col items-center;
+	.btn {
+		border-radius: 14px 14px 14px 14px;
+		padding: 16px 60px 13px 60px;
+		font-size: 26px;
+		line-height: 1;
+		font-weight: 600;
+		margin-top: 33px;
+		display: inline-block;
+		transition: all 0.3s ease-in-out;
+		@apply uppercase text-text-white
+			bg-orange-color font-sofia-sans;
+		&:hover {
+			@apply bg-white text-orange-color;
+		}
+	}
+
+	.countInput {
+		margin-top: 20px;
+		width: 100px;
+		height: 35px;
+		padding: 0 10px;
+		border-radius: 5px;
+		border: 1px solid #ccc;
+		color: #000;
+		@apply font-oswald font-bold;
+	}
+}

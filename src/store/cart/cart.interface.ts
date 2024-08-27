@@ -25,6 +25,8 @@ export interface VariableItem {
 export interface ItemListCount {
 	id: number
 	count: number
+	price: string
+	name: string
 	type: 'simple' | 'variable' | 'bundle'
 	paymentType: 'one-time' | 'subscription'
 	subscriptionPeriod?: string

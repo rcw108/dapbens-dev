@@ -1,45 +1,39 @@
 import { useActions } from '@/hooks/useActions'
-import { useCart } from '@/hooks/useCart'
-import {
-	ItemListCount,
-	UserSingleProductCartWithCount
-} from '@/store/cart/cart.interface'
+import { ItemListCount } from '@/store/cart/cart.interface'
 import Image from 'next/image'
 import { FC } from 'react'
 import styles from './SingleCartItem.module.scss'
 const SingleCartItem: FC<{
-	product: UserSingleProductCartWithCount
-	listItemData: ItemListCount[]
-}> = ({ product, listItemData }) => {
+	// product: UserSingleProductCartWithCount
+	listItemData: ItemListCount
+}> = ({ listItemData }) => {
 	const { toggleCartProduct } = useActions()
 
-	const { itemListCount } = useCart()
-
-	const period = itemListCount.find(item => item.id === product.id)
-
-	const itemCount =
-		itemListCount.find(item => item.id === product.id)?.count || 0
+	const itemCount = listItemData.count
 
 	return (
 		<div className={styles.item}>
-			<div className={styles.remove} onClick={() => toggleCartProduct(product)}>
+			<div
+				className={styles.remove}
+				onClick={() => toggleCartProduct(listItemData)}
+			>
 				<Image src='/trash.svg' alt='remove' width={14} height={14} />
 			</div>
 			<div className={styles.info}>
 				<div className={styles.top}>
-					<h6>{product.name}</h6>
+					<h6>{listItemData.name}</h6>
 				</div>
 				<div className={styles.bottom}>
-					{period &&
-						(period.paymentType === 'subscription'
-							? `${itemCount} × ${period.subscriptionPrice} ${period.subscriptionPeriod}`
-							: `${itemCount} × ${product.price}`)}
+					{listItemData &&
+						(listItemData.paymentType === 'subscription'
+							? `${itemCount} × ${listItemData.subscriptionPrice} ${listItemData.subscriptionPeriod}`
+							: `${itemCount} × ${listItemData.price}`)}
 				</div>
 			</div>
 			<div className={styles.image}>
 				<Image
-					src={period?.itemImage || product.images[0].src}
-					alt={product.name}
+					src={listItemData.itemImage}
+					alt={listItemData.name}
 					width={55}
 					height={55}
 				/>

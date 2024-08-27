@@ -15,30 +15,22 @@ const Cart: FC = () => {
 	const { userCart, itemListCount } = useCart()
 
 	useEffect(() => {
-		if (userCart) {
-			setCartCount(userCart.length)
+		if (itemListCount) {
+			setCartCount(itemListCount.length)
 		}
-	}, [userCart])
+	}, [itemListCount])
 
 	const totalPrice = (): number => {
 		let total: number = 0
-		userCart.forEach(item => {
-			const itemId = item.id
-			itemListCount.forEach(listItem => {
-				if (listItem.id === itemId) {
-					if (
-						listItem.paymentType === 'subscription' &&
-						listItem.subscriptionPrice
-					) {
-						total += listItem.count * +listItem.subscriptionPrice
-					}
-				} else if (
-					listItem.id === itemId &&
-					listItem.paymentType === 'one-time'
-				) {
-					total += listItem.count * +item.price
-				}
-			})
+		itemListCount.forEach(listItem => {
+			if (
+				listItem.paymentType === 'subscription' &&
+				listItem.subscriptionPrice
+			) {
+				total += listItem.count * +listItem.subscriptionPrice
+			} else if (listItem.id && listItem.paymentType === 'one-time') {
+				total += listItem.count * +listItem.price
+			}
 		})
 		return +total.toFixed(2)
 	}
@@ -68,7 +60,7 @@ const Cart: FC = () => {
 						<Image src='/close.svg' alt='close cart' width={26} height={26} />
 					</div>
 				</div>
-				{userCart.length > 0 ? (
+				{itemListCount.length > 0 ? (
 					<>
 						<div className={styles.progress}>
 							<div className={styles.progressLine}>
@@ -105,12 +97,8 @@ const Cart: FC = () => {
 
 						<div className={styles.store}>
 							<div className={styles.topDivider}></div>
-							{userCart.map(product => (
-								<SingleCartItem
-									key={product.id}
-									product={product}
-									listItemData={itemListCount}
-								/>
+							{itemListCount.map(product => (
+								<SingleCartItem listItemData={product} key={product.id} />
 							))}
 							<div className={styles.beforeGo}></div>
 						</div>

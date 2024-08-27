@@ -38,8 +38,9 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 					: 'every 2 weeks'
 		if (paymentType === 'subscription') {
 			addToCart({
-				product,
+				name: product.name,
 				count,
+				price: product.sale_price,
 				type: 'simple',
 				paymentType,
 				subscriptionPeriod: period,
@@ -53,8 +54,9 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 			})
 		} else {
 			addToCart({
-				product,
+				name: product.name,
 				id: product.id,
+				price: product.sale_price,
 				count,
 				type: 'simple',
 				paymentType,

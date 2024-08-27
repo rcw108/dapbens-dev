@@ -6,23 +6,23 @@ import { useProducts } from '@/hooks/useProducts'
 import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import Image from 'next/image'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import styles from './SingleProduct.module.scss'
 
 const SingleProduct: FC<{
 	data: WooCommerceSingleProduct
-	allProducts: WooCommerceSingleProduct[]
-}> = ({ data, allProducts }) => {
+	// allProducts: WooCommerceSingleProduct[]
+}> = ({ data }) => {
 	const { addToCart, pushAllProducts, addCartArray } = useActions()
 	const { products } = useProducts()
 	const { setOpenCart } = useCartMenu()
 
-	useEffect(() => {
-		if (products) return
-		localStorage.setItem('products', JSON.stringify(allProducts))
-		pushAllProducts(allProducts)
-	}, [])
+	// useEffect(() => {
+	// 	if (products) return
+	// 	localStorage.setItem('products', JSON.stringify(allProducts))
+	// 	pushAllProducts(allProducts)
+	// }, [])
 
 	usePushCookieUserCart()
 

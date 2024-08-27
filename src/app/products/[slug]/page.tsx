@@ -1,9 +1,6 @@
 import SimpleSinglePage from '@/components/screens/singleProduct/SimpleSingle'
 import SingleProduct from '@/components/screens/singleProduct/SingleProduct'
-import {
-	getAllProducts,
-	getSingleProductBySlug
-} from '@/components/ui/home/products/productActions'
+import { getSingleProductBySlug } from '@/components/ui/home/products/productActions'
 import { simpleSingleProductUrl } from '@/configs/product.config'
 import { SimpleSingle } from '@/types/singleTemplates/simpleSingle.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
@@ -14,7 +11,7 @@ export const revalidate = 1800
 const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 	params
 }) => {
-	const { products } = await getAllProducts()
+	// const { products } = await getAllProducts()
 
 	const product: WooCommerceSingleProduct = await getSingleProductBySlug(
 		params.slug
@@ -27,7 +24,7 @@ const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 
 		return (
 			<SimpleSinglePage
-				allProducts={products}
+				// allProducts={products}
 				template={pageTemplate}
 				data={product}
 			/>
@@ -38,7 +35,12 @@ const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 		return <div>Product not found</div>
 	}
 
-	return <SingleProduct allProducts={products} data={product} />
+	return (
+		<SingleProduct
+			//  allProducts={products}
+			data={product}
+		/>
+	)
 }
 
 export default SingleProductPage

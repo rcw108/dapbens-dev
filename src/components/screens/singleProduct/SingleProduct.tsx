@@ -20,6 +20,7 @@ const SingleProduct: FC<{
 
 	useEffect(() => {
 		if (products) return
+		localStorage.setItem('products', JSON.stringify(allProducts))
 		pushAllProducts(allProducts)
 	}, [])
 

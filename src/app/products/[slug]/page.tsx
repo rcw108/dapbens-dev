@@ -27,9 +27,9 @@ const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 
 		return (
 			<SimpleSinglePage
+				allProducts={products}
 				template={pageTemplate}
 				data={product}
-				allProducts={products}
 			/>
 		)
 	}

@@ -16,7 +16,6 @@ const SingleCartItem: FC<{
 	const { itemListCount } = useCart()
 
 	const period = itemListCount.find(item => item.id === product.id)
-	console.log(period)
 
 	const itemCount =
 		itemListCount.find(item => item.id === product.id)?.count || 0
@@ -39,7 +38,7 @@ const SingleCartItem: FC<{
 			</div>
 			<div className={styles.image}>
 				<Image
-					src={product.images[0].src}
+					src={period?.itemImage || product.images[0].src}
 					alt={product.name}
 					width={55}
 					height={55}

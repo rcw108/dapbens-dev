@@ -1,9 +1,10 @@
 import { getCookieDataCart, saveCartToCookie } from '@/utils/cookie.hepler'
+import { getStoreLocal } from '@/utils/getStoreLocal'
 import { createSlice } from '@reduxjs/toolkit'
 import { InitialState, UserSingleProductCartWithCount } from './cart.interface'
 
 const initialState: InitialState = {
-	userCart: [],
+	userCart: getStoreLocal('userCart') || [],
 	itemListCount: getCookieDataCart('cartCountList')
 }
 
@@ -40,7 +41,8 @@ export const cartSlice = createSlice({
 					subscriptionPeriod: payload.subscriptionPeriod,
 					subscriptionPrice: payload.subscriptionPrice,
 					variableItems: payload.variableItems,
-					bundleItems: payload.bundleItems
+					bundleItems: payload.bundleItems,
+					itemImage: payload.images[0].src
 				})
 				saveCartToCookie(state.itemListCount)
 			}
@@ -65,7 +67,8 @@ export const cartSlice = createSlice({
 					bundleItems: payload.bundleItems,
 					variableItems: payload.variableItems,
 					subscriptionPeriod: payload.subscriptionPeriod,
-					subscriptionPrice: payload.subscriptionPrice
+					subscriptionPrice: payload.subscriptionPrice,
+					itemImage: payload.product.images[0].src
 				})
 				saveCartToCookie(state.itemListCount)
 			}

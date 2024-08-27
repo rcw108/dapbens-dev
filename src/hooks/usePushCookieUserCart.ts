@@ -8,6 +8,7 @@ export const usePushCookieUserCart = () => {
 	const { userCart, itemListCount } = useCart()
 	const { products } = useProducts()
 	useEffect(() => {
+		localStorage.setItem('userCart', JSON.stringify(userCart))
 		if (products) {
 			if (itemListCount) {
 				const productsList = products.filter(product =>

@@ -31,6 +31,7 @@ export interface ItemListCount {
 	subscriptionPrice?: number
 	variableItems?: VariableItem
 	bundleItems?: BundleItem[]
+	itemImage: string
 }
 
 export interface InitialState {

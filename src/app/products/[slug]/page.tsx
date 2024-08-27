@@ -1,8 +1,11 @@
+import SimpleSinglePage from '@/components/screens/singleProduct/SimpleSingle'
 import SingleProduct from '@/components/screens/singleProduct/SingleProduct'
 import {
 	getAllProducts,
 	getSingleProductBySlug
 } from '@/components/ui/home/products/productActions'
+import { simpleSingleProductUrl } from '@/configs/product.config'
+import { SimpleSingle } from '@/types/singleTemplates/simpleSingle.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import { FC } from 'react'
 
@@ -16,6 +19,20 @@ const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 	const product: WooCommerceSingleProduct = await getSingleProductBySlug(
 		params.slug
 	)
+
+	if (product.type === 'simple') {
+		const pageTemplate: SimpleSingle = await fetch(simpleSingleProductUrl).then(
+			res => res.json()
+		)
+
+		return (
+			<SimpleSinglePage
+				template={pageTemplate}
+				data={product}
+				allProducts={products}
+			/>
+		)
+	}
 
 	if (!product) {
 		return <div>Product not found</div>

@@ -32,21 +32,41 @@ export const cartSlice = createSlice({
 				saveCartToCookie(state.itemListCount)
 			} else {
 				state.userCart.push(payload)
-				state.itemListCount.push({ id: payload.id, count: payload.count })
+				state.itemListCount.push({
+					id: payload.id,
+					count: payload.count,
+					paymentType: payload.paymentType,
+					type: payload.type,
+					subscriptionPeriod: payload.subscriptionPeriod,
+					subscriptionPrice: payload.subscriptionPrice,
+					variableItems: payload.variableItems,
+					bundleItems: payload.bundleItems
+				})
 				saveCartToCookie(state.itemListCount)
 			}
 			saveCartToCookie(state.itemListCount)
 		},
 
 		addToCart: (state, { payload }) => {
-			const findCart = state.userCart.find(product => product.id === payload.id)
+			const findCart = state.userCart.find(
+				product => product.id === payload.product.id
+			)
 			const itemListCart = state.itemListCount.find(
-				item => item.id === payload.id
+				item => item.id === payload.product.id
 			)
 
 			if (!itemListCart && !findCart) {
-				state.userCart.push(payload)
-				state.itemListCount.push({ id: payload.id, count: payload.count })
+				state.userCart.push(payload.product)
+				state.itemListCount.push({
+					id: payload.product.id,
+					count: payload.count,
+					paymentType: payload.paymentType,
+					type: payload.type,
+					bundleItems: payload.bundleItems,
+					variableItems: payload.variableItems,
+					subscriptionPeriod: payload.subscriptionPeriod,
+					subscriptionPrice: payload.subscriptionPrice
+				})
 				saveCartToCookie(state.itemListCount)
 			}
 

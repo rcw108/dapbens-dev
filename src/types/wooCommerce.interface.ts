@@ -33,7 +33,93 @@ export interface Meta {
 	value: string | string[] | number[]
 }
 
-export interface WooCommerceSingleProduct {
+export interface BundledItem {
+	bundled_item_id: number
+	product_id: number
+	menu_order: number
+	quantity_min: number
+	quantity_max: string
+	quantity_default: number
+	priced_individually: boolean
+	shipped_individually: boolean
+	override_title: boolean
+	title: string
+	override_description: boolean
+	description: string
+	optional: boolean
+	hide_thumbnail: boolean
+	discount: string
+	override_variations: boolean
+	// allowed_variations: []
+	override_default_variation_attributes: boolean
+	// default_variation_attributes: []
+	single_product_visibility: string
+	cart_visibility: string
+	order_visibility: string
+	single_product_price_visibility: string
+	cart_price_visibility: string
+	order_price_visibility: string
+	stock_status: 'in_stock' | 'out_of_stock'
+}
+
+export interface BundleInterface {
+	bundled_by: string[]
+	bundle_stock_status: string
+	bundle_stock_quantity: number
+	bundle_virtual: boolean
+	bundle_layout: string
+	bundle_add_to_cart_form_location: string
+	bundle_editable_in_cart: boolean
+	bundle_sold_individually_context: string
+	bundle_item_grouping: string
+	bundle_min_size: number
+	bundle_max_size: number
+	bundle_price: {
+		price: {
+			min: {
+				incl_tax: string
+				excl_tax: string
+			}
+			max: {
+				incl_tax: string
+				excl_tax: string
+			}
+		}
+		regular_price: {
+			min: {
+				incl_tax: string
+				excl_tax: string
+			}
+			max: {
+				incl_tax: string
+				excl_tax: string
+			}
+		}
+	}
+	bundled_items: BundledItem[]
+}
+
+export interface SingleProductACF {
+	rate_image: string
+	rate_text: string
+	title_de: string
+	text_de: string
+	title_subs: string
+	text_subs: string
+	title_ad: string
+	text_ad: string
+	title_sp: string
+	text_sp: string
+	star_image: string
+	author: string
+	review_text: string
+	info_repeater: {
+		title: string
+		text: string
+	}[]
+}
+
+export interface WooCommerceSingleProduct extends BundleInterface {
 	id: number
 	name: string
 	slug: string
@@ -95,4 +181,5 @@ export interface WooCommerceSingleProduct {
 	stock_status: string
 	has_options: boolean
 	post_password: string
+	acf: SingleProductACF
 }

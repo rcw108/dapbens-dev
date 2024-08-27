@@ -218,7 +218,6 @@ export const useShopContent = () => {
 	}
 
 	const handleCategories = (category: string) => {
-		console.log(category, categoriesActive)
 		if (category === categoriesActive) {
 			setCategoriesActive('')
 		} else {
@@ -227,7 +226,6 @@ export const useShopContent = () => {
 	}
 
 	const handleTags = (tag: string) => {
-		console.log(tag, tagActive)
 		if (tag === tagActive) {
 			setTagActive('')
 		} else {

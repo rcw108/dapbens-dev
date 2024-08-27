@@ -3,12 +3,37 @@ import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 export interface UserSingleProductCartWithCount
 	extends WooCommerceSingleProduct {
 	count: number
+	type: 'simple' | 'variable' | 'bundle'
+	paymentType: 'one-time' | 'subscription'
+	subscriptionPeriod?: string
+	subscriptionPrice?: number
+	variableItems?: VariableItem
+	bundleItems?: BundleItem[]
+}
+
+export interface BundleItem {
+	id: number
+	count: number
+	name: string
+}
+
+export interface VariableItem {
+	id: number
+	name: string
+}
+
+export interface ItemListCount {
+	id: number
+	count: number
+	type: 'simple' | 'variable' | 'bundle'
+	paymentType: 'one-time' | 'subscription'
+	subscriptionPeriod?: string
+	subscriptionPrice?: number
+	variableItems?: VariableItem
+	bundleItems?: BundleItem[]
 }
 
 export interface InitialState {
 	userCart: UserSingleProductCartWithCount[]
-	itemListCount: {
-		id: number
-		count: number
-	}[]
+	itemListCount: ItemListCount[]
 }

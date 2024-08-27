@@ -1,31 +1,46 @@
 import { useActions } from '@/hooks/useActions'
 import { useCart } from '@/hooks/useCart'
-import { UserSingleProductCartWithCount } from '@/store/cart/cart.interface'
+import {
+	ItemListCount,
+	UserSingleProductCartWithCount
+} from '@/store/cart/cart.interface'
 import Image from 'next/image'
 import { FC } from 'react'
 import styles from './SingleCartItem.module.scss'
-const SingleCartItem: FC<UserSingleProductCartWithCount> = props => {
+const SingleCartItem: FC<{
+	product: UserSingleProductCartWithCount
+	listItemData: ItemListCount[]
+}> = ({ product, listItemData }) => {
 	const { toggleCartProduct } = useActions()
 
 	const { itemListCount } = useCart()
 
-	const itemCount = itemListCount.find(item => item.id === props.id)?.count || 0
+	const period = itemListCount.find(item => item.id === product.id)
+	console.log(period)
+
+	const itemCount =
+		itemListCount.find(item => item.id === product.id)?.count || 0
 
 	return (
 		<div className={styles.item}>
-			<div className={styles.remove} onClick={() => toggleCartProduct(props)}>
+			<div className={styles.remove} onClick={() => toggleCartProduct(product)}>
 				<Image src='/trash.svg' alt='remove' width={14} height={14} />
 			</div>
 			<div className={styles.info}>
 				<div className={styles.top}>
-					<h6>{props.name}</h6>
+					<h6>{product.name}</h6>
 				</div>
-				<div className={styles.bottom}>{`${itemCount} × ${props.price}`}</div>
+				<div className={styles.bottom}>
+					{period &&
+						(period.paymentType === 'subscription'
+							? `${itemCount} × ${period.subscriptionPrice} ${period.subscriptionPeriod}`
+							: `${itemCount} × ${product.price}`)}
+				</div>
 			</div>
 			<div className={styles.image}>
 				<Image
-					src={props.images[0].src}
-					alt={props.name}
+					src={product.images[0].src}
+					alt={product.name}
 					width={55}
 					height={55}
 				/>

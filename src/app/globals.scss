@@ -146,3 +146,100 @@ ul.swiper-pagination-bullet li {
 	position: relative !important;
 	bottom: auto !important;
 }
+
+.productCard {
+	.swiper-slide {
+		max-height: 637px;
+		figure {
+			img {
+				min-width: 611px;
+				object-fit: cover;
+			}
+		}
+	}
+}
+
+.productFirstSlider {
+	position: inherit !important;
+	margin-bottom: 20px;
+	.swiper-slide {
+		max-height: 637px;
+		max-width: 637px;
+		img {
+			object-fit: cover;
+		}
+	}
+
+	.swiper-button-next,
+	.swiper-button-prev {
+		opacity: 1 !important;
+		width: 45px;
+		height: 45px;
+		border-radius: 50%;
+		background: #00e131;
+		font-size: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		right: -20px;
+		top: 40%;
+		z-index: 333;
+		&::after {
+			all: unset;
+			position: absolute;
+			content: '';
+			border-radius: 50%;
+			width: 45px;
+			height: 45px;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			z-index: -1;
+			border: 10px solid #161617;
+		}
+		&::before {
+			position: absolute;
+			content: url('/select.svg');
+			transform: rotate(-90deg) translate(-50%, -50%) scale(1.3);
+			top: 22%;
+			left: 50%;
+			width: 15px;
+			height: 15px;
+			z-index: 2;
+		}
+	}
+
+	.swiper-button-prev {
+		left: -20px;
+		right: auto;
+		&::before {
+			transform: rotate(90deg) translate(-50%, -50%) scale(1.3);
+			left: 20%;
+			top: 50%;
+		}
+	}
+}
+
+.thumb {
+	.swiper-wrapper {
+		justify-content: center;
+	}
+	.swiper-slide {
+		opacity: 0.5;
+		cursor: pointer;
+		transition: all 0.25s ease-in-out;
+		img {
+			width: 120px;
+			height: 120px;
+			padding: 10px;
+			border-radius: 15px;
+			border: 1px solid #fff;
+		}
+		&:hover {
+			opacity: 1;
+		}
+	}
+	.swiper-slide-thumb-active {
+		opacity: 1;
+	}
+}

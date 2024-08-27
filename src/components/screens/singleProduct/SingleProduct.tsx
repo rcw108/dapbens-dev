@@ -1,6 +1,7 @@
 'use client'
 
 import { useActions } from '@/hooks/useActions'
+import { useCartMenu } from '@/hooks/useCartMenu'
 import { useProducts } from '@/hooks/useProducts'
 import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
@@ -15,6 +16,7 @@ const SingleProduct: FC<{
 }> = ({ data, allProducts }) => {
 	const { addToCart, pushAllProducts, addCartArray } = useActions()
 	const { products } = useProducts()
+	const { setOpenCart } = useCartMenu()
 
 	useEffect(() => {
 		if (products) return
@@ -27,6 +29,7 @@ const SingleProduct: FC<{
 
 	const handleClick = (count: number = 1) => {
 		addToCart({ ...data, count })
+		setOpenCart(true)
 	}
 
 	return (

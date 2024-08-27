@@ -1,5 +1,6 @@
 import SmallHeading from '@/components/ui/headings/SmallHeading'
 import { useCart } from '@/hooks/useCart'
+import { useCartMenu } from '@/hooks/useCartMenu'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { FC, useEffect, useState } from 'react'
@@ -9,7 +10,7 @@ import SingleCartItem from './singleCartItem/SingleCartItem'
 
 const Cart: FC = () => {
 	const [cartCount, setCartCount] = useState(0)
-	const [openCart, setOpenCart] = useState(false)
+	const { openCart, setOpenCart } = useCartMenu()
 
 	const { userCart, itemListCount } = useCart()
 
@@ -25,6 +26,16 @@ const Cart: FC = () => {
 			const itemId = item.id
 			itemListCount.forEach(listItem => {
 				if (listItem.id === itemId) {
+					if (
+						listItem.paymentType === 'subscription' &&
+						listItem.subscriptionPrice
+					) {
+						total += listItem.count * +listItem.subscriptionPrice
+					}
+				} else if (
+					listItem.id === itemId &&
+					listItem.paymentType === 'one-time'
+				) {
 					total += listItem.count * +item.price
 				}
 			})
@@ -32,15 +43,19 @@ const Cart: FC = () => {
 		return +total.toFixed(2)
 	}
 
-	const totalCart: number = itemListCount.reduce(
-		(acc, curr) => acc + curr.count,
-		0
-	)
+	useEffect(() => {
+		const totalCart: number = itemListCount.reduce(
+			(acc, curr) => acc + curr.count,
+			0
+		)
+
+		setCartCount(totalCart)
+	}, [itemListCount])
 
 	return (
 		<>
 			<div className={stylesHeader.cart} onClick={() => setOpenCart(!openCart)}>
-				{totalCart > 9 ? '9+' : totalCart}
+				{cartCount > 9 ? '9+' : cartCount}
 			</div>
 			<div
 				className={clsx(styles.background, { [styles.openBg]: openCart })}
@@ -91,7 +106,11 @@ const Cart: FC = () => {
 						<div className={styles.store}>
 							<div className={styles.topDivider}></div>
 							{userCart.map(product => (
-								<SingleCartItem key={product.id} {...product} />
+								<SingleCartItem
+									key={product.id}
+									product={product}
+									listItemData={itemListCount}
+								/>
 							))}
 							<div className={styles.beforeGo}></div>
 						</div>

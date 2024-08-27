@@ -37,8 +37,6 @@ export const useFormSection = () => {
 
 		// const currentDate = new Date().toISOString().split('T')[0]
 
-		console.log(JSON.stringify(data.data))
-
 		const response = await axios.post(homePageForm, JSON.stringify(data), {
 			headers: {
 				'Content-Type': 'application/json',

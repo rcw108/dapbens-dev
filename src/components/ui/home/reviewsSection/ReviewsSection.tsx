@@ -18,7 +18,6 @@ const ReviewsSection: FC<Review> = ({ reviews_r, text_r, title_r }) => {
 	let sliderRef = useRef<Slider | null>(null)
 
 	const goToSlide = useCallback((index: number) => {
-		console.log(index)
 		if (sliderRef.current) {
 			sliderRef.current.slickGoTo(index)
 		}

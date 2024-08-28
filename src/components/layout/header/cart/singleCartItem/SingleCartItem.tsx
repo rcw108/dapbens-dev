@@ -21,7 +21,11 @@ const SingleCartItem: FC<{
 			</div>
 			<div className={styles.info}>
 				<div className={styles.top}>
-					<h6>{listItemData.name}</h6>
+					<h6>
+						{listItemData.type === 'variable'
+							? `${listItemData.name} - ${listItemData.variableItems?.name}`
+							: listItemData.name}
+					</h6>
 				</div>
 				<div className={styles.bottom}>
 					{listItemData &&

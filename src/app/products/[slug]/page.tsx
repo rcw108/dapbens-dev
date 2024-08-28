@@ -1,5 +1,6 @@
 import SimpleSinglePage from '@/components/screens/singleProduct/SimpleSingle'
 import SingleProduct from '@/components/screens/singleProduct/SingleProduct'
+import VariableSinglePage from '@/components/screens/singleProduct/VariableSingle'
 import { getSingleProductBySlug } from '@/components/ui/home/products/productActions'
 import { simpleSingleProductUrl } from '@/configs/product.config'
 import { SimpleSingle } from '@/types/singleTemplates/simpleSingle.interface'
@@ -22,13 +23,15 @@ const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 			res => res.json()
 		)
 
-		return (
-			<SimpleSinglePage
-				// allProducts={products}
-				template={pageTemplate}
-				data={product}
-			/>
+		return <SimpleSinglePage template={pageTemplate} data={product} />
+	}
+
+	if (product.type === 'variable') {
+		const pageTemplate: SimpleSingle = await fetch(simpleSingleProductUrl).then(
+			res => res.json()
 		)
+
+		return <VariableSinglePage template={pageTemplate} data={product} />
 	}
 
 	if (!product) {

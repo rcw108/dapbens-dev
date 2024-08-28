@@ -12,11 +12,14 @@ import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css'
 import SmallHeading from '../../headings/SmallHeading'
 import ReviewShopCard from '../../shop/reviewSectionShop/reviewShopCard/ReviewShopCard'
 import ProductSlider from '../productSlider/ProductSlider'
-import styles from './SimpleCard.module.scss'
-import Deliver from './deliver/Deliver'
-import ProductInfo from './productInfo/ProductInfo'
+import Deliver from '../simpleCard/deliver/Deliver'
+import ProductInfo from '../simpleCard/productInfo/ProductInfo'
+import styles from '../simpleCard/SimpleCard.module.scss'
+import stylesVar from './VariableCard.module.scss'
 
-const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
+const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
+	product
+}) => {
 	const [paymentType, setPaymentType] = useState<'one-time' | 'subscription'>(
 		'one-time'
 	)
@@ -25,11 +28,25 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 
 	const [deliver, setDeliver] = useState<false | '15%' | '20%' | '25%'>(false)
 
+	const [variant, setVariant] = useState<string>(
+		product.attributes[0].options[0]
+	)
+
 	const saveCount = () => +product.regular_price - +product.sale_price
 
 	const { addToCart } = useActions()
 
-	const handleClickSimple = () => {
+	const indexedVariables = () => {
+		const result: { name: string; id: number }[] = []
+
+		product.attributes[0].options.forEach((option, index) => {
+			result.push({ name: option, id: product.variations[index] })
+		})
+
+		return result
+	}
+
+	const handleClickVariable = () => {
 		const period =
 			deliver === '15%'
 				? 'every 2 month'
@@ -41,7 +58,11 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 				name: product.name,
 				count,
 				price: product.sale_price,
-				type: 'simple',
+				type: 'variable',
+				variableItems: {
+					id: indexedVariables().find(item => item.name === variant)?.id,
+					name: variant
+				},
 				paymentType,
 				subscriptionPeriod: period,
 				subscriptionPrice:
@@ -58,9 +79,13 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 				id: product.id,
 				price: product.sale_price,
 				count,
-				type: 'simple',
+				type: 'variable',
 				paymentType,
-				itemImage: product.images[0].src
+				itemImage: product.images[0].src,
+				variableItems: {
+					id: indexedVariables().find(item => item.name === variant)?.id,
+					name: variant
+				}
 			})
 		}
 	}
@@ -158,21 +183,54 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 								) : null}
 							</div>
 						</div>
-						<div className={styles.count}>
-							<div className={styles.minus} onClick={() => setCount(count - 1)}>
-								-
+						<div className={stylesVar.variableCount}>
+							<div className={stylesVar.variables}>
+								<Description
+									title='Choose Flavor'
+									className={stylesVar.titles}
+								/>
+								<div className={stylesVar.choice}>
+									{product.attributes[0].options.map(item => (
+										<div
+											className={clsx(stylesVar.blockChoice, {
+												[stylesVar.activeVariant]: variant === item
+											})}
+											onClick={() => setVariant(item)}
+											key={item}
+										>
+											<Description title={item} />
+										</div>
+									))}
+								</div>
 							</div>
-							<input
-								type='number'
-								value={count}
-								onChange={e => setCount(+e.target.value)}
-							/>
-							<div className={styles.plus} onClick={() => setCount(count + 1)}>
-								+
+							<div className={stylesVar.num}>
+								<Description
+									title='Choose Quantity'
+									className={stylesVar.titles}
+								/>
+								<div className={clsx(styles.count, stylesVar.countVar)}>
+									<div
+										className={styles.minus}
+										onClick={() => setCount(count - 1)}
+									>
+										-
+									</div>
+									<input
+										type='number'
+										value={count}
+										onChange={e => setCount(+e.target.value)}
+									/>
+									<div
+										className={styles.plus}
+										onClick={() => setCount(count + 1)}
+									>
+										+
+									</div>
+								</div>
 							</div>
 						</div>
 						<div className={styles.btns}>
-							<button onClick={handleClickSimple}>
+							<button onClick={handleClickVariable}>
 								{paymentType === 'one-time' ? (
 									<span className={styles.addToCart}>
 										Add to cart
@@ -200,4 +258,4 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 	)
 }
 
-export default SimpleCard
+export default VariableCard

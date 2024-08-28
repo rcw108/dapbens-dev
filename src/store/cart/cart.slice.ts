@@ -46,7 +46,7 @@ export const cartSlice = createSlice({
 
 		addToCart: (state, { payload }) => {
 			const itemListCart = state.itemListCount.find(
-				item => item.id === payload.product.id
+				item => item.id === payload.id
 			)
 
 			if (!itemListCart) {

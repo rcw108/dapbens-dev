@@ -119,6 +119,16 @@ export interface SingleProductACF {
 	}[]
 }
 
+export interface AttributesVar {
+	id: number
+	name: string
+	slug: string
+	position: number
+	visible: boolean
+	variation: boolean
+	options: string[]
+}
+
 export interface WooCommerceSingleProduct extends BundleInterface {
 	id: number
 	name: string
@@ -170,9 +180,9 @@ export interface WooCommerceSingleProduct extends BundleInterface {
 	categories: Category[]
 	tags: Tag[]
 	images: Image[]
-	// attributes: []
+	attributes: AttributesVar[]
 	// default_attributes: []
-	// variations: []
+	variations: number[]
 	// grouped_products: []
 	menu_order: number
 	price_html: string

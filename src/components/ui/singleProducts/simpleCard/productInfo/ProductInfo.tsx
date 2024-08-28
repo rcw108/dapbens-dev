@@ -16,18 +16,24 @@ const ProductInfo: FC<IProductInfo> = ({ acf, weight, dimensions }) => {
 			{acf.title_subs && acf.text_subs && (
 				<ProductInfoItem text={acf.text_subs} title={acf.title_subs} />
 			)}
-			{weight || dimensions ? (
+			{weight ||
+			(dimensions.length !== '' &&
+				dimensions.width !== '' &&
+				dimensions.height !== '') ? (
 				<ProductInfoItem
 					title='Additional Information'
 					text='Additional Information'
 				>
 					{weight && <AdditionalInfo text={`${weight} g`} title='Weight' />}
-					{dimensions && (
-						<AdditionalInfo
-							text={`${dimensions.length} × ${dimensions.width} × ${dimensions.height} in`}
-							title='Dimensions'
-						/>
-					)}
+					{dimensions &&
+						dimensions.length !== '' &&
+						dimensions.width !== '' &&
+						dimensions.height !== '' && (
+							<AdditionalInfo
+								text={`${dimensions.length} × ${dimensions.width} × ${dimensions.height} in`}
+								title='Dimensions'
+							/>
+						)}
 				</ProductInfoItem>
 			) : null}
 			{acf.text_sp && acf.title_sp && (

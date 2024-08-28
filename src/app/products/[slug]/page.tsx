@@ -12,7 +12,7 @@ import { FC } from 'react'
 
 export const revalidate = 1800
 
-export async function getProducts(): Promise<WooCommerceSingleProduct[]> {
+async function getProducts(): Promise<WooCommerceSingleProduct[]> {
 	const { products } = await getAllProducts()
 	return products
 }

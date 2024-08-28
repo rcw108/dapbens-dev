@@ -1,12 +1,13 @@
 'use server'
 
 import { getAllProducts } from '@/components/ui/home/products/productActions'
-import { FC } from 'react'
+import ClientProductHandler from './ClientProductHandler'
 
-const ServerProductComponent: FC = async () => {
+const ServerProductComponent = async () => {
 	const { products } = await getAllProducts()
 
-	return <h1>1</h1>
+	// Передаем данные в клиентский компонент
+	return <ClientProductHandler products={products} />
 }
 
 export default ServerProductComponent

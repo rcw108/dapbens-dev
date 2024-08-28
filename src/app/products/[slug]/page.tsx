@@ -1,13 +1,21 @@
 import SimpleSinglePage from '@/components/screens/singleProduct/SimpleSingle'
 import SingleProduct from '@/components/screens/singleProduct/SingleProduct'
 import VariableSinglePage from '@/components/screens/singleProduct/VariableSingle'
-import { getSingleProductBySlug } from '@/components/ui/home/products/productActions'
+import {
+	getAllProducts,
+	getSingleProductBySlug
+} from '@/components/ui/home/products/productActions'
 import { simpleSingleProductUrl } from '@/configs/product.config'
 import { SimpleSingle } from '@/types/singleTemplates/simpleSingle.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import { FC } from 'react'
 
 export const revalidate = 1800
+
+export async function getProducts(): Promise<WooCommerceSingleProduct[]> {
+	const { products } = await getAllProducts()
+	return products
+}
 
 const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 	params
@@ -17,6 +25,8 @@ const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 	const product: WooCommerceSingleProduct = await getSingleProductBySlug(
 		params.slug
 	)
+
+	const all = await getProducts()
 
 	if (product.type === 'simple') {
 		const pageTemplate: SimpleSingle = await fetch(simpleSingleProductUrl).then(
@@ -31,19 +41,16 @@ const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 			res => res.json()
 		)
 
-		return <VariableSinglePage template={pageTemplate} data={product} />
+		return (
+			<VariableSinglePage all={all} template={pageTemplate} data={product} />
+		)
 	}
 
 	if (!product) {
 		return <div>Product not found</div>
 	}
 
-	return (
-		<SingleProduct
-			//  allProducts={products}
-			data={product}
-		/>
-	)
+	return <SingleProduct data={product} />
 }
 
 export default SingleProductPage

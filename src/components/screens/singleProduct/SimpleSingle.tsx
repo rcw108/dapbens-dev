@@ -1,6 +1,7 @@
 'use client'
 
 import { useActions } from '@/hooks/useActions'
+import { useGetAllSingleProducts } from '@/hooks/useGetAllSingleProducts'
 import { useProducts } from '@/hooks/useProducts'
 import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { SimpleSingle } from '@/types/singleTemplates/simpleSingle.interface'
@@ -12,19 +13,20 @@ import SingleHeader from '../../ui/singleProducts/singleHeader/SingleHeader'
 interface ISimpleSingle {
 	data: WooCommerceSingleProduct
 	template: SimpleSingle
-	all: WooCommerceSingleProduct[]
 }
 
-const SimpleSinglePage: FC<ISimpleSingle> = ({ data, template, all }) => {
+const SimpleSinglePage: FC<ISimpleSingle> = ({ data, template }) => {
 	usePushCookieUserCart()
 
 	const { pushAllProducts } = useActions()
 	const { products: allProducts } = useProducts()
 
+	const { products } = useGetAllSingleProducts()
+
 	useEffect(() => {
 		if (allProducts) return
-		pushAllProducts(all)
-	}, [])
+		pushAllProducts(products)
+	}, [products])
 
 	return (
 		<main>

@@ -3,7 +3,13 @@
 import Description from '@/components/ui/headings/Description'
 import SubHeading from '@/components/ui/headings/SubHeading'
 import { useActions } from '@/hooks/useActions'
-import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
+import { useProducts } from '@/hooks/useProducts'
+import { BundleItem } from '@/store/cart/cart.interface'
+import {
+	Image as IImage,
+	Tag,
+	WooCommerceSingleProduct
+} from '@/types/wooCommerce.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { FC, useState } from 'react'
@@ -12,14 +18,29 @@ import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css'
 import SmallHeading from '../../headings/SmallHeading'
 import ReviewShopCard from '../../shop/reviewSectionShop/reviewShopCard/ReviewShopCard'
 import ProductSlider from '../productSlider/ProductSlider'
-import styles from './SimpleCard.module.scss'
-import Deliver from './deliver/Deliver'
-import ProductInfo from './productInfo/ProductInfo'
+import Deliver from '../simpleCard/deliver/Deliver'
+import ProductInfo from '../simpleCard/productInfo/ProductInfo'
+import styles from '../simpleCard/SimpleCard.module.scss'
+import stylesBun from './BundleCard.module.scss'
+import BundleSingleItem from './bundleSingleItem/BundleSingleItem'
 
-const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
+export interface BundleItemSingle {
+	name: string
+	id: number
+	slug: string
+	stock_status: string
+	tags: Tag[]
+	image: IImage
+}
+
+const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
+	const { products: allProducts } = useProducts()
+
 	const [paymentType, setPaymentType] = useState<'one-time' | 'subscription'>(
 		'one-time'
 	)
+
+	const [items, setItems] = useState<BundleItem[] | []>([])
 
 	const [count, setCount] = useState(1)
 
@@ -42,7 +63,8 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 				name: product.name,
 				count,
 				price: product.sale_price,
-				type: 'simple',
+				type: 'bundle',
+				bundleItems: [],
 				paymentType,
 				subscriptionPeriod: period,
 				subscriptionPrice:
@@ -58,13 +80,36 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 				name: product.name,
 				id: product.id,
 				price: product.sale_price,
+				bundleItems: [],
 				count,
-				type: 'simple',
+				type: 'bundle',
 				paymentType,
 				itemImage: product.images[0].src
 			})
 		}
 	}
+
+	const bundleItemToRender = () => {
+		const items: BundleItemSingle[] = []
+		product.bundled_items.map(bundleItem => {
+			const itemInAllProducts = allProducts?.find(
+				product => product.id === bundleItem.product_id
+			)
+			if (itemInAllProducts) {
+				items.push({
+					name: itemInAllProducts.name,
+					id: itemInAllProducts.id,
+					slug: itemInAllProducts.slug,
+					stock_status: itemInAllProducts.stock_status,
+					tags: itemInAllProducts.tags,
+					image: itemInAllProducts.images[0]
+				})
+			}
+		})
+		return items
+	}
+
+	console.log(items)
 
 	return (
 		<div className={clsx(styles.item, 'productCard')}>
@@ -126,6 +171,18 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 					</div>
 				</div>
 				<Description title={ReactHtmlParser(product.description)} />
+
+				<div className={stylesBun.bundleChoice}>
+					{bundleItemToRender().map(item => (
+						<BundleSingleItem
+							items={items}
+							handler={setItems}
+							key={item.id}
+							{...item}
+						/>
+					))}
+				</div>
+
 				{product.stock_status === 'instock' ? (
 					<div className={styles.buy}>
 						<div className={styles.paymentType}>
@@ -201,4 +258,4 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 	)
 }
 
-export default SimpleCard
+export default BundleCard

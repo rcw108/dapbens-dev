@@ -1,6 +1,6 @@
 'use client'
 
-import VariableCard from '@/components/ui/singleProducts/variableCard/VariableCard'
+import BundleCard from '@/components/ui/singleProducts/bundleCard/BundleCard'
 import { useActions } from '@/hooks/useActions'
 import { useProducts } from '@/hooks/useProducts'
 import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
@@ -9,13 +9,13 @@ import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import { FC, useEffect } from 'react'
 import SingleHeader from '../../ui/singleProducts/singleHeader/SingleHeader'
 
-interface IVariableSingle {
+interface IBundleSinglePage {
 	data: WooCommerceSingleProduct
 	template: SimpleSingle
 	all: WooCommerceSingleProduct[]
 }
 
-const VariableSinglePage: FC<IVariableSingle> = ({ data, template, all }) => {
+const BundleSinglePage: FC<IBundleSinglePage> = ({ data, template, all }) => {
 	usePushCookieUserCart()
 
 	const { pushAllProducts } = useActions()
@@ -29,10 +29,10 @@ const VariableSinglePage: FC<IVariableSingle> = ({ data, template, all }) => {
 	return (
 		<main>
 			<SingleHeader acf={template.acf} product={data}>
-				<VariableCard {...data} product={data} />
+				<BundleCard {...data} product={data} />
 			</SingleHeader>
 		</main>
 	)
 }
 
-export default VariableSinglePage
+export default BundleSinglePage

@@ -12,13 +12,16 @@
 	@apply font-sofia-sans;
 	.image {
 		margin-left: auto;
+		width: 14%;
 	}
 
 	.remove {
 		cursor: pointer;
+		width: 4%;
 	}
 
 	.info {
+		width: 86%;
 		.top {
 			margin-bottom: 5px;
 		}
@@ -27,4 +30,10 @@
 			color: #010101;
 		}
 	}
+}
+
+.bundleItemsList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2px;
 }

@@ -1,6 +1,31 @@
 .bundleChoice {
+	margin-top: 35px;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 19px;
 	grid-template-rows: auto;
+}
+
+.bundleInfoStatus {
+	display: flex;
+	justify-content: space-between;
+}
+
+.valid {
+	display: none;
+}
+
+.noValid {
+	button {
+		cursor: not-allowed;
+		&:hover {
+			transform: scale(1) !important;
+		}
+		opacity: 0.5;
+	}
+}
+
+.errorValidation {
+	color: #e2401c;
+	margin-top: 20px;
 }

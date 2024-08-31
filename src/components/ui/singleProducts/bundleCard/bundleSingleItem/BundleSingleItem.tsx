@@ -4,7 +4,7 @@ import { BundleItem } from '@/store/cart/cart.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import stylesSimpleCard from '../../simpleCard/SimpleCard.module.scss'
 import { BundleItemSingle } from '../BundleCard'
 import styles from './BundleSingleItem.module.scss'
@@ -20,58 +20,90 @@ const BundleSingleItem: FC<BundleSingleItemProps> = ({
 	name,
 	slug,
 	stock_status,
+	stock_quantity,
 	tags,
 	items,
 	handler
 }) => {
 	const [count, setCount] = useState(0)
 
+	useEffect(() => {
+		transferData(count)
+	}, [count])
+
 	const handlerClick = (variant: 'minus' | 'plus') => {
-		if (variant === 'minus') {
-			setCount(count - 1)
-		} else {
-			setCount(count + 1)
-		}
+		setCount(prevCount => {
+			const newCount =
+				variant === 'minus'
+					? Math.max(0, prevCount - 1)
+					: Math.min(stock_quantity, prevCount + 1)
+			return newCount
+		})
+	}
 
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newValue = Math.max(
+			0,
+			Math.min(stock_quantity, parseInt(e.target.value) || 0)
+		)
+		setCount(newValue)
+	}
+
+	const transferData = (newCount: number) => {
 		const itemCounts = items.filter(item => item.id !== id)
-
-		const newItem = { id, name, count: count, image: image.src }
-
-		if (count <= 0) {
-			const handlerItems = items.filter(item => item.id !== id)
-			handler(handlerItems)
-		} else {
+		if (newCount > 0) {
+			const newItem = {
+				id,
+				name,
+				count: newCount,
+				image: image.src,
+				stock: stock_status,
+				stock_count: stock_quantity
+			}
 			itemCounts.push(newItem)
-			handler(itemCounts)
 		}
+		handler(itemCounts)
 	}
 
 	return (
 		<div className={styles.item}>
-			<div
-				className={clsx(styles.tag, {
-					[styles.indica]: tags[0].name === 'Indica',
-					[styles.sativa]: tags[0].name === 'Sativa',
-					[styles.hybrid]: tags[0].name === 'Hybrid'
-				})}
-			>
-				{tags[0].name}
-			</div>
+			{tags[0] && (
+				<div
+					className={clsx(styles.tag, {
+						[styles.indica]: tags[0].name === 'Indica',
+						[styles.sativa]: tags[0].name === 'Sativa',
+						[styles.hybrid]: tags[0].name === 'Hybrid'
+					})}
+				>
+					{tags[0].name}
+				</div>
+			)}
 			<div className={styles.wrap}>
 				<div className={styles.left}>
 					<Image src={image.src} alt={name} width={65} height={65} />
 				</div>
 				<div className={styles.right}>
-					<h5>{name}</h5>
-					<span className={styles.link}>
-						<Link href={`/products/${slug}`} />
-					</span>
+					<div className={styles.top}>
+						<h5>
+							{name}{' '}
+							<span className={styles.link}>
+								<Link href={`/products/${slug}`} target='_blank'>
+									<Image
+										src='/remote-link.svg'
+										width={15}
+										height={15}
+										alt='link'
+									/>
+								</Link>
+							</span>
+						</h5>
+					</div>
 					<div
 						className={clsx(styles.stock, {
-							[styles.out]: stock_status === 'outofstock'
+							[styles.out]: stock_status !== 'in_stock'
 						})}
 					>
-						{stock_status === 'instock' ? 'In Stock' : 'Out of Stock'}
+						{stock_status === 'in_stock' ? 'In Stock' : 'Out of Stock'}
 					</div>
 					<div className={clsx(stylesSimpleCard.count, styles.countBundle)}>
 						<div
@@ -83,7 +115,9 @@ const BundleSingleItem: FC<BundleSingleItemProps> = ({
 						<input
 							type='number'
 							value={count}
-							onChange={e => setCount(+e.target.value)}
+							min={0}
+							max={100}
+							onChange={handleInputChange}
 						/>
 						<div
 							className={clsx(stylesSimpleCard.plus, styles.plusBundle)}

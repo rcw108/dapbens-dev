@@ -27,6 +27,18 @@ const SingleCartItem: FC<{
 							: listItemData.name}
 					</h6>
 				</div>
+				{listItemData.type === 'bundle' && listItemData.bundleItems ? (
+					<div className={styles.bundleInclude}>
+						<div className={styles.bundleItemsList}>
+							<p>Includes:</p>
+							{listItemData.bundleItems.map(item => (
+								<p key={item.id} className={styles.bundleItem}>
+									{item.name} × {item.count}
+								</p>
+							))}
+						</div>
+					</div>
+				) : null}
 				<div className={styles.bottom}>
 					{listItemData &&
 						(listItemData.paymentType === 'subscription'

@@ -31,6 +31,8 @@
 		justify-content: space-between;
 		.right {
 			padding-left: 18px;
+			display: flex;
+			flex-direction: column;
 			h5 {
 				@apply font-oswald;
 				font-size: 16px;
@@ -52,6 +54,8 @@
 		.countBundle {
 			width: 107px;
 			height: 37px;
+			margin: 0;
+			margin-top: auto;
 			font-size: 25px;
 			.minusBundle,
 			.plusBundle {
@@ -59,5 +63,14 @@
 				font-size: 25px;
 			}
 		}
+	}
+	.out {
+		color: #e2401c;
+	}
+}
+
+.top {
+	.link {
+		display: inline-block;
 	}
 }

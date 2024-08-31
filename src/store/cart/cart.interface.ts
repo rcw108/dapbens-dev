@@ -15,6 +15,8 @@ export interface BundleItem {
 	id: number
 	count: number
 	name: string
+	stock?: string
+	stock_count: number
 }
 
 export interface VariableItem {

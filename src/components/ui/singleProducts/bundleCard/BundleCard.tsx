@@ -12,7 +12,7 @@ import {
 } from '@/types/wooCommerce.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css'
 import SmallHeading from '../../headings/SmallHeading'
@@ -31,6 +31,7 @@ export interface BundleItemSingle {
 	stock_status: string
 	tags: Tag[]
 	image: IImage
+	stock_quantity: number
 }
 
 const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
@@ -41,8 +42,6 @@ const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 	)
 
 	const [items, setItems] = useState<BundleItem[] | []>([])
-
-	const [count, setCount] = useState(1)
 
 	const [deliver, setDeliver] = useState<false | '15%' | '20%' | '25%'>(false)
 
@@ -61,10 +60,16 @@ const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 		if (paymentType === 'subscription') {
 			addToCart({
 				name: product.name,
-				count,
 				price: product.sale_price,
 				type: 'bundle',
-				bundleItems: [],
+				count: 1,
+				bundleItems: items.map(item => {
+					return {
+						id: item.id,
+						count: item.count,
+						name: item.name
+					}
+				}),
 				paymentType,
 				subscriptionPeriod: period,
 				subscriptionPrice:
@@ -79,9 +84,15 @@ const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 			addToCart({
 				name: product.name,
 				id: product.id,
+				count: 1,
 				price: product.sale_price,
-				bundleItems: [],
-				count,
+				bundleItems: items.map(item => {
+					return {
+						id: item.id,
+						count: item.count,
+						name: item.name
+					}
+				}),
 				type: 'bundle',
 				paymentType,
 				itemImage: product.images[0].src
@@ -100,19 +111,64 @@ const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 					name: itemInAllProducts.name,
 					id: itemInAllProducts.id,
 					slug: itemInAllProducts.slug,
-					stock_status: itemInAllProducts.stock_status,
+					stock_status: bundleItem.stock_status,
 					tags: itemInAllProducts.tags,
-					image: itemInAllProducts.images[0]
+					image: itemInAllProducts.images[0],
+					stock_quantity: itemInAllProducts.stock_quantity
 				})
 			}
 		})
 		return items
 	}
 
-	console.log(items)
+	const [validation, setValidation] = useState<{
+		message: string
+		status: boolean
+	}>({
+		message: `Please choose ${product.bundle_max_size} items.`,
+		status: false
+	})
+
+	const totalCountItems = items.reduce((acc, item) => {
+		return acc + (item.count || 0)
+	}, 0)
+
+	const validationBundle = () => {
+		const totalCountItems = items.reduce(
+			(acc, item) => acc + (item.count || 0),
+			0
+		)
+		const outOfStockItems = items.filter(item => item.stock !== 'in_stock')
+		const insufficientQuantityItems = items.filter(
+			item => item.count > item.stock_count
+		)
+
+		let message = ''
+		let status = true
+
+		if (outOfStockItems.length > 0) {
+			message = `Insufficient stock -> ${outOfStockItems.map(item => item.name).join(', ')}`
+			status = false
+		} else if (insufficientQuantityItems.length > 0) {
+			message = `Insufficient quantity -> ${insufficientQuantityItems.map(item => item.name).join(', ')}`
+			status = false
+		} else if (
+			totalCountItems < product.bundle_min_size ||
+			totalCountItems > product.bundle_max_size
+		) {
+			message = `Please choose ${product.bundle_max_size} items.`
+			status = false
+		}
+
+		setValidation({ message, status })
+	}
+
+	useEffect(() => {
+		validationBundle()
+	}, [items])
 
 	return (
-		<div className={clsx(styles.item, 'productCard')}>
+		<div className={clsx(styles.item, stylesBun.itemBun, 'productCard')}>
 			<div className={styles.left}>
 				<div className={styles.wrap}>
 					<ProductSlider images={product.images} />
@@ -216,21 +272,37 @@ const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 								) : null}
 							</div>
 						</div>
-						<div className={styles.count}>
-							<div className={styles.minus} onClick={() => setCount(count - 1)}>
-								-
-							</div>
-							<input
-								type='number'
-								value={count}
-								onChange={e => setCount(+e.target.value)}
-							/>
-							<div className={styles.plus} onClick={() => setCount(count + 1)}>
-								+
-							</div>
+						<div
+							className={clsx(stylesBun.bundleInfoStatus, {
+								[stylesBun.valid]:
+									totalCountItems >= product.bundle_min_size &&
+									totalCountItems <= product.bundle_max_size
+							})}
+						>
+							<h5>
+								{totalCountItems < product.bundle_min_size ||
+								totalCountItems > product.bundle_min_size
+									? `Please choose ${product.bundle_min_size} items.`
+									: null}
+							</h5>
+							<h6>
+								{totalCountItems === 1
+									? `${totalCountItems} item selected`
+									: `${totalCountItems} items selected`}
+							</h6>
 						</div>
-						<div className={styles.btns}>
-							<button onClick={handleClickSimple}>
+						<div className={stylesBun.errorValidation}>
+							{validation.message ===
+							`Please choose ${product.bundle_max_size} items.`
+								? null
+								: validation.message}
+						</div>
+						<div
+							className={clsx(styles.btns, {
+								[stylesBun.noValid]: validation.status === false
+							})}
+						>
+							<button disabled={!validation.status} onClick={handleClickSimple}>
 								{paymentType === 'one-time' ? (
 									<span className={styles.addToCart}>
 										Add to cart

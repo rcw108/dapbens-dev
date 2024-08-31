@@ -1,12 +1,12 @@
 'use client'
 
-import BundleCard from '@/components/ui/singleProducts/bundleCard/BundleCard'
 import { useActions } from '@/hooks/useActions'
 import { useGetAllSingleProducts } from '@/hooks/useGetAllSingleProducts'
 import { useProducts } from '@/hooks/useProducts'
 import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { SimpleSingle } from '@/types/singleTemplates/simpleSingle.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
+import dynamic from 'next/dynamic'
 import { FC, useEffect } from 'react'
 import SingleHeader from '../../ui/singleProducts/singleHeader/SingleHeader'
 
@@ -14,6 +14,11 @@ interface IBundleSinglePage {
 	data: WooCommerceSingleProduct
 	template: SimpleSingle
 }
+
+const DynamicBundleCard = dynamic(
+	() => import('../../ui/singleProducts/bundleCard/BundleCard'),
+	{}
+)
 
 const BundleSinglePage: FC<IBundleSinglePage> = ({ data, template }) => {
 	usePushCookieUserCart()
@@ -31,7 +36,7 @@ const BundleSinglePage: FC<IBundleSinglePage> = ({ data, template }) => {
 	return (
 		<main>
 			<SingleHeader acf={template.acf} product={data}>
-				<BundleCard {...data} product={data} />
+				<DynamicBundleCard {...data} product={data} />
 			</SingleHeader>
 		</main>
 	)

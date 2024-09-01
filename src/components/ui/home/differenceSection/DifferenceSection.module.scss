@@ -1,6 +1,10 @@
 .difference {
 	margin-top: 70px;
 
+	.wrapper {
+		position: relative;
+	}
+
 	.title {
 		@apply mb-5 text-center uppercase;
 	}

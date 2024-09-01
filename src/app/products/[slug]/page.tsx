@@ -2,7 +2,11 @@ import BundleSinglePage from '@/components/screens/singleProduct/BundleSinglePag
 import SimpleSinglePage from '@/components/screens/singleProduct/SimpleSingle'
 import VariableSinglePage from '@/components/screens/singleProduct/VariableSingle'
 import { getSingleProductBySlug } from '@/components/ui/home/products/productActions'
-import { simpleSingleProductUrl } from '@/configs/product.config'
+import {
+	bundleSingleProductUrl,
+	simpleSingleProductUrl
+} from '@/configs/product.config'
+import { BundleSingle } from '@/types/singleTemplates/bundleSingle.interface'
 import { SimpleSingle } from '@/types/singleTemplates/simpleSingle.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import { FC } from 'react'
@@ -26,7 +30,7 @@ const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 		return <VariableSinglePage template={pageTemplate} data={product} />
 	}
 	if (product.type === 'bundle') {
-		const pageTemplate: SimpleSingle = await fetch(simpleSingleProductUrl).then(
+		const pageTemplate: BundleSingle = await fetch(bundleSingleProductUrl).then(
 			res => res.json()
 		)
 		return <BundleSinglePage template={pageTemplate} data={product} />

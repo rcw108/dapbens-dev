@@ -2,8 +2,12 @@
 
 import DifferenceSection from '@/components/ui/home/differenceSection/DifferenceSection'
 import FaqSection from '@/components/ui/home/faqSection/FaqSection'
+import FormSection from '@/components/ui/home/formSection/FormSection'
+import MarqueeItem from '@/components/ui/home/headSection/marqueeItem/MarqueeItem'
 import Steps from '@/components/ui/home/steps/Steps'
 import MarqueeLineSection from '@/components/ui/shop/marqueeLineSection/MarqueeLineSection'
+import AlsoLove from '@/components/ui/singleProducts/singleTemplate/alsoLove/AlsoLove'
+import Miss from '@/components/ui/singleProducts/singleTemplate/dontMiss/Miss'
 import QATest from '@/components/ui/singleProducts/singleTemplate/qATest/QATest'
 import { useActions } from '@/hooks/useActions'
 import { useGetAllSingleProducts } from '@/hooks/useGetAllSingleProducts'
@@ -12,6 +16,7 @@ import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { SimpleSingle } from '@/types/singleTemplates/simpleSingle.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import { FC, useEffect } from 'react'
+import Marquee from 'react-fast-marquee'
 import SimpleCard from '../../ui/singleProducts/simpleCard/SimpleCard'
 import SingleHeader from '../../ui/singleProducts/singleHeader/SingleHeader'
 import styles from './SingleStyles.module.scss'
@@ -71,6 +76,45 @@ const SimpleSinglePage: FC<ISimpleSingle> = ({ data, template }) => {
 				faqs_f={template.acf.tabs_faq}
 				text_f={template.acf.subtitle_faq}
 				title_f={template.acf.title_faq}
+			/>
+			<Miss
+				button_miss={template.acf.button_miss}
+				current_price_miss={template.acf.current_price_miss}
+				description_miss={template.acf.description_miss}
+				image_gallery_miss={template.acf.image_gallery_miss}
+				title_miss={template.acf.title_miss}
+				old_price_miss={template.acf.old_price_miss}
+				rate_image={template.acf.rate_image}
+				rate_text={template.acf.rate_text}
+				save_miss={template.acf.save_miss}
+				subscribe_text_miss={template.acf.subscribe_text_miss}
+				subtitle_miss={template.acf.subtitle_miss}
+			/>
+			<div
+				className={styles.marquee}
+				style={{
+					backgroundImage: `url(${template.acf.move_line_background_image})`
+				}}
+			>
+				{template.acf.move_line_content && (
+					<Marquee speed={50}>
+						{template.acf.move_line_content.map((item, index) => {
+							return <MarqueeItem key={index} {...item} />
+						})}
+					</Marquee>
+				)}
+			</div>
+			{products && (
+				<AlsoLove
+					products={products}
+					title={template.acf.title_lv}
+					description={template.acf.subtitle_lv}
+				/>
+			)}
+			<FormSection
+				background_image_form={template.acf.background_image_frm}
+				form_title={template.acf.title_frm}
+				form_description={template.acf.description_frm}
 			/>
 		</main>
 	)

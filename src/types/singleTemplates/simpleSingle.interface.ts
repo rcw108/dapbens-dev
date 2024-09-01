@@ -16,7 +16,7 @@ export interface ContentQuality {
 	text: string
 	image: string
 	review_author: string
-	review_stars: string | boolean
+	review_stars: string
 	review_text: string
 }
 
@@ -28,7 +28,7 @@ export interface SimpleSingleACF {
 	bottom_move_line_content: MoveLine[]
 	title_sin_steps: string
 	subtitle_sin_steps: string
-	single_steps: Step
+	single_steps: Step[]
 	background_image_qual: string
 	title_qual: string
 	subtitle_qual: string

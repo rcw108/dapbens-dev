@@ -1,12 +1,17 @@
 import Description from '@/components/ui/headings/Description'
 import SmallHeading from '@/components/ui/headings/SmallHeading'
 import { Step } from '@/types/homepage.interface'
+import clsx from 'clsx'
 import Image from 'next/image'
 import { FC } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import styles from './SingleStep.module.scss'
+interface ISingleStep extends Step {
+	className?: string
+}
 
-const SingleStep: FC<Step> = ({ img, text, title }) => {
+const SingleStep: FC<ISingleStep> = ({ img, text, title, className }) => {
+	console.log(img)
 	return (
 		<div className={styles.singleStep}>
 			<div className={styles.img}>
@@ -20,8 +25,14 @@ const SingleStep: FC<Step> = ({ img, text, title }) => {
 					/>
 				)}
 			</div>
-			<SmallHeading className={styles.title} title={ReactHtmlParser(title)} />
-			<Description className={styles.descr} title={ReactHtmlParser(text)} />
+			<SmallHeading
+				className={clsx(styles.title, className)}
+				title={ReactHtmlParser(title)}
+			/>
+			<Description
+				className={clsx(styles.descr, className)}
+				title={ReactHtmlParser(text)}
+			/>
 		</div>
 	)
 }

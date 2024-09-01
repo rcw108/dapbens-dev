@@ -39,10 +39,6 @@ const ProductSliderCard: FC<{
 						className={styles.price}
 						title={ReactHtmlParser(product.price_html)}
 					/>
-					<Description
-						className='text-[15px]'
-						title=' -  or subscribe and save up to 25%'
-					/>
 				</div>
 				{slideState && (
 					<div className={styles.btns}>

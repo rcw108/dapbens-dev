@@ -17,9 +17,11 @@ const MarqueeLineSection: FC<IMarqueeLineSection> = ({
 			style={{ backgroundImage: `url(${marquee_line_bg})` }}
 		>
 			<Marquee speed={50}>
-				{marquee_line_repeater.map((item, index) => (
-					<SingleMarquee {...item} key={index} />
-				))}
+				{[...marquee_line_repeater, ...marquee_line_repeater].map(
+					(item, index) => (
+						<SingleMarquee {...item} key={index} />
+					)
+				)}
 			</Marquee>
 		</section>
 	)

@@ -6,9 +6,17 @@ import { FC } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import stylesReviewCard from '../../../home/reviewsSection/reviewCard/ReviewCard.module.scss'
 import styles from './ReviewShopCard.module.scss'
-const ReviewShopCard: FC<ReviewRepeater> = ({ author, text, start_image }) => {
+interface IReviewShopCard extends ReviewRepeater {
+	className?: string
+}
+const ReviewShopCard: FC<IReviewShopCard> = ({
+	author,
+	text,
+	start_image,
+	className
+}) => {
 	return (
-		<div className={stylesReviewCard.review}>
+		<div className={clsx(stylesReviewCard.review, className)}>
 			<div className={stylesReviewCard.quote}></div>
 			<div className={stylesReviewCard.rate}>
 				<Image src={start_image} alt='star' width={88} height={18} />

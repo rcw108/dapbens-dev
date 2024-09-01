@@ -1,4 +1,5 @@
 import { HomeACF } from '@/types/homepage.interface'
+import clsx from 'clsx'
 import { FC } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import Button from '../../button/Button'
@@ -11,11 +12,27 @@ interface ISteps
 	extends Pick<
 		HomeACF,
 		'st_bg' | 'title_st' | 'text_st' | 'steps_st' | 'link_st'
-	> {}
+	> {
+	className?: string
+	classNameTitle?: string
+	classNameDescr?: string
+	classNameStep?: string
+}
 
-const Steps: FC<ISteps> = ({ link_st, st_bg, steps_st, text_st, title_st }) => {
+const Steps: FC<ISteps> = ({
+	link_st,
+	st_bg,
+	steps_st,
+	text_st,
+	title_st,
+	className,
+	classNameTitle,
+	classNameDescr,
+	classNameStep
+}) => {
+	console.log(steps_st)
 	return (
-		<section className={styles.steps}>
+		<section className={clsx(styles.steps, className)}>
 			<div className='container'>
 				<div
 					className={styles.box}
@@ -23,26 +40,28 @@ const Steps: FC<ISteps> = ({ link_st, st_bg, steps_st, text_st, title_st }) => {
 				>
 					<SubHeading
 						title={ReactHtmlParser(title_st)}
-						className={styles.title}
+						className={clsx(styles.title, classNameTitle)}
 					/>
 					<Description
-						className={styles.descr}
+						className={clsx(styles.text, classNameDescr)}
 						title={ReactHtmlParser(text_st)}
 					/>
 					{steps_st && (
 						<div className={styles.info}>
 							{steps_st.map((step, index) => (
-								<SingleStep key={index} {...step} />
+								<SingleStep className={classNameStep} key={index} {...step} />
 							))}
 						</div>
 					)}
-					<div className={styles.btns}>
-						<Button
-							link={link_st.url}
-							target={link_st.target}
-							text={link_st.title}
-						/>
-					</div>
+					{link_st.title !== '' && (
+						<div className={styles.btns}>
+							<Button
+								link={link_st.url}
+								target={link_st.target}
+								text={link_st.title}
+							/>
+						</div>
+					)}
 				</div>
 			</div>
 		</section>

@@ -3,6 +3,7 @@
 import Description from '@/components/ui/headings/Description'
 import SubHeading from '@/components/ui/headings/SubHeading'
 import { useActions } from '@/hooks/useActions'
+import { useCartMenu } from '@/hooks/useCartMenu'
 import { useProducts } from '@/hooks/useProducts'
 import { BundleItem } from '@/store/cart/cart.interface'
 import {
@@ -50,7 +51,10 @@ const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 
 	const { addToCart } = useActions()
 
+	const { setOpenCart } = useCartMenu()
+
 	const handleClickSimple = () => {
+		setOpenCart(true)
 		const period =
 			deliver === '15%'
 				? 'every 2 month'

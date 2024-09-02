@@ -2,7 +2,7 @@ import { ProductService } from '@/services/product.service'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetAllSingleProducts = () => {
-	const { isLoading, data } = useQuery({
+	const { isLoading, data, error } = useQuery({
 		queryKey: ['all products'],
 		queryFn: ProductService.getAllProducts,
 		select: ({ data }) => data
@@ -10,6 +10,7 @@ export const useGetAllSingleProducts = () => {
 
 	return {
 		isLoading,
-		products: data
+		products: data,
+		error
 	}
 }

@@ -31,7 +31,7 @@ const SimpleSinglePage: FC<ISimpleSingle> = ({ data, template }) => {
 	const { pushAllProducts } = useActions()
 	const { products: allProducts } = useProducts()
 
-	const { products } = useGetAllSingleProducts()
+	const { products, isLoading } = useGetAllSingleProducts()
 
 	useEffect(() => {
 		if (allProducts) return
@@ -106,6 +106,7 @@ const SimpleSinglePage: FC<ISimpleSingle> = ({ data, template }) => {
 			</div>
 			{products && (
 				<AlsoLove
+					loading={isLoading}
 					products={products}
 					title={template.acf.title_lv}
 					description={template.acf.subtitle_lv}

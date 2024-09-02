@@ -10,15 +10,10 @@ interface IAlsoLove {
 	products: WooCommerceSingleProduct[]
 	title: string
 	description: string
-	isLoading: boolean
+	loading: boolean
 }
 
-const AlsoLove: FC<IAlsoLove> = ({
-	products,
-	description,
-	title,
-	isLoading
-}) => {
+const AlsoLove: FC<IAlsoLove> = ({ products, description, title, loading }) => {
 	const firstCategoryList = products
 		.sort((a, b) => {
 			return +a.price - +b.price
@@ -28,7 +23,7 @@ const AlsoLove: FC<IAlsoLove> = ({
 		)
 		.slice(0, 7)
 
-	if (isLoading) {
+	if (loading) {
 		return <SkeletonLoader count={1} width={'100%'} height={400} />
 	}
 

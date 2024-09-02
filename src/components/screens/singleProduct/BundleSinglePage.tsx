@@ -114,7 +114,7 @@ const BundleSinglePage: FC<IBundleSinglePage> = ({ data, template }) => {
 			</div>
 			{products && (
 				<AlsoLove
-					isLoading={isLoading}
+					loading={isLoading}
 					products={products}
 					title={template.acf.title_lv}
 					description={template.acf.subtitle_lv}

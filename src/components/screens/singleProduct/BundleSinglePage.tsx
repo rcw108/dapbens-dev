@@ -28,9 +28,8 @@ interface IBundleSinglePage {
 
 const DynamicBundleCard = dynamic(
 	() => import('../../ui/singleProducts/bundleCard/BundleCard'),
-	{}
+	{ ssr: false }
 )
-
 const BundleSinglePage: FC<IBundleSinglePage> = ({ data, template }) => {
 	usePushCookieUserCart()
 

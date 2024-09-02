@@ -15,9 +15,9 @@ import { useProducts } from '@/hooks/useProducts'
 import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { BundleSingle } from '@/types/singleTemplates/bundleSingle.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
-import dynamic from 'next/dynamic'
 import { FC, useEffect } from 'react'
 import Marquee from 'react-fast-marquee'
+import BundleCard from '../../ui/singleProducts/bundleCard/BundleCard'
 import SingleHeader from '../../ui/singleProducts/singleHeader/SingleHeader'
 import styles from './SingleStyles.module.scss'
 
@@ -26,10 +26,6 @@ interface IBundleSinglePage {
 	template: BundleSingle
 }
 
-const DynamicBundleCard = dynamic(
-	() => import('../../ui/singleProducts/bundleCard/BundleCard'),
-	{ ssr: false }
-)
 const BundleSinglePage: FC<IBundleSinglePage> = ({ data, template }) => {
 	usePushCookieUserCart()
 
@@ -46,7 +42,7 @@ const BundleSinglePage: FC<IBundleSinglePage> = ({ data, template }) => {
 	return (
 		<main>
 			<SingleHeader acf={template.acf} product={data}>
-				<DynamicBundleCard loading={isLoading} {...data} product={data} />
+				<BundleCard loading={isLoading} {...data} product={data} />
 			</SingleHeader>
 			<Steps
 				link_st={{ url: '', target: '', title: '' }}

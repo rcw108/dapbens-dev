@@ -176,7 +176,11 @@ const BundleCard: FC<{
 	}, [items])
 
 	if (loading) {
-		return <SkeletonLoader count={1} width={'100%'} height={500} />
+		return (
+			<div className={stylesBun.skeleton}>
+				<SkeletonLoader count={2} width={'100%'} height={1200} />
+			</div>
+		)
 	}
 
 	return (

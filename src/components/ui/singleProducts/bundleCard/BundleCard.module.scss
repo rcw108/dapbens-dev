@@ -29,3 +29,12 @@
 	color: #e2401c;
 	margin-top: 20px;
 }
+
+.skeleton {
+	span {
+		&:first-child {
+			display: flex;
+			gap: 20px;
+		}
+	}
+}

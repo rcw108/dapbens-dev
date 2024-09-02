@@ -22,7 +22,7 @@ const AlsoLove: FC<IAlsoLove> = ({ products, description, title, loading }) => {
 		.slice(0, 7)
 
 	if (loading) {
-		return <SkeletonLoader count={1} width={'100%'} height={400} />
+		return <SkeletonLoader count={1} width={'100%'} height={600} />
 	}
 
 	return (

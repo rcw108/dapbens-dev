@@ -1,3 +1,5 @@
+'use client'
+
 import Button from '@/components/ui/button/Button'
 import Description from '@/components/ui/headings/Description'
 import SmallHeading from '@/components/ui/headings/SmallHeading'
@@ -31,6 +33,7 @@ const Miss: FC<IMiss> = ({
 							<Image src={rate_image} alt={rate_text} width={88} height={16} />
 							<Description title={ReactHtmlParser(rate_text)} />
 						</div>
+						{}
 						<SmallHeading
 							className={styles.subHeading}
 							title={ReactHtmlParser(subtitle_miss)}

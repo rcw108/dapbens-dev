@@ -98,7 +98,10 @@ const Cart: FC = () => {
 						<div className={styles.store}>
 							<div className={styles.topDivider}></div>
 							{itemListCount.map(product => (
-								<SingleCartItem listItemData={product} key={product.id} />
+								<SingleCartItem
+									listItemData={product}
+									key={`${product.id}-${product.name}`}
+								/>
 							))}
 							<div className={styles.beforeGo}></div>
 						</div>

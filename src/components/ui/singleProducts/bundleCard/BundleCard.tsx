@@ -18,6 +18,7 @@ import ReactHtmlParser from 'react-html-parser'
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css'
 import SmallHeading from '../../headings/SmallHeading'
 import ReviewShopCard from '../../shop/reviewSectionShop/reviewShopCard/ReviewShopCard'
+import SkeletonLoader from '../../SkeletonLoader'
 import ProductSlider from '../productSlider/ProductSlider'
 import Deliver from '../simpleCard/deliver/Deliver'
 import ProductInfo from '../simpleCard/productInfo/ProductInfo'
@@ -35,7 +36,10 @@ export interface BundleItemSingle {
 	stock_quantity: number
 }
 
-const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
+const BundleCard: FC<{
+	product: WooCommerceSingleProduct
+	loading: boolean
+}> = ({ product, loading }) => {
 	const { products: allProducts } = useProducts()
 
 	const [paymentType, setPaymentType] = useState<'one-time' | 'subscription'>(
@@ -171,6 +175,10 @@ const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 		validationBundle()
 	}, [items])
 
+	if (loading) {
+		return <SkeletonLoader count={1} width={'100%'} height={500} />
+	}
+
 	return (
 		<div className={clsx(styles.item, stylesBun.itemBun, 'productCard')}>
 			<div className={styles.left}>
@@ -191,12 +199,14 @@ const BundleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 			</div>
 			<div className={styles.right}>
 				<div className={styles.rate}>
-					<Image
-						src={product.acf.rate_image}
-						alt='rate'
-						width={88}
-						height={16}
-					/>
+					{product.acf.rate_image && (
+						<Image
+							src={product.acf.rate_image}
+							alt='rate'
+							width={88}
+							height={16}
+						/>
+					)}
 					<Description title={ReactHtmlParser(product.acf.rate_text)} />
 				</div>
 				<SubHeading

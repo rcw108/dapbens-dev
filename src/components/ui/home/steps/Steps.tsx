@@ -30,7 +30,6 @@ const Steps: FC<ISteps> = ({
 	classNameDescr,
 	classNameStep
 }) => {
-	console.log(steps_st)
 	return (
 		<section className={clsx(styles.steps, className)}>
 			<div className='container'>

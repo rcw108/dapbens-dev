@@ -15,6 +15,10 @@
 		@apply text-center text-text-black mb-10;
 	}
 
+	.text {
+		@apply text-center text-text-black mb-10;
+	}
+
 	.info {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);

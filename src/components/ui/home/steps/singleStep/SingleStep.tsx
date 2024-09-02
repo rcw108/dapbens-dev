@@ -11,7 +11,6 @@ interface ISingleStep extends Step {
 }
 
 const SingleStep: FC<ISingleStep> = ({ img, text, title, className }) => {
-	console.log(img)
 	return (
 		<div className={styles.singleStep}>
 			<div className={styles.img}>

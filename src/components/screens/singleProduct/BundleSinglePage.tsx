@@ -37,7 +37,7 @@ const BundleSinglePage: FC<IBundleSinglePage> = ({ data, template }) => {
 	const { pushAllProducts } = useActions()
 	const { products: allProducts } = useProducts()
 
-	const { products } = useGetAllSingleProducts()
+	const { products, isLoading } = useGetAllSingleProducts()
 
 	useEffect(() => {
 		if (allProducts) return
@@ -47,7 +47,7 @@ const BundleSinglePage: FC<IBundleSinglePage> = ({ data, template }) => {
 	return (
 		<main>
 			<SingleHeader acf={template.acf} product={data}>
-				<DynamicBundleCard {...data} product={data} />
+				<DynamicBundleCard loading={isLoading} {...data} product={data} />
 			</SingleHeader>
 			<Steps
 				link_st={{ url: '', target: '', title: '' }}

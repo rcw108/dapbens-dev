@@ -4,10 +4,12 @@ import VariableSinglePage from '@/components/screens/singleProduct/VariableSingl
 import { getSingleProductBySlug } from '@/components/ui/home/products/productActions'
 import {
 	bundleSingleProductUrl,
-	simpleSingleProductUrl
+	simpleSingleProductUrl,
+	variableSingleProductUrl
 } from '@/configs/product.config'
 import { BundleSingle } from '@/types/singleTemplates/bundleSingle.interface'
 import { SimpleSingle } from '@/types/singleTemplates/simpleSingle.interface'
+import { VariableSingle } from '@/types/singleTemplates/variableSingle.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import { FC } from 'react'
 export const revalidate = 1800
@@ -24,9 +26,9 @@ const SingleProductPage: FC<{ params: { slug: string } }> = async ({
 		return <SimpleSinglePage template={pageTemplate} data={product} />
 	}
 	if (product.type === 'variable') {
-		const pageTemplate: SimpleSingle = await fetch(simpleSingleProductUrl).then(
-			res => res.json()
-		)
+		const pageTemplate: VariableSingle = await fetch(
+			variableSingleProductUrl
+		).then(res => res.json())
 		return <VariableSinglePage template={pageTemplate} data={product} />
 	}
 	if (product.type === 'bundle') {

@@ -41,3 +41,19 @@
 .diffWrap {
 	padding: 55px 0px 55px 0px;
 }
+
+.diffVar {
+	position: relative;
+	padding: 55px 0;
+}
+
+.diffBlock {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0.65;
+	z-index: -1;
+	background-color: #17191e;
+	border-radius: 34px;
+}

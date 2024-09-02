@@ -178,7 +178,41 @@ const BundleCard: FC<{
 	if (loading) {
 		return (
 			<div className={stylesBun.skeleton}>
-				<SkeletonLoader count={2} width={'100%'} height={1200} />
+				<div className={stylesBun.leftSkeleton}>
+					<SkeletonLoader count={1} width={'100%'} height={600} />
+					<div className={stylesBun.thumb}>
+						<SkeletonLoader
+							count={2}
+							width={'100%'}
+							height={120}
+							className='mt-5'
+						/>
+					</div>
+					<SkeletonLoader
+						count={1}
+						width={'100%'}
+						height={300}
+						className='mt-10'
+					/>
+				</div>
+				<div className={stylesBun.rightSkeleton}>
+					<SkeletonLoader count={1} width={'100%'} height={54} />
+					<SkeletonLoader
+						count={1}
+						width={'100%'}
+						height={34}
+						className='my-5'
+					/>
+					<div className={stylesBun.items}>
+						<SkeletonLoader count={8} width={'48%'} height={120} />
+					</div>
+					<SkeletonLoader
+						count={1}
+						width={'100%'}
+						height={250}
+						className='my-5'
+					/>
+				</div>
 			</div>
 		)
 	}

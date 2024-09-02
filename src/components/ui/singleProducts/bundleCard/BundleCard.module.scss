@@ -31,10 +31,32 @@
 }
 
 .skeleton {
-	span {
-		&:first-child {
-			display: flex;
-			gap: 20px;
+	display: flex;
+	gap: 40px;
+	.leftSkeleton,
+	.rightSkeleton {
+		width: 50%;
+	}
+	.rightSkeleton {
+		.items {
+			span {
+				&:first-child {
+					width: 100%;
+					display: flex;
+					flex-wrap: wrap;
+					gap: 8px;
+					row-gap: 14px;
+				}
+			}
+		}
+	}
+	.thumb {
+		span {
+			&:first-child {
+				display: flex;
+				justify-content: center;
+				gap: 15px;
+			}
 		}
 	}
 }

@@ -3,10 +3,11 @@
 import Description from '@/components/ui/headings/Description'
 import SubHeading from '@/components/ui/headings/SubHeading'
 import { useActions } from '@/hooks/useActions'
+import { useProducts } from '@/hooks/useProducts'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css'
 import SmallHeading from '../../headings/SmallHeading'
@@ -15,6 +16,7 @@ import ProductSlider from '../productSlider/ProductSlider'
 import Deliver from '../simpleCard/deliver/Deliver'
 import ProductInfo from '../simpleCard/productInfo/ProductInfo'
 import styles from '../simpleCard/SimpleCard.module.scss'
+import { useVariableVariantProduct } from './useVariableVariantProduct'
 import stylesVar from './VariableCard.module.scss'
 
 const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
@@ -32,7 +34,37 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 		product.attributes[0].options[0]
 	)
 
-	const saveCount = () => +product.regular_price - +product.sale_price
+	const [variantPrice, setVariantPrice] = useState<{
+		regular_price: number
+		sale_price: number
+	}>({ regular_price: 0, sale_price: 0 })
+
+	const { products } = useProducts()
+
+	const { isLoading, singleProductVar, error } = useVariableVariantProduct(
+		product.variations[0]
+	)
+
+	const variantPriceFn = (): { regular_price: number; sale_price: number } => {
+		if (singleProductVar) {
+			return {
+				sale_price: +singleProductVar.sale_price || 0,
+				regular_price: +singleProductVar.regular_price || 0
+			}
+		} else {
+			return {
+				regular_price: 0,
+				sale_price: 0
+			}
+		}
+	}
+
+	useEffect(() => {
+		setVariantPrice(variantPriceFn())
+	}, [singleProductVar])
+
+	const saveCount = () =>
+		variantPrice.regular_price - +variantPriceFn().sale_price
 
 	const { addToCart } = useActions()
 
@@ -57,7 +89,7 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 			addToCart({
 				name: product.name,
 				count,
-				price: product.sale_price,
+				price: variantPriceFn().sale_price,
 				type: 'variable',
 				variableItems: {
 					id: indexedVariables().find(item => item.name === variant)?.id,
@@ -77,7 +109,7 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 			addToCart({
 				name: product.name,
 				id: product.id,
-				price: product.sale_price,
+				price: variantPrice.sale_price,
 				count,
 				type: 'variable',
 				paymentType,
@@ -106,6 +138,15 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 								/>
 							</div>
 						)}
+					{typeof product.acf.chart_image === 'string' && (
+						<Image
+							className='mt-10'
+							src={product.acf.chart_image}
+							alt='chart'
+							width={637}
+							height={357}
+						/>
+					)}
 				</div>
 			</div>
 			<div className={styles.right}>
@@ -129,7 +170,7 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 				<div className={styles.status}>
 					<Description
 						className={styles.save}
-						title={`You save $${String(saveCount())}`}
+						title={`You save $${String(saveCount().toFixed(2))}`}
 					/>
 					<div className={styles.stock}>
 						{product.stock_status === 'outofstock' ? (
@@ -186,7 +227,7 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 						<div className={stylesVar.variableCount}>
 							<div className={stylesVar.variables}>
 								<Description
-									title='Choose Flavor'
+									title={`Choose ${product.attributes[0].name}`}
 									className={stylesVar.titles}
 								/>
 								<div className={stylesVar.choice}>
@@ -249,6 +290,7 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 					</div>
 				) : null}
 				<ProductInfo
+					attributes={product.attributes}
 					acf={product.acf}
 					weight={product.weight}
 					dimensions={product.dimensions}

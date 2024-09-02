@@ -1,13 +1,23 @@
-import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
+import {
+	AttributesVar,
+	WooCommerceSingleProduct
+} from '@/types/wooCommerce.interface'
 import { FC } from 'react'
 import AdditionalInfo from './addintionalInfo/AdditionalInfo'
 import styles from './ProductInfo.module.scss'
 import ProductInfoItem from './productInfoItem/ProductInfoItem'
 
 interface IProductInfo
-	extends Pick<WooCommerceSingleProduct, 'acf' | 'weight' | 'dimensions'> {}
+	extends Pick<WooCommerceSingleProduct, 'acf' | 'weight' | 'dimensions'> {
+	attributes?: AttributesVar[]
+}
 
-const ProductInfo: FC<IProductInfo> = ({ acf, weight, dimensions }) => {
+const ProductInfo: FC<IProductInfo> = ({
+	acf,
+	weight,
+	dimensions,
+	attributes
+}) => {
 	return (
 		<div className={styles.info}>
 			{acf.title_de && acf.text_de && (
@@ -34,6 +44,18 @@ const ProductInfo: FC<IProductInfo> = ({ acf, weight, dimensions }) => {
 								title='Dimensions'
 							/>
 						)}
+				</ProductInfoItem>
+			) : attributes && attributes[0].name && attributes[0].options ? (
+				<ProductInfoItem
+					title='Additional Information'
+					text='Additional Information'
+				>
+					{attributes[0].name && (
+						<AdditionalInfo
+							text={attributes[0].options.join(', ')}
+							title={attributes[0].name}
+						/>
+					)}
 				</ProductInfoItem>
 			) : null}
 			{acf.text_sp && acf.title_sp && (

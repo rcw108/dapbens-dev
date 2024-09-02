@@ -117,6 +117,7 @@ export interface SingleProductACF {
 		title: string
 		text: string
 	}[]
+	chart_image: string | boolean
 }
 
 export interface AttributesVar {

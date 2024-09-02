@@ -14,15 +14,12 @@ interface IAlsoLove {
 }
 
 const AlsoLove: FC<IAlsoLove> = ({ products, description, title, loading }) => {
-	const firstCategoryList =
-		products
-			.sort((a, b) => {
-				return +a.price - +b.price
-			})
-			.filter(product =>
-				product.categories.some(category => category.slug === '510-cartridges')
-			)
-			.slice(0, 7) || []
+	const filteredProducts = products
+		.filter(product =>
+			product.categories.some(category => category.slug === '510-cartridges')
+		)
+		.sort((a, b) => +a.price - +b.price)
+		.slice(0, 7)
 
 	if (loading) {
 		return <SkeletonLoader count={1} width={'100%'} height={400} />
@@ -30,7 +27,7 @@ const AlsoLove: FC<IAlsoLove> = ({ products, description, title, loading }) => {
 
 	return (
 		<>
-			{firstCategoryList.length > 1 ? (
+			{filteredProducts.length > 1 ? (
 				<section className={styles.also}>
 					<div className={styles.box}>
 						<SubHeading
@@ -41,7 +38,7 @@ const AlsoLove: FC<IAlsoLove> = ({ products, description, title, loading }) => {
 							className={styles.descr}
 							title={ReactHtmlParser(description)}
 						/>
-						<SliderComponent list={firstCategoryList} />
+						<SliderComponent list={filteredProducts} />
 					</div>
 				</section>
 			) : loading ? (

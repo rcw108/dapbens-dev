@@ -12,7 +12,7 @@ const sendTransactionRequest = async (
 ) => {
 	try {
 		const response = await axios.post(
-			'https://apitest.authorize.net/xml/v1/request.api',
+			'https://api2.authorize.net/xml/v1/request.api',
 			transactionData,
 			{
 				headers: {

@@ -68,6 +68,7 @@ export interface ICheckoutOrder {
 	line_items: {
 		product_id: number
 		quantity: number
+		price: number
 	}[]
 }
 

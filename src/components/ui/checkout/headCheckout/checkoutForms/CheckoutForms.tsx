@@ -197,7 +197,8 @@ const CheckoutForms = () => {
 			},
 			line_items: itemListCount.map(item => ({
 				product_id: +item.id,
-				quantity: +item.count
+				quantity: +item.count,
+				price: +item.price
 			}))
 		}
 

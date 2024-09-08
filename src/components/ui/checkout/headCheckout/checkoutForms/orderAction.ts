@@ -61,12 +61,14 @@ export const handleCreateOrder = async (
 						cardCode: cardData.creditCard.cardCode
 					}
 				},
-				lineItems: {
-					lineItem: orderData.line_items.map(item => ({
-						itemId: String(item.product_id),
-						quantity: String(item.quantity)
-					}))
-				},
+				// lineItems: {
+				// 	lineItem: orderData.line_items.map(item => ({
+				// 		itemId: String(item.product_id),
+				// 		name: String(item.product_id),
+				// 		quantity: String(item.quantity),
+				// 		unitPrice: String(item.price)
+				// 	}))
+				// },
 				shipping: {
 					amount: shippingData.shipping.cost,
 					name: shippingData.shipping.label,

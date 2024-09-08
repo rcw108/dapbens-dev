@@ -1,3 +1,5 @@
+'use client'
+
 import Description from '@/components/ui/headings/Description'
 import SmallHeading from '@/components/ui/headings/SmallHeading'
 import SkeletonLoader from '@/components/ui/SkeletonLoader'

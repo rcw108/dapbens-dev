@@ -243,3 +243,31 @@ ul.swiper-pagination-bullet li {
 		opacity: 1;
 	}
 }
+
+.sumCard {
+	.wcsatt-sub-options,
+	.wcsatt-sub-discount {
+		display: none;
+	}
+
+	del {
+		color: #868686;
+		.woocommerce-Price-amount {
+			@apply font-sofia-sans;
+			font-weight: 700;
+			color: #868686;
+			font-size: 20px;
+			line-height: 1.35;
+		}
+	}
+	ins {
+		.woocommerce-Price-amount {
+			@apply font-sofia-sans;
+			font-weight: 700;
+			color: #010101;
+			font-size: 20px;
+			line-height: 1.35;
+			margin-left: 10px;
+		}
+	}
+}

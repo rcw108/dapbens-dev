@@ -1,6 +1,7 @@
 'use server'
 
 import { Category, Tag } from '@/store/products/product.interface'
+import { ICheckoutOrder } from '@/types/checkoutLayout.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 import { cache } from 'react'
@@ -41,3 +42,13 @@ export const getProductCategories = cache(async () => {
 	const response: { data: Category[] } = await api.get('products/categories')
 	return response.data
 })
+
+export const createOrder = async (orderData: ICheckoutOrder) => {
+	try {
+		const response = await api.post('orders', orderData)
+		return response.data
+	} catch (error) {
+		console.error('Ошибка при создании заказа:', error)
+		throw error
+	}
+}

@@ -1,0 +1,38 @@
+.head {
+	border-radius: 14px;
+	.top {
+		background: transparent linear-gradient(270deg, #8ad1dd 0%, #beb9d6 100%) 0%
+			0% no-repeat padding-box;
+		height: 66px;
+		border-radius: 14px 14px 0 0;
+	}
+	.rate {
+		@apply flex gap-3 justify-center mt-5 font-light;
+	}
+}
+
+.timer {
+	@apply text-center mt-5 uppercase font-oswald;
+	font-size: 24px;
+	font-weight: 300;
+	line-height: 1.5;
+	letter-spacing: 0;
+	color: #ffffff;
+	span {
+		font-weight: 500;
+		color: #f77313;
+	}
+	.text {
+		p {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 5px;
+		}
+	}
+	img {
+		width: 24px;
+		height: 24px;
+		display: inline-block;
+	}
+}

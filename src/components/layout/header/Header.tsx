@@ -1,7 +1,11 @@
+'use client'
+
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { FC } from 'react'
+import CheckoutHeader from './checkoutHeader/CheckoutHeader'
 import styles from './Header.module.scss'
 import Logotype from './logotype/Logotype'
 import Menu from './menu/Menu'
@@ -10,6 +14,12 @@ import TopBar from './topbar/TopBar'
 const DynamicCart = dynamic(() => import('./cart/Cart'), { ssr: false })
 
 const Header: FC = () => {
+	const pathname = usePathname()
+
+	if (pathname === '/checkout') {
+		return <CheckoutHeader />
+	}
+
 	return (
 		<header>
 			<TopBar />

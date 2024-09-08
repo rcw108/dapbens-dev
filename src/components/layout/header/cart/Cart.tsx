@@ -1,6 +1,6 @@
 import SmallHeading from '@/components/ui/headings/SmallHeading'
 import { useCart } from '@/hooks/useCart'
-import { useCartMenu } from '@/hooks/useCartMenu'
+import { useCartContext } from '@/providers/CartContextProvider'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { FC, useEffect, useState } from 'react'
@@ -10,7 +10,7 @@ import SingleCartItem from './singleCartItem/SingleCartItem'
 
 const Cart: FC = () => {
 	const [cartCount, setCartCount] = useState(0)
-	const { openCart, setOpenCart } = useCartMenu()
+	const { openCart, setOpenCart } = useCartContext()
 
 	const { userCart, itemListCount } = useCart()
 
@@ -43,6 +43,8 @@ const Cart: FC = () => {
 
 		setCartCount(totalCart)
 	}, [itemListCount])
+
+	console.log('cart: ', openCart)
 
 	return (
 		<>

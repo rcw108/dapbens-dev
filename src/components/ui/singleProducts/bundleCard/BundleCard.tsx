@@ -3,8 +3,8 @@
 import Description from '@/components/ui/headings/Description'
 import SubHeading from '@/components/ui/headings/SubHeading'
 import { useActions } from '@/hooks/useActions'
-import { useCartMenu } from '@/hooks/useCartMenu'
 import { useProducts } from '@/hooks/useProducts'
+import { useCartContext } from '@/providers/CartContextProvider'
 import { BundleItem } from '@/store/cart/cart.interface'
 import {
 	Image as IImage,
@@ -55,7 +55,9 @@ const BundleCard: FC<{
 
 	const { addToCart } = useActions()
 
-	const { setOpenCart } = useCartMenu()
+	const { openCart, setOpenCart } = useCartContext()
+
+	console.log('product: ', openCart)
 
 	const handleClickSimple = () => {
 		setOpenCart(true)

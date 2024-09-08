@@ -3,6 +3,7 @@
 import Description from '@/components/ui/headings/Description'
 import SubHeading from '@/components/ui/headings/SubHeading'
 import { useActions } from '@/hooks/useActions'
+import { useCartMenu } from '@/hooks/useCartMenu'
 import { useProducts } from '@/hooks/useProducts'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import clsx from 'clsx'
@@ -78,7 +79,11 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 		return result
 	}
 
+	const { setOpenCart } = useCartMenu()
+
 	const handleClickVariable = () => {
+		setOpenCart(true)
+
 		const period =
 			deliver === '15%'
 				? 'every 2 month'

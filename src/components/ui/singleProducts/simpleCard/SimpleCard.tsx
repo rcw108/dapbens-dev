@@ -3,6 +3,7 @@
 import Description from '@/components/ui/headings/Description'
 import SubHeading from '@/components/ui/headings/SubHeading'
 import { useActions } from '@/hooks/useActions'
+import { useCartMenu } from '@/hooks/useCartMenu'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
@@ -29,8 +30,11 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 		(+product.regular_price - +product.sale_price).toFixed(2)
 
 	const { addToCart } = useActions()
+	const { setOpenCart } = useCartMenu()
 
 	const handleClickSimple = () => {
+		setOpenCart(true)
+
 		const period =
 			deliver === '15%'
 				? 'every 2 month'

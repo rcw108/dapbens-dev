@@ -3,8 +3,8 @@
 import Description from '@/components/ui/headings/Description'
 import SubHeading from '@/components/ui/headings/SubHeading'
 import { useActions } from '@/hooks/useActions'
-import { useCartMenu } from '@/hooks/useCartMenu'
 import { useProducts } from '@/hooks/useProducts'
+import { useCartContext } from '@/providers/CartContextProvider'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
@@ -79,7 +79,7 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 		return result
 	}
 
-	const { setOpenCart } = useCartMenu()
+	const { openCart, setOpenCart } = useCartContext()
 
 	const handleClickVariable = () => {
 		setOpenCart(true)

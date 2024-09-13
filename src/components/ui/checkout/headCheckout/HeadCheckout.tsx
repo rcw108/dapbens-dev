@@ -17,6 +17,8 @@ interface IHeadCheckout
 		| 'rating_text'
 		| 'checkout_timer'
 		| 'checkout_after_timer_text'
+		| 'credit_card_image'
+		| 'order_advantages'
 	> {}
 
 const HeadCheckout: FC<IHeadCheckout> = ({
@@ -24,7 +26,9 @@ const HeadCheckout: FC<IHeadCheckout> = ({
 	checkout_timer,
 	marquee_line_repeater,
 	rating_image,
-	rating_text
+	rating_text,
+	credit_card_image,
+	order_advantages
 }) => {
 	return (
 		<section className={styles.head}>
@@ -48,7 +52,10 @@ const HeadCheckout: FC<IHeadCheckout> = ({
 				checkout_timer={checkout_timer}
 			/>
 			<div className={styles.wrapper}>
-				<CheckoutForms />
+				<CheckoutForms
+					credit_card_image={credit_card_image}
+					order_advantages={order_advantages}
+				/>
 			</div>
 		</section>
 	)

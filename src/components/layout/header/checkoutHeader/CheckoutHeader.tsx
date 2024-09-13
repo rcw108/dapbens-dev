@@ -3,6 +3,7 @@
 import SmallHeading from '@/components/ui/headings/SmallHeading'
 import SkeletonLoader from '@/components/ui/SkeletonLoader'
 import Image from 'next/image'
+import Link from 'next/link'
 import { FC } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import styles from './CheckoutHeader.module.scss'
@@ -28,12 +29,14 @@ const CheckoutHeader: FC = () => {
 					/>
 				</div>
 				<div className={styles.logotype}>
-					<Image
-						src={data.acf.logotype}
-						alt='logotype'
-						width={191}
-						height={59}
-					/>
+					<Link href='/'>
+						<Image
+							src={data.acf.logotype}
+							alt='logotype'
+							width={191}
+							height={59}
+						/>
+					</Link>
 				</div>
 			</header>
 		)

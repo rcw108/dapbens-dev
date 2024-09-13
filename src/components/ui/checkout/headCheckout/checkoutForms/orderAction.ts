@@ -1,7 +1,12 @@
 'use server'
 
-import { createOrder } from '@/components/ui/home/products/productActions'
 import {
+	createOrder,
+	getDiscountCodeAsync
+} from '@/components/ui/home/products/productActions'
+import {
+	AuthNetCreateSubscribe,
+	AuthSubRequestData,
 	ICheckoutOrder,
 	ICreateTransactionRequest
 } from '@/types/checkoutLayout.interface'
@@ -108,5 +113,59 @@ export const handleCreateOrder = async (
 	} catch (error) {
 		console.error('Error creating order:', error)
 		throw new Error('Order creation failed')
+	}
+}
+
+export const getDiscountCode = async (discountName: string) => {
+	const res = await getDiscountCodeAsync(discountName)
+	return res
+}
+
+export const createSubscribeAuthNet = async (data: AuthSubRequestData) => {
+	try {
+		const requestData: AuthNetCreateSubscribe = {
+			ARBCreateSubscriptionRequest: {
+				merchantAuthentication: {
+					name: process.env.AUTH_NET_NAME || '',
+					transactionKey: process.env.AUTH_NET_KEY || ''
+				},
+				subscription: {
+					name: 'Sample subscription',
+					paymentSchedule: {
+						interval: {
+							length: data.interval,
+							unit: data.unit
+						},
+						startDate: data.startDate,
+						totalOccurrences: '9999'
+					},
+					amount: data.amount,
+					payment: {
+						creditCard: {
+							cardNumber: data.cardNumber,
+							expirationDate: data.expirationDate
+						}
+					},
+					billTo: {
+						firstName: data.firstName,
+						lastName: data.lastName
+					}
+				}
+			}
+		}
+
+		const response = await axios.post(
+			'https://api2.authorize.net/xml/v1/request.api',
+			requestData,
+			{
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}
+		)
+
+		return response.data
+	} catch (error) {
+		console.error('Error creating subscribe:', error)
 	}
 }

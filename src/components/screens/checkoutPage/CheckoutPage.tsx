@@ -39,6 +39,8 @@ const CheckoutPage: FC<{ data: ICheckoutLayout }> = ({ data }) => {
 				marquee_line_repeater={data.acf.marquee_line_repeater}
 				rating_image={data.acf.rating_image}
 				rating_text={data.acf.rating_text}
+				credit_card_image={data.acf.credit_card_image}
+				order_advantages={data.acf.order_advantages}
 			/>
 		</main>
 	)

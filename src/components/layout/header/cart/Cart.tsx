@@ -3,6 +3,7 @@ import { useCart } from '@/hooks/useCart'
 import { useCartContext } from '@/providers/CartContextProvider'
 import clsx from 'clsx'
 import Image from 'next/image'
+import Link from 'next/link'
 import { FC, useEffect, useState } from 'react'
 import stylesHeader from '../Header.module.scss'
 import styles from './Cart.module.scss'
@@ -117,12 +118,12 @@ const Cart: FC = () => {
 								{totalPrice()}
 							</div>
 						</div>
-						<div className={styles.btns}>
+						<Link href='/checkout' className={styles.btns}>
 							<button>
 								<Image src='/lock.svg' alt='checkout' width={14} height={14} />
 								<span>Checkout</span>
 							</button>
-						</div>
+						</Link>
 					</>
 				) : (
 					<div className={styles.emptyCart}>

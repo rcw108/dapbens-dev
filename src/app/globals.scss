@@ -271,3 +271,39 @@ ul.swiper-pagination-bullet li {
 		}
 	}
 }
+
+.select__single-value {
+	line-height: 21px !important;
+	color: #010101 !important;
+	font-size: 16px !important;
+}
+
+.css-1u9des2-indicatorSeparator {
+	display: none !important;
+}
+
+.select__indicator {
+	svg {
+		display: none;
+	}
+	position: relative;
+
+	&::after {
+		position: absolute;
+		content: '';
+		top: 70%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		border-color: #888 transparent transparent transparent;
+		border-style: solid;
+		border-width: 5px 4px 0 4px;
+		height: 0;
+		margin-left: -4px;
+		margin-top: -2px;
+		width: 0;
+	}
+}
+
+.select__control {
+	cursor: pointer !important;
+}

@@ -5,19 +5,19 @@ import { FieldValues, UseFormSetValue } from 'react-hook-form'
 const libraries: Libraries = ['places']
 const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY || ''
 
-export const useCheckoutForm = (setValue: UseFormSetValue<FieldValues>) => {
-	const { isLoaded } = useLoadScript({
+export const useCheckoutFormDiff = (setValue: UseFormSetValue<FieldValues>) => {
+	const { isLoaded: isLoadedDiff } = useLoadScript({
 		googleMapsApiKey: apiKey,
 		libraries,
 		language: 'en'
 	})
 
-	const autocompleteRef = useRef<HTMLInputElement>(null)
+	const autocompleteRefDiff = useRef<HTMLInputElement>(null)
 
 	useEffect(() => {
-		if (isLoaded && autocompleteRef.current) {
+		if (isLoadedDiff && autocompleteRefDiff.current) {
 			const autocomplete = new window.google.maps.places.Autocomplete(
-				autocompleteRef.current,
+				autocompleteRefDiff.current,
 				{
 					types: ['address'],
 					componentRestrictions: { country: 'us' }
@@ -39,22 +39,22 @@ export const useCheckoutForm = (setValue: UseFormSetValue<FieldValues>) => {
 
 				// Update form values
 				setValue(
-					'streetAddress',
+					'streetAddressDiff',
 					`${addressComponents['street_number'] || ''} ${addressComponents['route'] || ''}`
 				)
-				setValue('cityTown', addressComponents['locality'] || '')
+				setValue('cityTownDiff', addressComponents['locality'] || '')
 				setValue(
-					'stateCountry',
+					'stateCountryDiff',
 					addressComponents['administrative_area_level_1'] || ''
 				)
 				console.log(addressComponents['administrative_area_level_1'])
-				setValue('zipCode', addressComponents['postal_code'] || '')
+				setValue('zipCodeDiff', addressComponents['postal_code'] || '')
 			})
 		}
-	}, [isLoaded, setValue])
+	}, [isLoadedDiff, setValue])
 
 	return {
-		autocompleteRef,
-		isLoaded
+		autocompleteRefDiff,
+		isLoadedDiff
 	}
 }

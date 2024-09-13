@@ -1,7 +1,11 @@
 'use server'
 
+import { createSubcribe } from '@/configs/order.config'
 import { Category, Tag } from '@/store/products/product.interface'
-import { ICheckoutOrder } from '@/types/checkoutLayout.interface'
+import {
+	ICheckoutOrder,
+	SubscribeCreate
+} from '@/types/checkoutLayout.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 import { cache } from 'react'
@@ -50,5 +54,26 @@ export const createOrder = async (orderData: ICheckoutOrder) => {
 	} catch (error) {
 		console.error('Ошибка при создании заказа:', error)
 		throw error
+	}
+}
+
+export const getDiscountCodeAsync = async (discountName: string) => {
+	try {
+		const discountCode = await api
+			.get(`coupons?search=${discountName}`)
+			.then(res => res.data)
+		return discountCode
+	} catch (error) {
+		console.error('Error fetching discount code:', error)
+		return null
+	}
+}
+
+export const createSubscribe = async (data: SubscribeCreate) => {
+	try {
+		const response = await api.post(createSubcribe, data)
+		return response
+	} catch (error) {
+		console.error('Error creating subscribe:', error)
 	}
 }

@@ -57,8 +57,6 @@ const BundleCard: FC<{
 
 	const { openCart, setOpenCart } = useCartContext()
 
-	console.log('product: ', openCart)
-
 	const handleClickSimple = () => {
 		setOpenCart(true)
 		const period =

@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { FieldValues, UseFormSetValue } from 'react-hook-form'
 
 const libraries: Libraries = ['places']
-const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY || ''
+const apiKey = 'AIzaSyBhOWxxPQKHvtJNNT0FDwEkvGKb25nXK3g'
 
 export const useCheckoutFormDiff = (setValue: UseFormSetValue<FieldValues>) => {
 	const { isLoaded: isLoadedDiff } = useLoadScript({

@@ -3,6 +3,7 @@
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { FC } from 'react'
 import CheckoutHeader from './checkoutHeader/CheckoutHeader'
@@ -31,7 +32,9 @@ const Header: FC = () => {
 						<Image src='/search.svg' alt='search' width={26} height={26} />
 					</div>
 					<div className={clsx('cursor-pointer', styles.profile)}>
-						<Image src='/user.svg' alt='profile' width={26} height={26} />
+						<Link href={'/my-account'}>
+							<Image src='/user.svg' alt='profile' width={26} height={26} />
+						</Link>
 					</div>
 					<DynamicCart />
 				</div>

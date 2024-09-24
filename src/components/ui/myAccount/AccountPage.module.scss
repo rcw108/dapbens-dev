@@ -1,0 +1,13 @@
+.wrap {
+	background-color: #fff;
+	padding-top: 30px;
+	margin-bottom: 50px;
+	.profileWrapper {
+		display: grid;
+		max-width: 1140px;
+		margin: 0 auto;
+		padding: 10px;
+		grid-template-columns: 197px 856px;
+		column-gap: 66px;
+	}
+}

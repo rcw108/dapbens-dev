@@ -1,0 +1,17 @@
+.faqSection {
+	background-color: #fff;
+	.item {
+		border: 1px solid red;
+	}
+	.faq {
+		&-0 {
+			border-color: black;
+		}
+		&-1 {
+			border-color: purple;
+		}
+	}
+	.wrapper-1 {
+		background-color: green;
+	}
+}

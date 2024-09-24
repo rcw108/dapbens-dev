@@ -47,7 +47,7 @@ export interface ICheckoutOrder {
 	set_paid: false
 	coupon_lines?: {
 		code: string
-	}
+	}[]
 	billing: {
 		first_name: string
 		last_name: string

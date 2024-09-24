@@ -39,15 +39,32 @@ const CheckoutForms: FC<{
 	credit_card_image: { card_image: string }[]
 	order_advantages: Order[]
 }> = ({ credit_card_image, order_advantages }) => {
+	const {
+		register,
+		setValue,
+		getValues,
+		watch,
+		control,
+		formState: { errors }
+	} = useForm({
+		mode: 'onChange'
+	})
+
+	const { itemListCount } = useCart()
+
+	const { products } = useProducts()
+
+	const watchedFields = watch([
+		'stateCountry',
+		'zipCode',
+		'cityTown, zipCodeDiff, cityTownDiff, stateCountryDiff'
+	])
+
 	const [account, setAccount] = useState(false)
 	const [news, setNews] = useState(false)
 	const [diffAddress, setDiffAddress] = useState(false)
 
 	const [selectShipping, setSelectShipping] = useState<string>('')
-
-	const { register, setValue, getValues, watch, control } = useForm({
-		mode: 'onChange'
-	})
 
 	const [shipping, setShipping] = useState<
 		ICheckoutShippingValidateResponse[] | null
@@ -59,19 +76,9 @@ const CheckoutForms: FC<{
 	)
 
 	const [cardType, setCardType] = useState<CreditCardType[] | null>(null)
-	const [cardImage, setCardImage] = useState<string>('')
 
 	const { autocompleteRef, isLoaded } = useCheckoutForm(setValue)
 	const { autocompleteRefDiff, isLoadedDiff } = useCheckoutFormDiff(setValue)
-
-	const { itemListCount } = useCart()
-	const { products } = useProducts()
-
-	const watchedFields = watch([
-		'stateCountry',
-		'zipCode',
-		'cityTown, zipCodeDiff, cityTownDiff, stateCountryDiff'
-	])
 
 	const totalPrice = itemListCount.reduce((acc, item) => {
 		return acc + +item.price * +item.count
@@ -257,9 +264,6 @@ const CheckoutForms: FC<{
 			payment_method: 'credit card',
 			payment_method_title: 'Bank Transfer',
 			set_paid: false,
-			coupon_lines: {
-				code: getValues('discountCode')
-			},
 			billing: {
 				first_name: getValues('firstName'),
 				last_name: getValues('lastName'),
@@ -272,6 +276,17 @@ const CheckoutForms: FC<{
 				email: getValues('email'),
 				phone: getValues('phone') || ''
 			},
+			coupon_lines: discountValue
+				? [
+						{
+							code: getValues('discountCode')
+						}
+					]
+				: [
+						{
+							code: ''
+						}
+					],
 			shipping: {
 				first_name:
 					getValues('firstNameDiff') === ''
@@ -281,11 +296,12 @@ const CheckoutForms: FC<{
 					getValues('lastNameDiff') === ''
 						? getValues('lastName')
 						: getValues('lastNameDiff'),
-				address_1: autocompleteRefDiff.current
-					? autocompleteRefDiff.current.value
-					: autocompleteRef.current
-						? autocompleteRef.current.value
-						: '',
+				address_1:
+					diffAddress === true && autocompleteRefDiff.current
+						? autocompleteRefDiff.current.value
+						: autocompleteRef.current
+							? autocompleteRef.current.value
+							: '',
 				address_2: '',
 				city:
 					getValues('cityTownDiff') === ''
@@ -326,7 +342,7 @@ const CheckoutForms: FC<{
 							cost: '0.00'
 						}
 		}
-
+		console.log(orderData)
 		try {
 			const order = await handleCreateOrder(orderData, cardData, shippingData)
 			console.log('Order response:', order)
@@ -364,6 +380,8 @@ const CheckoutForms: FC<{
 		return totalAfterDiscount.toFixed(2)
 	}
 
+	console.log(getValues('discountCode'))
+
 	const watchCard = watch('cardNumber')
 
 	const cardTypeCheck = () => {
@@ -376,10 +394,9 @@ const CheckoutForms: FC<{
 		cardTypeCheck()
 	}, [watchCard])
 
-	console.log(cardType, credit_card_image)
-
 	if (!isLoaded) return <div>Loading...</div>
 
+	console.log(errors)
 	return (
 		<div className={styles.wrap}>
 			<div className={styles.left}>
@@ -387,15 +404,56 @@ const CheckoutForms: FC<{
 				<form className={styles.billing}>
 					<label className={styles.req}>
 						<Description title={'First name'} />
-						<input type='text' required {...register('firstName')} />
+						<input
+							type='text'
+							{...register('firstName', {
+								required: true,
+								minLength: {
+									value: 2,
+									message: 'First name must be at least 2 characters'
+								},
+								maxLength: {
+									value: 20,
+									message: 'First name must be at most 20 characters'
+								}
+							})}
+						/>
+						{errors.firstName?.message && (
+							<div className={styles.error}>
+								{errors.firstName.message.toString()}
+							</div>
+						)}
 					</label>
 					<label className={styles.req}>
 						<Description title={'Last name'} />
-						<input type='text' required {...register('lastName')} />
+						<input
+							type='text'
+							{...register('lastName', {
+								required: true,
+								minLength: {
+									value: 2,
+									message: 'Last name must be at least 2 characters'
+								},
+								maxLength: {
+									value: 40,
+									message: 'Last name must be at most 40 characters'
+								}
+							})}
+						/>
+						{errors.lastName?.message && (
+							<div className={styles.error}>
+								{errors.lastName.message.toString()}
+							</div>
+						)}
 					</label>
 					<label className={styles.company}>
 						<Description title={'Company name (optional)'} />
 						<input type='text' {...register('companyName')} />
+						{errors.companyName?.message && (
+							<div className={styles.error}>
+								{errors.companyName.message.toString()}
+							</div>
+						)}
 					</label>
 					<label className={styles.req}>
 						<Description title={'Country / Region'} />
@@ -417,7 +475,7 @@ const CheckoutForms: FC<{
 									options={states}
 									required
 									placeholder='Select a state'
-									className={styles.select}
+									className='select'
 									classNamePrefix='select'
 									onChange={selectedOption =>
 										field.onChange(selectedOption ? selectedOption.value : '')
@@ -438,19 +496,86 @@ const CheckoutForms: FC<{
 					</label>
 					<label className={styles.req}>
 						<Description title={'City / Town'} />
-						<input required type='text' {...register('cityTown')} />
+						<input
+							type='text'
+							{...register('cityTown', {
+								required: true,
+								minLength: {
+									value: 2,
+									message: 'City / Town must be at least 2 characters'
+								},
+								maxLength: {
+									value: 40,
+									message: 'City / Town must be at most 40 characters'
+								}
+							})}
+						/>
+						{errors.cityTown?.message && (
+							<div className={styles.error}>
+								{errors.cityTown.message.toString()}
+							</div>
+						)}
 					</label>
 					<label className={styles.req}>
 						<Description title={'Zip code'} />
-						<input required type='text' {...register('zipCode')} />
+						<input
+							type='number'
+							{...register('zipCode', {
+								required: true,
+								minLength: {
+									value: 2,
+									message: 'Zip code must be at least 2 characters'
+								},
+								maxLength: {
+									value: 10,
+									message: 'Zip code must be at most 10 characters'
+								},
+								pattern: {
+									value: /^[0-9]+$/,
+									message: 'Zip code must be numbers'
+								}
+							})}
+						/>
+						{errors.zipCode?.message && (
+							<div className={styles.error}>
+								{errors.zipCode.message.toString()}
+							</div>
+						)}
 					</label>
 					<label className={styles.req}>
 						<Description title={'Email address'} />
-						<input required type='email' {...register('email')} />
+						<input
+							type='email'
+							{...register('email', {
+								required: true,
+								minLength: {
+									value: 6,
+									message: 'Email must be at least 6 characters'
+								},
+								maxLength: {
+									value: 40,
+									message: 'Email must be at most 40 characters'
+								},
+								pattern: {
+									value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+									message: 'Invalid email address'
+								}
+							})}
+						/>
+						{errors.email?.message && (
+							<div className={styles.error}>
+								{errors.email.message.toString()}
+							</div>
+						)}
 					</label>
-					<label>
+					<label className={styles.phone}>
 						<Description title={'Phone number (optional)'} />
 						<input type='tel' {...register('phone')} />
+						{errors.phone?.message && (
+							<div className={styles.error}>
+								{errors.phone.message.toString()}
+							</div>
+						)}
 					</label>
 				</form>
 				<div className={styles.checkouts}>
@@ -470,6 +595,14 @@ const CheckoutForms: FC<{
 						></div>
 						Create an account?
 					</h3>
+					{account && (
+						<form>
+							<label className={styles.req}>
+								<Description title={'Account username'} />
+								<input type='text' />
+							</label>
+						</form>
+					)}
 					<h3
 						className={styles.h3}
 						onClick={() => setDiffAddress(!diffAddress)}
@@ -487,26 +620,55 @@ const CheckoutForms: FC<{
 						<label className={styles.req}>
 							<Description title={'First name'} />
 							<input
-								required={diffAddress}
 								type='text'
-								{...register('firstNameDiff')}
+								{...register('firstNameDiff', {
+									required: diffAddress,
+									minLength: {
+										value: 2,
+										message: 'First name must be at least 2 characters'
+									},
+									maxLength: {
+										value: 20,
+										message: 'First name must be at most 20 characters'
+									}
+								})}
 							/>
+							{errors.firstNameDiff?.message && (
+								<div className={styles.error}>
+									{errors.firstNameDiff.message.toString()}
+								</div>
+							)}
 						</label>
 						<label className={styles.req}>
 							<Description title={'Last name'} />
 							<input
-								required={diffAddress}
 								type='text'
-								{...register('lastNameDiff')}
+								{...register('lastNameDiff', {
+									required: diffAddress,
+									minLength: {
+										value: 2,
+										message: 'Last name must be at least 2 characters'
+									},
+									maxLength: {
+										value: 40,
+										message: 'Last name must be at most 40 characters'
+									}
+								})}
 							/>
+							{errors.lastNameDiff?.message && (
+								<div className={styles.error}>
+									{errors.lastNameDiff.message.toString()}
+								</div>
+							)}
 						</label>
 						<label className={styles.company}>
 							<Description title={'Company name (optional)'} />
-							<input
-								required={diffAddress}
-								type='text'
-								{...register('companyNameDiff')}
-							/>
+							<input type='text' {...register('companyNameDiff')} />
+							{errors.companyNameDiff?.message && (
+								<div className={styles.error}>
+									{errors.companyNameDiff.message.toString()}
+								</div>
+							)}
 						</label>
 						<label className={styles.req}>
 							<Description title={'Country / Region'} />
@@ -528,7 +690,7 @@ const CheckoutForms: FC<{
 										required={diffAddress}
 										options={states}
 										placeholder='Select a state'
-										className={styles.select}
+										className='select'
 										classNamePrefix='select'
 										onChange={selectedOption =>
 											field.onChange(selectedOption ? selectedOption.value : '')
@@ -543,21 +705,57 @@ const CheckoutForms: FC<{
 							<input
 								required={diffAddress}
 								type='text'
-								ref={autocompleteRefDiff} // Используйте autocompleteRefDiff здесь
+								ref={autocompleteRefDiff}
 								placeholder='House number and street name'
 							/>
 						</label>
 						<label className={styles.req}>
 							<Description title={'City / Town'} />
-							<input type='text' {...register('cityTownDiff')} />
+							<input
+								type='text'
+								{...register('cityTownDiff', {
+									required: diffAddress,
+									minLength: {
+										value: 2,
+										message: 'City / Town must be at least 2 characters'
+									},
+									maxLength: {
+										value: 40,
+										message: 'City / Town must be at most 40 characters'
+									}
+								})}
+							/>
+							{errors.cityTownDiff?.message && (
+								<div className={styles.error}>
+									{errors.cityTownDiff.message.toString()}
+								</div>
+							)}
 						</label>
 						<label className={styles.req}>
 							<Description title={'Zip code'} />
 							<input
-								required={diffAddress}
-								type='text'
-								{...register('zipCodeDiff')}
+								type='number'
+								{...register('zipCodeDiff', {
+									required: true,
+									minLength: {
+										value: 2,
+										message: 'Zip code must be at least 2 characters'
+									},
+									maxLength: {
+										value: 10,
+										message: 'Zip code must be at most 10 characters'
+									},
+									pattern: {
+										value: /^[0-9]+$/,
+										message: 'Zip code must be numbers'
+									}
+								})}
 							/>
+							{errors.zipCodeDiff?.message && (
+								<div className={styles.error}>
+									{errors.zipCodeDiff.message.toString()}
+								</div>
+							)}
 						</label>
 					</form>
 				</div>

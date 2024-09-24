@@ -1,0 +1,18 @@
+.headAC {
+	background-color: #1b1b1b;
+	padding: 20px 35px 20px 0px;
+	.wrapper {
+		max-width: 1500px;
+		margin: 0 auto;
+		@apply flex justify-between items-center;
+
+		.item {
+			width: 25%;
+			text-align: center;
+			@apply flex gap-2 items-center justify-center;
+			.text {
+				font-size: 15px;
+			}
+		}
+	}
+}

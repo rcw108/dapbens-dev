@@ -1,0 +1,14 @@
+.item {
+	.content {
+		overflow: hidden;
+		display: grid;
+		grid-template-rows: 0fr;
+		min-height: 0;
+		transition: all 0.5s ease-in-out;
+		&.active {
+			grid-template-rows: 1fr;
+			min-height: 100%;
+			transition: all 0.5s ease-in-out;
+		}
+	}
+}

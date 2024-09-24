@@ -307,3 +307,11 @@ ul.swiper-pagination-bullet li {
 .select__control {
 	cursor: pointer !important;
 }
+
+.select__option,
+.select__menu {
+	font-size: 15px;
+	font-weight: 300;
+	line-height: 22px;
+	color: #000;
+}

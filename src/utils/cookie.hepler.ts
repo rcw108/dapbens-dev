@@ -1,3 +1,4 @@
+import { InitialUser } from '@/store/user/user.interface'
 import Cookies from 'js-cookie'
 
 export const saveCartToCookie = (
@@ -17,4 +18,23 @@ export const getCookieDataCart = (name: string) => {
 		return JSON.parse(cookie)
 	}
 	return []
+}
+
+export const saveUserToCookie = (user: InitialUser) => {
+	Cookies.set('user', JSON.stringify(user), {
+		sameSite: 'None',
+		secure: true
+	})
+}
+
+export const removeUserToCookie = () => {
+	Cookies.remove('user')
+}
+
+export const getUserFromCookie = () => {
+	const cookie = Cookies.get('user')
+	if (cookie) {
+		return JSON.parse(cookie)
+	}
+	return null
 }

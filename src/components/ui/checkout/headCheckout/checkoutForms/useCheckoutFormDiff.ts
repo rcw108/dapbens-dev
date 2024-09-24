@@ -36,6 +36,7 @@ export const useCheckoutFormDiff = (setValue: UseFormSetValue<FieldValues>) => {
 					},
 					{} as Record<string, string>
 				)
+				console.log(addressComponents)
 
 				// Update form values
 				setValue(

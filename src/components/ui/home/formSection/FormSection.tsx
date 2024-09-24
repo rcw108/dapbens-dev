@@ -1,4 +1,7 @@
+'use client'
+
 import { HomeACF } from '@/types/homepage.interface'
+import clsx from 'clsx'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import ReactHtmlParser from 'react-html-parser'
@@ -11,12 +14,15 @@ interface IFormSection
 	extends Pick<
 		HomeACF,
 		'background_image_form' | 'form_description' | 'form_title'
-	> {}
+	> {
+	className?: string
+}
 
 const FormSection: FC<IFormSection> = ({
 	background_image_form,
 	form_description,
-	form_title
+	form_title,
+	className
 }) => {
 	const {
 		register,
@@ -34,7 +40,7 @@ const FormSection: FC<IFormSection> = ({
 	}
 
 	return (
-		<section className={styles.form}>
+		<section className={clsx(styles.form, className)}>
 			<div className='container'>
 				<div
 					className={styles.box}

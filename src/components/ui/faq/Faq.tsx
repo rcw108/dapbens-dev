@@ -6,7 +6,7 @@ import Description from '../headings/Description'
 import FormSection from '../home/formSection/FormSection'
 import HeadAccountSection from '../myAccount/headAccountSection/HeadAccountSection'
 import TitleAccountSection from '../myAccount/titleAccountSection/TitleAccountSection'
-import styles from './FAQ.module.scss'
+import styles from './Faq.module.scss'
 import FaqInfoSection from './faqInfoSection/FaqInfoSection'
 
 const Faq: FC<{ data: FAQPage }> = ({ data }) => {

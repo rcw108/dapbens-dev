@@ -1,3 +1,5 @@
+'use client'
+
 import { FC } from 'react'
 import styles from './MainAuthContent.module.scss'
 import Login from './login/Login'

@@ -6,7 +6,7 @@ import { useActions } from '@/hooks/useActions'
 import { ValidUser } from '@/types/myAccount.interface'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { FC, useState } from 'react'
+import { FC, FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { AuthCustomer } from '../../customer.interface'
 import { authCustomer, validateToken } from '../../customersActions'
@@ -30,23 +30,26 @@ const Login: FC = () => {
 
 	const { setUser } = useActions()
 
-	const handleFormSubmit = async () => {
+	const handleFormSubmit = async (e: FormEvent) => {
+		e.preventDefault()
 		const data = {
 			login: getValues('login'),
 			password: getValues('password')
 		}
-
+		console.log(data)
 		try {
 			const response = await authCustomer(data)
+			console.log(response)
 			if (response.status === false) {
 				setErrorLogin(response.data.message)
 			}
 			const userData: ValidUser = await validateToken(response.data.jwt)
+			console.log(userData)
 
-			if (userData.success) {
+			if (userData.user) {
 				const data = {
-					user: userData.data.user,
-					jwt: response.data.jwt
+					user: userData.user,
+					jwt: userData.jwt[0]
 				}
 				setUser(data)
 			} else {
@@ -60,7 +63,7 @@ const Login: FC = () => {
 	return (
 		<div className={styles.login}>
 			<SubHeading className={styles.title} title={'Login'} />
-			<form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
+			<form className={styles.form}>
 				<div>
 					<label className={clsx(styles.authInput, styles.password)}>
 						<Description
@@ -117,7 +120,7 @@ const Login: FC = () => {
 					/>
 					<span>Remember me</span>
 				</label>
-				<button className={styles.submit} type='submit'>
+				<button className={styles.submit} onClick={handleFormSubmit}>
 					Log in
 				</button>
 			</form>

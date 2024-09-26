@@ -16,6 +16,7 @@ export const userSlice = createSlice({
 	initialState,
 	reducers: {
 		setUser(state, { payload }: { payload: InitialUser }) {
+			console.log(payload)
 			state.user = payload.user
 			state.jwt = payload.jwt
 			saveUserToCookie(state)

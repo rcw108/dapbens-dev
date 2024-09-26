@@ -3,9 +3,8 @@
 import { useUser } from '@/hooks/useUser'
 import { MyAccountLayout } from '@/types/myAccount.interface'
 import dynamic from 'next/dynamic'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import styles from './AccountPage.module.scss'
-import NavSidebar from './navSidebar/NavSidebar'
 const DynamicMainAuthContent = dynamic(
 	() => import('./mainAuthContent/MainAuthContent'),
 	{ ssr: false }
@@ -14,21 +13,35 @@ const DynamicDashboard = dynamic(() => import('./dashboard/Dashboard'), {
 	ssr: false
 })
 
+const DynamicNavSidebar = dynamic(() => import('./navSidebar/NavSidebar'), {
+	ssr: false
+})
+
 const AccountPage: FC<{ data: MyAccountLayout }> = ({ data }) => {
-	const { user } = useUser()
+	const user = useUser()
+
+	const [isClient, setIsClient] = useState(false)
+
+	useEffect(() => {
+		setIsClient(true)
+	}, [])
+
+	if (!isClient) {
+		return <div className={styles.wrap}>Loading...</div>
+	}
 
 	return (
 		<>
-			<section className={styles.wrap}>
+			<div className={styles.wrap}>
 				{user !== null ? (
 					<div className={styles.profileWrapper}>
-						<NavSidebar />
+						<DynamicNavSidebar />
 						<DynamicDashboard />
 					</div>
 				) : (
 					<DynamicMainAuthContent />
 				)}
-			</section>
+			</div>
 		</>
 	)
 }

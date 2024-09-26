@@ -23,6 +23,7 @@ const SingleFaq: FC<SingleQA> = ({ answer, question }) => {
 					alt='caret'
 					width={7}
 					height={18}
+					style={{ transition: 'all 0.3s ease-in-out' }}
 					className={clsx({ [styles.rotate]: open })}
 				/>
 			</div>

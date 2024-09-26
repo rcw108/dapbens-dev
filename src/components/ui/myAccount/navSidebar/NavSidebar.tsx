@@ -1,5 +1,6 @@
 'use client'
 
+import { useActions } from '@/hooks/useActions'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,6 +9,8 @@ import { FC } from 'react'
 import styles from './NavSidebar.module.scss'
 const NavSidebar: FC = () => {
 	const pathname = usePathname()
+
+	const { logout } = useActions()
 
 	console.log(pathname)
 
@@ -89,7 +92,7 @@ const NavSidebar: FC = () => {
 						</Link>
 					</li>
 					<li>
-						<div className={styles.logout}>
+						<div onClick={() => logout()} className={styles.logout}>
 							Log out{' '}
 							<Image src={'/logout.svg'} alt='logout' width={20} height={20} />{' '}
 						</div>

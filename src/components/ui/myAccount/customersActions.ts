@@ -3,9 +3,12 @@
 import { API_URL } from '@/configs/api.config'
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 import axios from 'axios'
-import { AuthCustomer, RegistrationCustomer } from './customer.interface'
+import {
+	AuthCustomer,
+	RegistrationCustomer,
+	SingleOrder
+} from './customer.interface'
 
-const customerURL = `${API_URL}/wp-json/wc/v3/customers`
 const authRoute = `${API_URL}/woo/?rest_route=/auth/v1`
 
 const api = new WooCommerceRestApi({
@@ -46,6 +49,7 @@ export const authCustomer = async (data: AuthCustomer) => {
 	const reqBody: Partial<RegistrationCustomer> = {
 		password: data.password
 	}
+	console.log(data)
 	let path = `${authRoute}/auth&`
 	if (data.login.includes('@')) {
 		reqBody['email'] = data.login
@@ -68,4 +72,18 @@ export const validateToken = async (token: string) => {
 		.then(res => res.data.data)
 
 	return response
+}
+
+export const getCustomerOrders = async (customerId: number) => {
+	try {
+		const response: { data: SingleOrder[] } = await api.get(
+			`orders?customer=${customerId}`
+		)
+		return { success: true, data: response.data }
+	} catch (error: any) {
+		return {
+			success: false,
+			error: error.response?.data || 'An unexpected error occurred.'
+		}
+	}
 }

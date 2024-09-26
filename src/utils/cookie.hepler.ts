@@ -33,8 +33,10 @@ export const removeUserToCookie = () => {
 
 export const getUserFromCookie = () => {
 	const cookie = Cookies.get('user')
+	console.log(cookie)
 	if (cookie) {
-		return JSON.parse(cookie)
+		const res = JSON.parse(cookie)
+		return res.user
 	}
 	return null
 }

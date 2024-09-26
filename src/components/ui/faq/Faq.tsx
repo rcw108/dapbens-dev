@@ -25,8 +25,13 @@ const Faq: FC<{ data: FAQPage }> = ({ data }) => {
 				title={data.acf.titlep_f}
 			/>
 			<FaqInfoSection faqs_fp={data.acf.faqs_fp} />
-			<div className={clsx('container', styles.policy)}>
-				<Description title={ReactHtmlParser(data.acf.content)} />
+			<div className='bg-white'>
+				<div className={clsx('container', styles.policy)}>
+					<Description
+						className={styles.title}
+						title={ReactHtmlParser(data.acf.content)}
+					/>
+				</div>
 			</div>
 			<HeadAccountSection
 				contentLines={data.acf.info_line.map(item => {

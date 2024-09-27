@@ -6,6 +6,7 @@ import { FC, useEffect, useState } from 'react'
 import { SingleOrder } from '../../customer.interface'
 import { getCustomerOrders } from '../../customersActions'
 import styles from './OrderContent.module.scss'
+
 const OrderContent: FC = () => {
 	const [userOrders, setUserOrders] = useState<SingleOrder[] | []>()
 	const [loading, setLoading] = useState(true)

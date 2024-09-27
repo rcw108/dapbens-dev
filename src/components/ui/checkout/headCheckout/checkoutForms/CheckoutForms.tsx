@@ -15,6 +15,7 @@ import clsx from 'clsx'
 import creditCardType from 'credit-card-type'
 import { CreditCardType } from 'credit-card-type/dist/types'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 import { FC, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import ReactHtmlParser from 'react-html-parser'
@@ -345,9 +346,14 @@ const CheckoutForms: FC<{
 		console.log(orderData)
 		try {
 			const order = await handleCreateOrder(orderData, cardData, shippingData)
+
+			if (order) {
+				redirect('/')
+			}
 			console.log('Order response:', order)
 		} catch (error) {
 			console.error('Ошибка при создании ордера:', error)
+			redirect('/')
 		}
 	}
 

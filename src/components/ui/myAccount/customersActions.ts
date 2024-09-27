@@ -6,7 +6,8 @@ import axios from 'axios'
 import {
 	AuthCustomer,
 	RegistrationCustomer,
-	SingleOrder
+	SingleOrder,
+	SingleSubscribe
 } from './customer.interface'
 
 const authRoute = `${API_URL}/woo/?rest_route=/auth/v1`
@@ -79,6 +80,68 @@ export const getCustomerOrders = async (customerId: number) => {
 		const response: { data: SingleOrder[] } = await api.get(
 			`orders?customer=${customerId}`
 		)
+		return { success: true, data: response.data }
+	} catch (error: any) {
+		return {
+			success: false,
+			error: error.response?.data || 'An unexpected error occurred.'
+		}
+	}
+}
+
+export const getCustomerSubscribes = async (customerId: number) => {
+	try {
+		const response: { data: SingleSubscribe[] } = await api.get(
+			`subscriptions?customer=${customerId}`
+		)
+		return { success: true, data: response.data }
+	} catch (error: any) {
+		return {
+			success: false,
+			error: error.response?.data || 'An unexpected error occurred.'
+		}
+	}
+}
+
+export const createSubscribeAuthnet = async (data: any) => {
+	const dataA = {
+		ARBCreateSubscriptionRequest: {
+			merchantAuthentication: {
+				name: process.env.AUTH_NET_NAME || '',
+				transactionKey: process.env.AUTH_NET_KEY || ''
+			},
+			refId: '123456',
+			subscription: {
+				name: 'Sample subscription',
+				paymentSchedule: {
+					interval: {
+						length: '1',
+						unit: 'months'
+					},
+					startDate: '2020-08-30',
+					totalOccurrences: '12',
+					trialOccurrences: '1'
+				},
+				amount: '10.29',
+				trialAmount: '0.00',
+				payment: {
+					creditCard: {
+						cardNumber: '4111111111111111',
+						expirationDate: '2025-12'
+					}
+				},
+				billTo: {
+					firstName: 'John',
+					lastName: 'Smith'
+				}
+			}
+		}
+	}
+}
+
+export const getCustomerById = async (customerId: number) => {
+	try {
+		const response = await api.get(`customers/${customerId}`)
 		return { success: true, data: response.data }
 	} catch (error: any) {
 		return {

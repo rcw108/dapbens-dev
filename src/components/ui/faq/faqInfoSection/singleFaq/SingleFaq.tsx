@@ -1,18 +1,21 @@
-'use client'
-
 import Description from '@/components/ui/headings/Description'
 import SmallHeading from '@/components/ui/headings/SmallHeading'
-import { SingleQA } from '@/types/faq.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import styles from './SingleFaq.module.scss'
-const SingleFaq: FC<SingleQA> = ({ answer, question }) => {
-	const [open, setOpen] = useState(false)
 
+interface ISingleFAq {
+	question: string
+	answer: string
+	open: boolean
+	setOpen: () => void
+}
+
+const SingleFaq: FC<ISingleFAq> = ({ answer, question, open, setOpen }) => {
 	return (
-		<div className={styles.item} onClick={() => setOpen(!open)}>
+		<div className={styles.item} onClick={setOpen}>
 			<div className={styles.top}>
 				<SmallHeading
 					className='text-black'

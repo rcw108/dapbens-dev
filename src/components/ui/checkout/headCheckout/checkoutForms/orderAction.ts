@@ -106,33 +106,31 @@ export const handleCreateOrder = async (
 
 	try {
 		const order = await createOrder(orderData)
+		console.log(123123123, order)
 		console.log('Order created successfully:', order)
-		const transactionResponse = await sendTransactionRequest(transactionData)
-		console.log(
-			'Transaction response:',
-			transactionResponse,
-			'Order error: ',
-			transactionResponse.transactionResponse.errors,
-			'Order message: ',
-			transactionResponse.transactionResponse.messages
-		)
-		if (transactionResponse.transactionResponse.responseCode === '2') {
-			const res = await updateOrderPaymentStatus(order.id, 'failed')
-			console.log(res)
+		try {
+			const transactionResponse = await sendTransactionRequest(transactionData)
+			console.log(222222222222222, transactionResponse.messages)
+			if (transactionResponse.transactionResponse.responseCode === '2') {
+				const res = await updateOrderPaymentStatus(order.id, 'failed')
+				console.log(res)
+			}
+			if (transactionResponse.transactionResponse.responseCode === '1') {
+				const res = await updateOrderPaymentStatus(order.id, 'processing')
+				console.log(res)
+			}
+			if (transactionResponse.transactionResponse.responseCode === '4') {
+				const res = await updateOrderPaymentStatus(order.id, 'processing')
+				console.log(res)
+			}
+			if (transactionResponse.transactionResponse.responseCode === '3') {
+				const res = await updateOrderPaymentStatus(order.id, 'failed')
+				console.log(res)
+			}
+			return { order, transactionResponse }
+		} catch (error) {
+			console.log('Error sending transaction response:', error)
 		}
-		if (transactionResponse.transactionResponse.responseCode === '1') {
-			const res = await updateOrderPaymentStatus(order.id, 'processing')
-			console.log(res)
-		}
-		if (transactionResponse.transactionResponse.responseCode === '4') {
-			const res = await updateOrderPaymentStatus(order.id, 'processing')
-			console.log(res)
-		}
-		if (transactionResponse.transactionResponse.responseCode === '3') {
-			const res = await updateOrderPaymentStatus(order.id, 'failed')
-			console.log(res)
-		}
-		return { order, transactionResponse }
 	} catch (error) {
 		console.error('Error creating order:', error)
 		throw new Error('Order creation failed')

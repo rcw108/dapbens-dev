@@ -15,13 +15,14 @@ import clsx from 'clsx'
 import creditCardType from 'credit-card-type'
 import { CreditCardType } from 'credit-card-type/dist/types'
 import Image from 'next/image'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { FC, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import ReactHtmlParser from 'react-html-parser'
 import Select from 'react-select'
 import CartSummary from './cartSummary/CartSummary'
 import styles from './CheckoutForms.module.scss'
+import CheckScreen from './CheckScreen'
 import { getDiscountCode, handleCreateOrder } from './orderAction'
 import { states } from './statesData'
 import { useCheckoutForm } from './useCheckoutForm'
@@ -40,16 +41,25 @@ const CheckoutForms: FC<{
 	credit_card_image: { card_image: string }[]
 	order_advantages: Order[]
 }> = ({ credit_card_image, order_advantages }) => {
+	const [paymentCheck, setPaymentCheck] = useState(false)
+	const [paymentDetails, setPaymentDetails] = useState<any>()
+	const [sendPayment, setSendPayment] = useState(false)
+	const [sendError, setSendError] = useState(false)
+	const [sendErrorMessage, setSendErrorMessage] = useState<any>()
+
 	const {
 		register,
 		setValue,
 		getValues,
 		watch,
+		handleSubmit,
 		control,
 		formState: { errors }
 	} = useForm({
 		mode: 'onChange'
 	})
+
+	const router = useRouter()
 
 	const { itemListCount } = useCart()
 
@@ -88,6 +98,8 @@ const CheckoutForms: FC<{
 	useEffect(() => {
 		if (totalPrice > 50) {
 			setSelectShipping('Free shipping')
+		} else {
+			setSelectShipping('USPS Ground (2-4 Days)')
 		}
 	}, [totalPrice])
 
@@ -99,6 +111,16 @@ const CheckoutForms: FC<{
 		zipCodeDiff: '',
 		cityTownDiff: ''
 	})
+
+	const formatExpiryDate = (expiry: string): string => {
+		const match = expiry.match(/^(0[1-9]|1[0-2])\/(\d{2})$/)
+		if (match) {
+			const month = match[1]
+			const year = `20${match[2]}` // Добавляем "20" перед двумя цифрами года
+			return `${year}-${month}`
+		}
+		return expiry
+	}
 
 	useEffect(() => {
 		if (!isLoaded || isRequesting) return
@@ -188,6 +210,7 @@ const CheckoutForms: FC<{
 		const stateCountry = getValues('stateCountry')
 		const zipCode = getValues('zipCode')
 		const email = getValues('email')
+		const card = getValues('cardNumber')
 
 		if (
 			firstName &&
@@ -197,28 +220,12 @@ const CheckoutForms: FC<{
 			zipCode &&
 			email &&
 			autocompleteRef.current &&
-			autocompleteRef.current.value
+			autocompleteRef.current.value &&
+			card
 		) {
 			return true
 		}
 		return false
-	}
-
-	const convertExpirationDate = (expDate: string): string => {
-		// Убедитесь, что входная строка имеет длину 6 и состоит из цифр
-		if (expDate.length !== 6 || !/^\d{6}$/.test(expDate)) {
-			throw new Error('Invalid expiration date format')
-		}
-
-		const month = expDate.slice(0, 2)
-		const year = `20${expDate.slice(2, 4)}`
-
-		// Проверка на валидность месяца и года
-		if (Number(month) < 1 || Number(month) > 12) {
-			throw new Error('Invalid month')
-		}
-
-		return `${year}-${month}`
 	}
 
 	const handleDiscount = async () => {
@@ -246,6 +253,8 @@ const CheckoutForms: FC<{
 	const handleBtn = async () => {
 		if (!validateBtn()) return
 
+		setSendPayment(true)
+
 		const haveSubscribeItems = itemListCount.filter(
 			item => item.paymentType === 'subscription'
 		)
@@ -253,13 +262,6 @@ const CheckoutForms: FC<{
 		// if (haveSubscribeItems.length > 0 && auth) {
 		// 	const response = await createSubscribeAuthNet()
 		// }
-
-		const cardExpDate = getValues('cardExpDate')
-
-		const formattedExpirationDate =
-			cardExpDate && cardExpDate.length === 6
-				? convertExpirationDate(cardExpDate)
-				: ''
 
 		const orderData: ICheckoutOrder = {
 			payment_method: 'credit card',
@@ -328,7 +330,7 @@ const CheckoutForms: FC<{
 		const cardData = {
 			creditCard: {
 				cardNumber: getValues('cardNumber'),
-				expirationDate: getValues('expiry'),
+				expirationDate: formatExpiryDate(getValues('expiry')),
 				cardCode: getValues('cardCode'),
 				total: +discountTotal()
 			}
@@ -344,18 +346,25 @@ const CheckoutForms: FC<{
 						}
 		}
 		console.log(orderData)
-		try {
-			const order = await handleCreateOrder(orderData, cardData, shippingData)
+		const order = await handleCreateOrder(orderData, cardData, shippingData)
 
-			if (order) {
-				redirect('/')
-			}
+		if (
+			order &&
+			order.transactionResponse?.transactionResponse &&
+			!order.transactionResponse.transactionResponse.errors
+		) {
+			setPaymentCheck(true)
+			setPaymentDetails(order)
+			setSendPayment(false)
+		} else {
 			console.log('Order response:', order)
-		} catch (error) {
-			console.error('Ошибка при создании ордера:', error)
-			redirect('/')
+			setSendPayment(false)
+			setSendError(true)
+			setSendErrorMessage(order?.transactionResponse.transactionResponse.errors)
 		}
 	}
+
+	console.log(sendErrorMessage, sendError)
 
 	const discountTotal = () => {
 		// Вычисляем общую стоимость товаров
@@ -402,233 +411,33 @@ const CheckoutForms: FC<{
 
 	if (!isLoaded) return <div>Loading...</div>
 
+	if (paymentCheck) {
+		return <CheckScreen data={paymentDetails} />
+	}
+
 	console.log(errors)
 	return (
-		<div className={styles.wrap}>
-			<div className={styles.left}>
-				<SmallHeading className='mb-5' title={'Billing details'} />
-				<form className={styles.billing}>
-					<label className={styles.req}>
-						<Description title={'First name'} />
-						<input
-							type='text'
-							{...register('firstName', {
-								required: true,
-								minLength: {
-									value: 2,
-									message: 'First name must be at least 2 characters'
-								},
-								maxLength: {
-									value: 20,
-									message: 'First name must be at most 20 characters'
-								}
-							})}
-						/>
-						{errors.firstName?.message && (
-							<div className={styles.error}>
-								{errors.firstName.message.toString()}
-							</div>
-						)}
-					</label>
-					<label className={styles.req}>
-						<Description title={'Last name'} />
-						<input
-							type='text'
-							{...register('lastName', {
-								required: true,
-								minLength: {
-									value: 2,
-									message: 'Last name must be at least 2 characters'
-								},
-								maxLength: {
-									value: 40,
-									message: 'Last name must be at most 40 characters'
-								}
-							})}
-						/>
-						{errors.lastName?.message && (
-							<div className={styles.error}>
-								{errors.lastName.message.toString()}
-							</div>
-						)}
-					</label>
-					<label className={styles.company}>
-						<Description title={'Company name (optional)'} />
-						<input type='text' {...register('companyName')} />
-						{errors.companyName?.message && (
-							<div className={styles.error}>
-								{errors.companyName.message.toString()}
-							</div>
-						)}
-					</label>
-					<label className={styles.req}>
-						<Description title={'Country / Region'} />
-						<Description
-							className={styles.countryBlock}
-							title={'United States (US)'}
-						/>
-					</label>
-					<label className={styles.req}>
-						<Description title={'State / County'} />
-						<Controller
-							name='stateCountry'
-							control={control}
-							defaultValue=''
-							rules={{ required: true }}
-							render={({ field }) => (
-								<Select
-									{...field}
-									options={states}
-									required
-									placeholder='Select a state'
-									className='select'
-									classNamePrefix='select'
-									onChange={selectedOption =>
-										field.onChange(selectedOption ? selectedOption.value : '')
-									}
-									value={states.find(option => option.label === field.value)}
-								/>
-							)}
-						/>
-					</label>
-					<label className={clsx(styles.street, styles.req)}>
-						<Description title={'Street address'} />
-						<input
-							required
-							type='text'
-							ref={autocompleteRef}
-							placeholder='House number and street name'
-						/>
-					</label>
-					<label className={styles.req}>
-						<Description title={'City / Town'} />
-						<input
-							type='text'
-							{...register('cityTown', {
-								required: true,
-								minLength: {
-									value: 2,
-									message: 'City / Town must be at least 2 characters'
-								},
-								maxLength: {
-									value: 40,
-									message: 'City / Town must be at most 40 characters'
-								}
-							})}
-						/>
-						{errors.cityTown?.message && (
-							<div className={styles.error}>
-								{errors.cityTown.message.toString()}
-							</div>
-						)}
-					</label>
-					<label className={styles.req}>
-						<Description title={'Zip code'} />
-						<input
-							type='number'
-							{...register('zipCode', {
-								required: true,
-								minLength: {
-									value: 2,
-									message: 'Zip code must be at least 2 characters'
-								},
-								maxLength: {
-									value: 10,
-									message: 'Zip code must be at most 10 characters'
-								},
-								pattern: {
-									value: /^[0-9]+$/,
-									message: 'Zip code must be numbers'
-								}
-							})}
-						/>
-						{errors.zipCode?.message && (
-							<div className={styles.error}>
-								{errors.zipCode.message.toString()}
-							</div>
-						)}
-					</label>
-					<label className={styles.req}>
-						<Description title={'Email address'} />
-						<input
-							type='email'
-							{...register('email', {
-								required: true,
-								minLength: {
-									value: 6,
-									message: 'Email must be at least 6 characters'
-								},
-								maxLength: {
-									value: 40,
-									message: 'Email must be at most 40 characters'
-								},
-								pattern: {
-									value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-									message: 'Invalid email address'
-								}
-							})}
-						/>
-						{errors.email?.message && (
-							<div className={styles.error}>
-								{errors.email.message.toString()}
-							</div>
-						)}
-					</label>
-					<label className={styles.phone}>
-						<Description title={'Phone number (optional)'} />
-						<input type='tel' {...register('phone')} />
-						{errors.phone?.message && (
-							<div className={styles.error}>
-								{errors.phone.message.toString()}
-							</div>
-						)}
-					</label>
-				</form>
-				<div className={styles.checkouts}>
-					<h3 className={styles.h3} onClick={() => setNews(!news)}>
-						<div
-							className={clsx(styles.check, {
-								[styles.checked]: news === true
-							})}
-						></div>
-						Sign me up to receive email updates and news (optional)
-					</h3>
-					<h3 className={styles.h3} onClick={() => setAccount(!account)}>
-						<div
-							className={clsx(styles.check, {
-								[styles.checked]: account === true
-							})}
-						></div>
-						Create an account?
-					</h3>
-					{account && (
-						<form>
-							<label className={styles.req}>
-								<Description title={'Account username'} />
-								<input type='text' />
-							</label>
-						</form>
-					)}
-					<h3
-						className={styles.h3}
-						onClick={() => setDiffAddress(!diffAddress)}
-					>
-						<div
-							className={clsx(styles.check, {
-								[styles.checked]: diffAddress === true
-							})}
-						></div>
-						Ship to a different address?
-					</h3>
+		<>
+			{sendError && sendErrorMessage && (
+				<div className={styles.payError}>
+					<Description
+						title={`${sendErrorMessage[0].errorText} Check your card details`}
+					/>
 				</div>
-				<div className={clsx(styles.shipDiff, { [styles.show]: diffAddress })}>
-					<form className={styles.billing}>
+			)}
+			<form className={styles.wrap} onSubmit={handleSubmit(handleBtn)}>
+				<div className={styles.left}>
+					<SmallHeading className='mb-5' title={'Billing details'} />
+					<div className={styles.billing}>
 						<label className={styles.req}>
 							<Description title={'First name'} />
 							<input
 								type='text'
-								{...register('firstNameDiff', {
-									required: diffAddress,
+								{...register('firstName', {
+									required: {
+										value: true,
+										message: 'First name is required'
+									},
 									minLength: {
 										value: 2,
 										message: 'First name must be at least 2 characters'
@@ -639,9 +448,9 @@ const CheckoutForms: FC<{
 									}
 								})}
 							/>
-							{errors.firstNameDiff?.message && (
+							{errors.firstName?.message && (
 								<div className={styles.error}>
-									{errors.firstNameDiff.message.toString()}
+									{errors.firstName.message.toString()}
 								</div>
 							)}
 						</label>
@@ -649,8 +458,11 @@ const CheckoutForms: FC<{
 							<Description title={'Last name'} />
 							<input
 								type='text'
-								{...register('lastNameDiff', {
-									required: diffAddress,
+								{...register('lastName', {
+									required: {
+										value: true,
+										message: 'Last name is required'
+									},
 									minLength: {
 										value: 2,
 										message: 'Last name must be at least 2 characters'
@@ -661,18 +473,18 @@ const CheckoutForms: FC<{
 									}
 								})}
 							/>
-							{errors.lastNameDiff?.message && (
+							{errors.lastName?.message && (
 								<div className={styles.error}>
-									{errors.lastNameDiff.message.toString()}
+									{errors.lastName.message.toString()}
 								</div>
 							)}
 						</label>
 						<label className={styles.company}>
 							<Description title={'Company name (optional)'} />
-							<input type='text' {...register('companyNameDiff')} />
-							{errors.companyNameDiff?.message && (
+							<input type='text' {...register('companyName')} />
+							{errors.companyName?.message && (
 								<div className={styles.error}>
-									{errors.companyNameDiff.message.toString()}
+									{errors.companyName.message.toString()}
 								</div>
 							)}
 						</label>
@@ -686,15 +498,15 @@ const CheckoutForms: FC<{
 						<label className={styles.req}>
 							<Description title={'State / County'} />
 							<Controller
-								name='stateCountryDiff'
+								name='stateCountry'
 								control={control}
 								defaultValue=''
 								rules={{ required: true }}
 								render={({ field }) => (
 									<Select
 										{...field}
-										required={diffAddress}
 										options={states}
+										required
 										placeholder='Select a state'
 										className='select'
 										classNamePrefix='select'
@@ -709,9 +521,9 @@ const CheckoutForms: FC<{
 						<label className={clsx(styles.street, styles.req)}>
 							<Description title={'Street address'} />
 							<input
-								required={diffAddress}
+								required
 								type='text'
-								ref={autocompleteRefDiff}
+								ref={autocompleteRef}
 								placeholder='House number and street name'
 							/>
 						</label>
@@ -719,8 +531,11 @@ const CheckoutForms: FC<{
 							<Description title={'City / Town'} />
 							<input
 								type='text'
-								{...register('cityTownDiff', {
-									required: diffAddress,
+								{...register('cityTown', {
+									required: {
+										value: true,
+										message: 'City / Town is required'
+									},
 									minLength: {
 										value: 2,
 										message: 'City / Town must be at least 2 characters'
@@ -731,9 +546,9 @@ const CheckoutForms: FC<{
 									}
 								})}
 							/>
-							{errors.cityTownDiff?.message && (
+							{errors.cityTown?.message && (
 								<div className={styles.error}>
-									{errors.cityTownDiff.message.toString()}
+									{errors.cityTown.message.toString()}
 								</div>
 							)}
 						</label>
@@ -741,8 +556,11 @@ const CheckoutForms: FC<{
 							<Description title={'Zip code'} />
 							<input
 								type='number'
-								{...register('zipCodeDiff', {
-									required: true,
+								{...register('zipCode', {
+									required: {
+										value: true,
+										message: 'Zip code is required'
+									},
 									minLength: {
 										value: 2,
 										message: 'Zip code must be at least 2 characters'
@@ -757,267 +575,569 @@ const CheckoutForms: FC<{
 									}
 								})}
 							/>
-							{errors.zipCodeDiff?.message && (
+							{errors.zipCode?.message && (
 								<div className={styles.error}>
-									{errors.zipCodeDiff.message.toString()}
+									{errors.zipCode.message.toString()}
 								</div>
 							)}
 						</label>
-					</form>
-				</div>
-				<div
-					className={clsx(styles.shipping, {
-						[styles.none]: shipping === null
-					})}
-				>
-					<SmallHeading className={styles.shipText} title={'Shipping'} />
-					<div className={styles.boxes}>
-						{itemListCount &&
-							itemListCount.reduce((acc, item) => acc + +item.price, 0) >
-								50 && (
-								<div
-									onClick={() => setSelectShipping('Free shipping')}
-									className={clsx(styles.box, {
-										[styles.select]: selectShipping === 'Free shipping'
-									})}
-								>
-									<div className={styles.itemShip}>
-										<div
-											className={clsx(styles.checkbox, {
-												[styles.selectCheck]: selectShipping === 'Free shipping'
-											})}
-										></div>
-										<p className='text-black'>Free shipping</p>
-									</div>
+						<label className={styles.req}>
+							<Description title={'Email address'} />
+							<input
+								type='email'
+								{...register('email', {
+									required: {
+										value: true,
+										message: 'Email is required'
+									},
+									minLength: {
+										value: 6,
+										message: 'Email must be at least 6 characters'
+									},
+									maxLength: {
+										value: 40,
+										message: 'Email must be at most 40 characters'
+									},
+									pattern: {
+										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+										message: 'Invalid email address'
+									}
+								})}
+							/>
+							{errors.email?.message && (
+								<div className={styles.error}>
+									{errors.email.message.toString()}
 								</div>
 							)}
-						{shipping &&
-							shipping
-								.sort((a, b) => +a.cost - +b.cost)
-								.map((item, index) => (
+						</label>
+						<label className={styles.phone}>
+							<Description title={'Phone number (optional)'} />
+							<input type='tel' {...register('phone')} />
+							{errors.phone?.message && (
+								<div className={styles.error}>
+									{errors.phone.message.toString()}
+								</div>
+							)}
+						</label>
+					</div>
+					<div className={styles.checkouts}>
+						<h3 className={styles.h3} onClick={() => setNews(!news)}>
+							<div
+								className={clsx(styles.check, {
+									[styles.checked]: news === true
+								})}
+							></div>
+							Sign me up to receive email updates and news (optional)
+						</h3>
+						<h3 className={styles.h3} onClick={() => setAccount(!account)}>
+							<div
+								className={clsx(styles.check, {
+									[styles.checked]: account === true
+								})}
+							></div>
+							Create an account?
+						</h3>
+						{account && (
+							<div>
+								<label className={styles.req}>
+									<Description title={'Account username'} />
+									<input type='text' />
+								</label>
+							</div>
+						)}
+						<h3
+							className={styles.h3}
+							onClick={() => setDiffAddress(!diffAddress)}
+						>
+							<div
+								className={clsx(styles.check, {
+									[styles.checked]: diffAddress === true
+								})}
+							></div>
+							Ship to a different address?
+						</h3>
+					</div>
+					<div
+						className={clsx(styles.shipDiff, { [styles.show]: diffAddress })}
+					>
+						<div className={styles.billing}>
+							<label className={styles.req}>
+								<Description title={'First name'} />
+								<input
+									type='text'
+									{...register('firstNameDiff', {
+										required: {
+											value: diffAddress,
+											message: 'First name is required'
+										},
+										minLength: {
+											value: 2,
+											message: 'First name must be at least 2 characters'
+										},
+										maxLength: {
+											value: 20,
+											message: 'First name must be at most 20 characters'
+										}
+									})}
+								/>
+								{errors.firstNameDiff?.message && (
+									<div className={styles.error}>
+										{errors.firstNameDiff.message.toString()}
+									</div>
+								)}
+							</label>
+							<label className={styles.req}>
+								<Description title={'Last name'} />
+								<input
+									type='text'
+									{...register('lastNameDiff', {
+										required: {
+											value: diffAddress,
+											message: 'Last name is required'
+										},
+										minLength: {
+											value: 2,
+											message: 'Last name must be at least 2 characters'
+										},
+										maxLength: {
+											value: 40,
+											message: 'Last name must be at most 40 characters'
+										}
+									})}
+								/>
+								{errors.lastNameDiff?.message && (
+									<div className={styles.error}>
+										{errors.lastNameDiff.message.toString()}
+									</div>
+								)}
+							</label>
+							<label className={styles.company}>
+								<Description title={'Company name (optional)'} />
+								<input type='text' {...register('companyNameDiff')} />
+								{errors.companyNameDiff?.message && (
+									<div className={styles.error}>
+										{errors.companyNameDiff.message.toString()}
+									</div>
+								)}
+							</label>
+							<label className={styles.req}>
+								<Description title={'Country / Region'} />
+								<Description
+									className={styles.countryBlock}
+									title={'United States (US)'}
+								/>
+							</label>
+							<label className={styles.req}>
+								<Description title={'State / County'} />
+								<Controller
+									name='stateCountryDiff'
+									control={control}
+									defaultValue=''
+									rules={{ required: diffAddress }}
+									render={({ field }) => (
+										<Select
+											{...field}
+											required={diffAddress}
+											options={states}
+											placeholder='Select a state'
+											className='select'
+											classNamePrefix='select'
+											onChange={selectedOption =>
+												field.onChange(
+													selectedOption ? selectedOption.value : ''
+												)
+											}
+											value={states.find(
+												option => option.label === field.value
+											)}
+										/>
+									)}
+								/>
+							</label>
+							<label className={clsx(styles.street, styles.req)}>
+								<Description title={'Street address'} />
+								<input
+									required={diffAddress}
+									type='text'
+									ref={autocompleteRefDiff}
+									placeholder='House number and street name'
+								/>
+							</label>
+							<label className={styles.req}>
+								<Description title={'City / Town'} />
+								<input
+									type='text'
+									{...register('cityTownDiff', {
+										required: {
+											value: diffAddress,
+											message: 'City / Town is required'
+										},
+										minLength: {
+											value: 2,
+											message: 'City / Town must be at least 2 characters'
+										},
+										maxLength: {
+											value: 40,
+											message: 'City / Town must be at most 40 characters'
+										}
+									})}
+								/>
+								{errors.cityTownDiff?.message && (
+									<div className={styles.error}>
+										{errors.cityTownDiff.message.toString()}
+									</div>
+								)}
+							</label>
+							<label className={styles.req}>
+								<Description title={'Zip code'} />
+								<input
+									type='number'
+									{...register('zipCodeDiff', {
+										required: {
+											value: diffAddress,
+											message: 'Zip code is required'
+										},
+										minLength: {
+											value: 2,
+											message: 'Zip code must be at least 2 characters'
+										},
+										maxLength: {
+											value: 10,
+											message: 'Zip code must be at most 10 characters'
+										},
+										pattern: {
+											value: /^[0-9]+$/,
+											message: 'Zip code must be numbers'
+										}
+									})}
+								/>
+								{errors.zipCodeDiff?.message && (
+									<div className={styles.error}>
+										{errors.zipCodeDiff.message.toString()}
+									</div>
+								)}
+							</label>
+						</div>
+					</div>
+					<div
+						className={clsx(styles.shipping, {
+							[styles.none]: shipping === null
+						})}
+					>
+						<SmallHeading className={styles.shipText} title={'Shipping'} />
+						<div className={styles.boxes}>
+							{itemListCount &&
+								itemListCount.reduce((acc, item) => acc + +item.price, 0) >
+									50 && (
 									<div
+										onClick={() => setSelectShipping('Free shipping')}
 										className={clsx(styles.box, {
-											[styles.select]: selectShipping === item.label
+											[styles.select]: selectShipping === 'Free shipping'
 										})}
-										onClick={() => setSelectShipping(item.label)}
-										key={item.id}
 									>
 										<div className={styles.itemShip}>
 											<div
 												className={clsx(styles.checkbox, {
-													[styles.selectCheck]: selectShipping === item.label
+													[styles.selectCheck]:
+														selectShipping === 'Free shipping'
 												})}
 											></div>
-											<p className='text-black'>{item.label}</p>
+											<p className='text-black'>Free shipping</p>
 										</div>
-										<p className='text-black'>${item.cost}</p>
 									</div>
-								))}
-					</div>
-				</div>
-				<div className={styles.payment}>
-					<SmallHeading className={styles.payText} title={'Payment details'} />
-					<div className={styles.paymentBox}>
-						<div className={styles.paymentTop}>
-							<h3 className={styles.h3}>
-								<div className={styles.checked}></div>
-								Credit Card
-							</h3>
-							<Description title='Pay securely using your credit card.' />
-							<div className={styles.cards}>
-								{credit_card_image &&
-									credit_card_image.map((card, index) => (
-										<Image
-											key={`${card}-${index}`}
-											src={card.card_image}
-											alt='credit card'
-											width={30}
-											height={30}
-										/>
+								)}
+							{shipping &&
+								shipping
+									.sort((a, b) => +a.cost - +b.cost)
+									.map((item, index) => (
+										<div
+											className={clsx(styles.box, {
+												[styles.select]: selectShipping === item.label
+											})}
+											onClick={() => setSelectShipping(item.label)}
+											key={item.id}
+										>
+											<div className={styles.itemShip}>
+												<div
+													className={clsx(styles.checkbox, {
+														[styles.selectCheck]: selectShipping === item.label
+													})}
+												></div>
+												<p className='text-black'>{item.label}</p>
+											</div>
+											<p className='text-black'>${item.cost}</p>
+										</div>
 									))}
+						</div>
+					</div>
+					<div className={styles.payment}>
+						<SmallHeading
+							className={styles.payText}
+							title={'Payment details'}
+						/>
+						<div className={styles.paymentBox}>
+							<div className={styles.paymentTop}>
+								<h3 className={styles.h3}>
+									<div className={styles.checked}></div>
+									Credit Card
+								</h3>
+								<Description title='Pay securely using your credit card.' />
+								<div className={styles.cards}>
+									{credit_card_image &&
+										credit_card_image.map((card, index) => (
+											<Image
+												key={`${card}-${index}`}
+												src={card.card_image}
+												alt='credit card'
+												width={30}
+												height={30}
+												className={styles.cardType}
+											/>
+										))}
+								</div>
+							</div>
+							<div className={styles.paymentForm}>
+								<div className={styles.pay}>
+									<label className={styles.card}>
+										<div className={styles.cardType}>
+											{cardType &&
+												cardType[0] &&
+												getValues('cardNumber') !== '' && (
+													<Image src={`/${cardType[0].type}.svg`} alt='' fill />
+												)}
+										</div>
+										<Description title={'Card Number'} />
+										<input
+											type='number'
+											placeholder='•••• •••• •••• ••••'
+											{...register('cardNumber', {
+												required: {
+													value: true,
+													message: 'Card number is required'
+												},
+												maxLength: {
+													value: 20,
+													message: 'Card number must be at most 20 characters'
+												},
+												minLength: {
+													value: 16,
+													message: 'Card number must be at least 16 characters'
+												},
+												pattern: {
+													value: /^[0-9]+$/,
+													message: 'Card number must be numbers'
+												}
+											})}
+										/>
+										{errors.cardNumber?.message && (
+											<div className={styles.error}>
+												{errors.cardNumber.message.toString()}
+											</div>
+										)}
+									</label>
+									<label>
+										<Description title={'Expiry (MM/YY)'} />
+										<input
+											type='tel'
+											{...register('expiry', {
+												required: {
+													value: true,
+													message: 'Expiry is required'
+												},
+												maxLength: {
+													value: 5,
+													message: 'Expiry must be at most 5 characters'
+												},
+												minLength: {
+													value: 5,
+													message: 'Expiry must be at least 5 characters'
+												},
+												pattern: {
+													value: /^(0[1-9]|1[0-2])\/\d{2}$/,
+													message: 'Expiry must be in format MM / YY'
+												}
+											})}
+											placeholder='MM / YY'
+										/>
+										{errors.expiry?.message && (
+											<div className={styles.error}>
+												{errors.expiry.message.toString()}
+											</div>
+										)}
+									</label>
+									<label>
+										<Description title='Card code' />
+										<input
+											type='tel'
+											{...register('cardCode', {
+												required: {
+													value: true,
+													message: 'CVC is required'
+												},
+												maxLength: {
+													value: 4,
+													message: 'CVC must be at most 4 characters'
+												},
+												minLength: {
+													value: 3,
+													message: 'CVC must be at least 3 characters'
+												}
+											})}
+											placeholder='CVC'
+											maxLength={4}
+										/>
+										{errors.cardCode?.message && (
+											<div className={styles.error}>
+												{errors.cardCode.message.toString()}
+											</div>
+										)}
+									</label>
+								</div>
 							</div>
 						</div>
-						<div className={styles.paymentForm}>
-							<form className={styles.pay}>
-								<label className={styles.card}>
-									<div className={styles.cardType}>
-										{cardType &&
-											cardType[0] &&
-											getValues('cardNumber') !== '' && (
-												<Image src={`/${cardType[0].type}.svg`} alt='' fill />
-											)}
-									</div>
-									<Description title={'Card Number'} />
-									<input
-										type='tel'
-										{...register('cardNumber')}
-										placeholder='•••• •••• •••• ••••'
-										maxLength={19}
-									/>
-								</label>
-								<label>
-									<Description title={'Expiry (MM/YY)'} />
-									<input
-										type='tel'
-										{...register('expiry')}
-										placeholder='MM / YY'
-									/>
-								</label>
-								<label>
-									<Description title='Card code' />
-									<input
-										type='tel'
-										{...register('cardCode')}
-										placeholder='CVC'
-										maxLength={4}
-									/>
-								</label>
-							</form>
-						</div>
 					</div>
 				</div>
-			</div>
-			<div className={styles.right}>
-				<CartSummary />
-				<div className={styles.discount}>
-					<SmallHeading
-						className={styles.titleDisc}
-						title={'Enter your discount code'}
-					/>
-					<label>
-						<input type='text' {...register('discountCode')} />
-						<span className={styles.couponError}>
-							{(typeof discountValue === 'string' ||
-								typeof discountValue === null ||
-								discountValue === undefined) &&
-								'Coupon not found'}
-						</span>
-						<button onClick={handleDiscount}>ACTIVATE</button>
-					</label>
-				</div>
-				<div className={styles.divider}></div>
-				<div className={styles.subtotal}>
-					<SmallHeading className={styles.subTotalTitle} title={'Subtotal'} />
-					<div className={styles.subPrice}>
-						<p className={styles.bdi}>
-							$
-							{productsToRender &&
-								productsToRender
-									.reduce((acc, item) => acc + +item.regular_price, 0)
-									.toFixed(2)}
-						</p>
-						<p className={styles.ins}>
-							$
-							{itemListCount &&
-								itemListCount
-									.reduce((acc, item) => acc + +item.price, 0)
-									.toFixed(2)}
-						</p>
+				<div className={styles.right}>
+					<CartSummary />
+					<div className={styles.discount}>
+						<SmallHeading
+							className={styles.titleDisc}
+							title={'Enter your discount code'}
+						/>
+						<label>
+							<input type='text' {...register('discountCode')} />
+							<span className={styles.couponError}>
+								{(typeof discountValue === 'string' ||
+									typeof discountValue === null ||
+									discountValue === undefined) &&
+									'Coupon not found'}
+							</span>
+							<div className={styles.discBtn} onClick={handleDiscount}>
+								ACTIVATE
+							</div>
+						</label>
 					</div>
-				</div>
-				{discountValue &&
-					typeof discountValue === 'object' &&
-					discountValue.code &&
-					discountValue.amount && (
-						<div className={styles.countAndRemove}>
-							<Description
-								className={styles.countAndRemoveText}
-								title={`Coupon: ${discountValue.code}`}
-							/>
-							<div className={styles.countAndRemoveText}>
-								-$
+					<div className={styles.divider}></div>
+					<div className={styles.subtotal}>
+						<SmallHeading className={styles.subTotalTitle} title={'Subtotal'} />
+						<div className={styles.subPrice}>
+							<p className={styles.bdi}>
+								$
+								{productsToRender &&
+									productsToRender
+										.reduce((acc, item) => acc + +item.regular_price, 0)
+										.toFixed(2)}
+							</p>
+							<p className={styles.ins}>
+								$
 								{itemListCount &&
-									(
-										(itemListCount.reduce(
-											(acc, item) => acc + +item.price * +item.count,
-											0
-										) +
-											// Добавляем стоимость доставки, если она выбрана
-											(shipping &&
-											shipping.find(item => item.label === selectShipping)?.cost
-												? Number(
-														shipping.find(item => item.label === selectShipping)
-															?.cost
-													)
-												: 0)) *
-										// Применяем скидку
-										(discountValue && discountValue.amount
-											? +discountValue.amount / 100
-											: 0)
-									).toFixed(2)}
-								<button onClick={resetDiscount}>[Remove]</button>
-							</div>
+									itemListCount
+										.reduce((acc, item) => acc + +item.price, 0)
+										.toFixed(2)}
+							</p>
 						</div>
-					)}
-				<div className={styles.divider}></div>
-				<div className={styles.total}>
-					<SmallHeading className={styles.totalTitle} title={'Total'} />
-					<div className={styles.totalPrice}>
-						<p className={styles.bdi}>
-							$
-							{productsToRender &&
-								(
-									productsToRender.reduce(
-										(acc, item) => acc + +item.regular_price,
-										0
-									) +
-									(shipping &&
-									shipping.find(item => item.label === selectShipping)?.cost
-										? Number(
+					</div>
+					{discountValue &&
+						typeof discountValue === 'object' &&
+						discountValue.code &&
+						discountValue.amount && (
+							<div className={styles.countAndRemove}>
+								<Description
+									className={styles.countAndRemoveText}
+									title={`Coupon: ${discountValue.code}`}
+								/>
+								<div className={styles.countAndRemoveText}>
+									-$
+									{itemListCount &&
+										(
+											(itemListCount.reduce(
+												(acc, item) => acc + +item.price * +item.count,
+												0
+											) +
+												// Добавляем стоимость доставки, если она выбрана
+												(shipping &&
 												shipping.find(item => item.label === selectShipping)
 													?.cost
-											) || 0
-										: 0)
-								).toFixed(2)}
-						</p>
-						<p className={styles.ins}>${discountTotal()}</p>
-						<div className={styles.save}>
-							{`You're saved $${
-								productsToRender &&
-								productsToRender
-									.reduce((acc, item) => {
-										const regularPrice = Number(item.regular_price) || 0
-										const price = Number(item.price) || 0
-										return acc + (regularPrice - price)
-									}, 0)
-									.toFixed(2)
-							}`}
+													? Number(
+															shipping.find(
+																item => item.label === selectShipping
+															)?.cost
+														)
+													: 0)) *
+											// Применяем скидку
+											(discountValue && discountValue.amount
+												? +discountValue.amount / 100
+												: 0)
+										).toFixed(2)}
+									<button onClick={resetDiscount}>[Remove]</button>
+								</div>
+							</div>
+						)}
+					<div className={styles.divider}></div>
+					<div className={styles.total}>
+						<SmallHeading className={styles.totalTitle} title={'Total'} />
+						<div className={styles.totalPrice}>
+							<p className={styles.bdi}>
+								$
+								{productsToRender &&
+									(
+										productsToRender.reduce(
+											(acc, item) => acc + +item.regular_price,
+											0
+										) +
+										(shipping &&
+										shipping.find(item => item.label === selectShipping)?.cost
+											? Number(
+													shipping.find(item => item.label === selectShipping)
+														?.cost
+												) || 0
+											: 0)
+									).toFixed(2)}
+							</p>
+							<p className={styles.ins}>${discountTotal()}</p>
+							<div className={styles.save}>
+								{`You're saved $${
+									productsToRender &&
+									productsToRender
+										.reduce((acc, item) => {
+											const regularPrice = Number(item.regular_price) || 0
+											const price = Number(item.price) || 0
+											return acc + (regularPrice - price)
+										}, 0)
+										.toFixed(2)
+								}`}
+							</div>
 						</div>
 					</div>
-				</div>
-				{!!itemListCount.some(item => item.paymentType === 'subscription') && (
-					<div>Remove subscribe item</div>
-				)}
-				{itemListCount.some(item => item.paymentType === 'subscription') ===
-					false && (
-					<div className={styles.btns}>
-						<button
-							className={styles.btn}
-							disabled={
-								!validateBtn() ||
-								!!itemListCount.some(
-									item => item.paymentType === 'subscription'
-								)
-							}
-							onClick={handleBtn}
-						>
-							PLACE ORDER
-						</button>
-					</div>
-				)}
-				<div className={styles.orderAdv}>
-					{order_advantages.map((item, index) => (
-						<div key={item.text} className='flex gap-2'>
-							<Image src={item.icon} alt={item.text} width={24} height={24} />
-							<Description
-								className={styles.textAd}
-								title={ReactHtmlParser(item.text)}
-							/>
+					{!!itemListCount.some(
+						item => item.paymentType === 'subscription'
+					) && <div>Remove subscribe item</div>}
+					{itemListCount.some(item => item.paymentType === 'subscription') ===
+						false && (
+						<div className={styles.btns}>
+							<button
+								className={clsx(styles.btn, {
+									[styles.disabledBtn]: sendPayment
+								})}
+							>
+								PLACE ORDER
+							</button>
 						</div>
-					))}
+					)}
+					<div className={styles.orderAdv}>
+						{order_advantages.map((item, index) => (
+							<div key={item.text} className='flex gap-2'>
+								<Image src={item.icon} alt={item.text} width={24} height={24} />
+								<Description
+									className={styles.textAd}
+									title={ReactHtmlParser(item.text)}
+								/>
+							</div>
+						))}
+					</div>
 				</div>
-			</div>
-		</div>
+			</form>
+		</>
 	)
 }
 

@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 import { FC } from 'react'
 import stylesBoard from '../../AccountPage.module.scss'
-import ShippingContent from './shippingContent/shippingContent'
+import ShippingContent from './shippingContent/ShippingContent'
 
 const DynamicNavSidebar = dynamic(() => import('../../navSidebar/NavSidebar'), {
 	ssr: false

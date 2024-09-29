@@ -4,6 +4,7 @@ import { API_URL } from '@/configs/api.config'
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api'
 import axios from 'axios'
 import {
+	Address,
 	AuthCustomer,
 	RegistrationCustomer,
 	SingleOrder,
@@ -142,6 +143,21 @@ export const createSubscribeAuthnet = async (data: any) => {
 export const getCustomerById = async (customerId: number) => {
 	try {
 		const response = await api.get(`customers/${customerId}`)
+		return { success: true, data: response.data }
+	} catch (error: any) {
+		return {
+			success: false,
+			error: error.response?.data || 'An unexpected error occurred.'
+		}
+	}
+}
+
+export const updateCustomerBillingAddress = async (
+	data: { billing?: Partial<Address>; shipping?: Partial<Address> },
+	id: number
+) => {
+	try {
+		const response = await api.put(`customers/${id}`, data)
 		return { success: true, data: response.data }
 	} catch (error: any) {
 		return {

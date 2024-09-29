@@ -62,7 +62,11 @@ const NavSidebar: FC = () => {
 					<li>
 						<Link
 							className={clsx(
-								pathname === '/my-account/edit-address' ? styles.active : ''
+								pathname === '/my-account/edit-address' ||
+									pathname === '/my-account/edit-address/billing' ||
+									pathname === '/my-account/edit-address/shipping'
+									? styles.active
+									: ''
 							)}
 							href='/my-account/edit-address'
 						>

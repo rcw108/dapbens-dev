@@ -75,6 +75,11 @@ export interface ICheckoutOrder {
 		quantity: number
 		price: number
 	}[]
+	shipping_lines: {
+		method_id: string
+		method_title: string
+		total: string
+	}[]
 }
 
 export interface ICreateTransactionRequest {
@@ -183,7 +188,7 @@ export interface Discount {
 }
 
 export interface SubscribeCreate {
-	customer_id: number
+	customer_id?: number
 	status: 'active' | 'on-hold' | 'cancelled' | 'pending'
 	billing_period: string
 	billing_interval: number
@@ -191,6 +196,11 @@ export interface SubscribeCreate {
 	next_payment_date: string
 	payment_method: 'authnet'
 	payment_method_title: 'Credit Card'
+	payment_details?: {
+		post_meta: {
+			[key: string]: string
+		}
+	}
 
 	billing: {
 		first_name: string
@@ -214,17 +224,11 @@ export interface SubscribeCreate {
 		postcode: string
 		country: string
 	}
-	line_items: [
-		{
-			product_id: number
-			quantity: number
-		},
-		{
-			product_id: number
-			variation_id?: number
-			quantity: number
-		}
-	]
+	line_items: {
+		product_id: number
+		variation_id?: number
+		quantity: number
+	}[]
 	shipping_lines?: [
 		{
 			method_id: string
@@ -258,6 +262,7 @@ export interface AuthNetCreateSubscribe {
 				creditCard: {
 					cardNumber: string
 					expirationDate: string
+					cardCode: string
 				}
 			}
 			billTo: {
@@ -272,6 +277,7 @@ export interface AuthSubRequestData {
 	amount: string
 	cardNumber: string
 	expirationDate: string
+	cardCode: string
 	firstName: string
 	lastName: string
 	startDate: string

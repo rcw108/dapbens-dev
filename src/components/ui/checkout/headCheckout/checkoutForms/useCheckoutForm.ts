@@ -47,7 +47,6 @@ export const useCheckoutForm = (setValue: UseFormSetValue<FieldValues>) => {
 					'stateCountry',
 					addressComponents['administrative_area_level_1'] || ''
 				)
-				console.log(addressComponents['administrative_area_level_1'])
 				setValue('zipCode', addressComponents['postal_code'] || '')
 			})
 		}

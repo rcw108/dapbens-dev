@@ -1,6 +1,9 @@
 'use client'
 
 import SmallHeading from '@/components/ui/headings/SmallHeading'
+import SkeletonLoader from '@/components/ui/SkeletonLoader'
+import { useGetAuthorizeToken } from '@/hooks/useGetAuthorizeToken'
+import { useGlobalUser } from '@/hooks/useGlobalUser'
 import { useUser } from '@/hooks/useUser'
 import Link from 'next/link'
 import { FC, useEffect, useState } from 'react'
@@ -17,7 +20,7 @@ const EditAddressesContent: FC = () => {
 		const fetchUserOrders = async (id: number) => {
 			setLoading(true)
 			const result = await getCustomerById(id)
-			if (result.success) {
+			if (result.data) {
 				setCustomer(result.data)
 			} else {
 				setError(result.error?.message || 'An unexpected error occurred')
@@ -28,12 +31,38 @@ const EditAddressesContent: FC = () => {
 		if (user) fetchUserOrders(Number(user.ID))
 	}, [user])
 
-	if (loading) return <div>Loading...</div>
+	const { authorize } = useGlobalUser()
+	const { fetchAuthorizeToken } = useGetAuthorizeToken()
+
+	useEffect(() => {
+		if (authorize === null) {
+			fetchAuthorizeToken(Number(user?.ID))
+		}
+	})
+
+	if (loading)
+		return <SkeletonLoader className='flex gap-4' count={1} height={120} />
 	if (error) return <div>Error</div>
 
 	if (customer === null) return <div>No customer found</div>
 
 	console.log(customer)
+
+	const isCustomerHaveAddress = (variant: 'billing' | 'shipping') => {
+		if (
+			customer?.[variant]?.first_name &&
+			customer?.[variant]?.last_name &&
+			customer?.[variant]?.address_1 &&
+			customer?.[variant]?.city &&
+			customer?.[variant]?.postcode &&
+			customer?.[variant]?.country &&
+			customer?.[variant]?.state
+		) {
+			return true
+		} else {
+			return false
+		}
+	}
 
 	return (
 		<div className={styles.customerAddress}>
@@ -54,23 +83,23 @@ const EditAddressesContent: FC = () => {
 							Edit Billing address{' '}
 						</Link>
 					</div>
-					{customer?.billing?.first_name && customer?.billing?.last_name ? (
+					{isCustomerHaveAddress('billing') ? (
 						<div className={styles.address}>
 							<h6>
-								{customer?.billing?.first_name} {customer?.billing?.last_name}
+								{customer.billing.first_name} {customer.billing.last_name}
 							</h6>
-							<h6>{customer?.billing?.company}</h6>
-							<h6>{customer?.billing?.address_1}</h6>
-							<h6>{customer?.billing?.address_2}</h6>
+							<h6>{customer.billing.company}</h6>
+							<h6>{customer.billing.address_1}</h6>
+							<h6>{customer.billing.address_2}</h6>
 							<div className={styles.add}>
-								<h6>{customer?.billing?.city}</h6>
-								<h6>{customer?.billing?.state}</h6>
-								<h6>{customer?.billing?.postcode}</h6>
+								<h6>{customer.billing.city}</h6>
+								<h6>{customer.billing.state}</h6>
+								<h6>{customer.billing.postcode}</h6>
 							</div>
 						</div>
 					) : (
 						<div className={styles.address}>
-							<h6>You have not set a billing address</h6>
+							<h6>You have not set up this type of address yet.</h6>
 						</div>
 					)}
 				</div>
@@ -84,7 +113,7 @@ const EditAddressesContent: FC = () => {
 							Edit Shipping address{' '}
 						</Link>
 					</div>
-					{customer?.shipping?.first_name && customer?.shipping?.last_name ? (
+					{isCustomerHaveAddress('shipping') ? (
 						<div className={styles.address}>
 							<h6>
 								{customer?.shipping?.first_name} {customer?.shipping?.last_name}
@@ -100,7 +129,7 @@ const EditAddressesContent: FC = () => {
 						</div>
 					) : (
 						<div className={styles.address}>
-							<h6>You have not set a shipping address</h6>
+							<h6>You have not set up this type of address yet.</h6>
 						</div>
 					)}
 				</div>

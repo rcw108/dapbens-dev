@@ -92,6 +92,7 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 					: 'every 2 weeks'
 		if (paymentType === 'subscription') {
 			addToCart({
+				id: product.id,
 				name: product.name,
 				count,
 				price: variantPriceFn().sale_price,

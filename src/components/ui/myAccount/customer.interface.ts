@@ -102,6 +102,7 @@ export interface SingleOrder {
 	prices_include_tax: boolean
 	date_created: string
 	date_modified: string
+	subtotal: string
 	discount_total: string
 	discount_tax: string
 	shipping_total: string
@@ -150,6 +151,12 @@ export interface SingleOrder {
 	line_items: OrderItem[]
 	fee_lines: SingleFee[]
 	// coupon_lines
+	shipping_lines: {
+		id: number
+		total: string
+		method_id: string
+		method_title: string
+	}[]
 }
 
 export interface SingleSubscribe extends SingleOrder {
@@ -184,4 +191,18 @@ export interface SingleCustomer {
 	username: string
 	billing: Address
 	shipping: Address
+	meta_data: {
+		id: number
+		key: string
+		value: string
+	}[]
+}
+
+export interface SingleNote {
+	note: string
+	date_created: string
+	date_created_gmt: string
+	customer_note: number
+	author: string
+	id: number
 }

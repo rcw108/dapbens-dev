@@ -1,15 +1,24 @@
 'use client'
 import Description from '@/components/ui/headings/Description'
 import SmallHeading from '@/components/ui/headings/SmallHeading'
+import { SingleCustomer } from '@/components/ui/myAccount/customer.interface'
+import {
+	getCustomerById,
+	SetCustomerAuthorizeMetaData
+} from '@/components/ui/myAccount/customersActions'
 import { useCart } from '@/hooks/useCart'
+import { useGlobalUser } from '@/hooks/useGlobalUser'
 import { useProducts } from '@/hooks/useProducts'
+import { useUser } from '@/hooks/useUser'
 import { CheckoutService } from '@/services/checkout.service'
 import {
+	AuthSubRequestData,
 	Discount,
 	ICheckoutOrder,
 	ICheckoutShippingValidate,
 	ICheckoutShippingValidateResponse,
-	Order
+	Order,
+	SubscribeCreate
 } from '@/types/checkoutLayout.interface'
 import clsx from 'clsx'
 import creditCardType from 'credit-card-type'
@@ -21,9 +30,10 @@ import { Controller, useForm } from 'react-hook-form'
 import ReactHtmlParser from 'react-html-parser'
 import Select from 'react-select'
 import CartSummary from './cartSummary/CartSummary'
+import { handleCheckout } from './checkoutAction'
 import styles from './CheckoutForms.module.scss'
 import CheckScreen from './CheckScreen'
-import { getDiscountCode, handleCreateOrder } from './orderAction'
+import { getDiscountCode } from './orderAction'
 import { states } from './statesData'
 import { useCheckoutForm } from './useCheckoutForm'
 import { useCheckoutFormDiff } from './useCheckoutFormDiff'
@@ -46,6 +56,21 @@ const CheckoutForms: FC<{
 	const [sendPayment, setSendPayment] = useState(false)
 	const [sendError, setSendError] = useState(false)
 	const [sendErrorMessage, setSendErrorMessage] = useState<any>()
+	const user = useUser()
+	const { authorize } = useGlobalUser()
+	const [customer, setCustomer] = useState<SingleCustomer | null>(null)
+
+	useEffect(() => {
+		const fetch = async () => {
+			if (user) {
+				const customer = await getCustomerById(Number(user.ID))
+				if (customer.data) {
+					setCustomer(customer.data)
+				}
+			}
+		}
+		fetch()
+	}, [user])
 
 	const {
 		register,
@@ -250,18 +275,71 @@ const CheckoutForms: FC<{
 		setValue('discountCode', '')
 	}
 
+	const formatDate = (date: Date) => {
+		const year = date.getFullYear()
+		const month = String(date.getMonth() + 1).padStart(2, '0')
+		const day = String(date.getDate()).padStart(2, '0')
+		const hours = String(date.getHours()).padStart(2, '0')
+		const minutes = String(date.getMinutes()).padStart(2, '0')
+		const seconds = String(date.getSeconds()).padStart(2, '0')
+
+		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+	}
+
+	const calculateNextRenewal = (
+		period: 'every month' | 'every 2 weeks' | 'every 2 months'
+	) => {
+		const currentDate = new Date()
+		if (period === 'every 2 months') {
+			currentDate.setMonth(currentDate.getMonth() + 2)
+		} else if (period === 'every 2 weeks') {
+			currentDate.setDate(currentDate.getDate() + 14)
+		} else if (period === 'every month') {
+			currentDate.setMonth(currentDate.getMonth() + 1)
+		}
+		return currentDate.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		})
+	}
+
+	const formatDateTime = (date: Date) => {
+		const year = date.getFullYear()
+		const month = String(date.getMonth() + 1).padStart(2, '0')
+		const day = String(date.getDate()).padStart(2, '0')
+		const hours = String(date.getHours()).padStart(2, '0')
+		const minutes = String(date.getMinutes()).padStart(2, '0')
+		const seconds = String(date.getSeconds()).padStart(2, '0')
+
+		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+	}
+
+	const addTimeToDate = (date: Date, period: string) => {
+		const newDate = new Date(date)
+
+		if (period === 'every 2 months') {
+			newDate.setMonth(newDate.getMonth() + 2)
+		} else if (period === 'every month') {
+			newDate.setMonth(newDate.getMonth() + 1)
+		} else if (period === 'every 2 weeks') {
+			newDate.setDate(newDate.getDate() + 14)
+		}
+
+		return formatDateTime(newDate)
+	}
+
 	const handleBtn = async () => {
 		if (!validateBtn()) return
 
 		setSendPayment(true)
+		const selectedShippingMethod = shipping?.find(
+			item => item.label === selectShipping
+		)
 
 		const haveSubscribeItems = itemListCount.filter(
 			item => item.paymentType === 'subscription'
 		)
-
-		// if (haveSubscribeItems.length > 0 && auth) {
-		// 	const response = await createSubscribeAuthNet()
-		// }
 
 		const orderData: ICheckoutOrder = {
 			payment_method: 'credit card',
@@ -324,7 +402,17 @@ const CheckoutForms: FC<{
 				product_id: +item.id,
 				quantity: +item.count,
 				price: +item.price
-			}))
+			})),
+			shipping_lines: [
+				{
+					method_id:
+						shipping?.find(item => item.label === selectShipping)?.id || '',
+					method_title:
+						shipping?.find(item => item.label === selectShipping)?.label || '',
+					total:
+						shipping?.find(item => item.label === selectShipping)?.cost || ''
+				}
+			]
 		}
 
 		const cardData = {
@@ -345,26 +433,154 @@ const CheckoutForms: FC<{
 							cost: '0.00'
 						}
 		}
-		console.log(orderData)
-		const order = await handleCreateOrder(orderData, cardData, shippingData)
 
-		if (
-			order &&
-			order.transactionResponse?.transactionResponse &&
-			!order.transactionResponse.transactionResponse.errors
-		) {
-			setPaymentCheck(true)
-			setPaymentDetails(order)
+		const subscribeData: SubscribeCreate = {
+			status: 'pending',
+			billing_period:
+				haveSubscribeItems[0].subscriptionPeriod === 'every 2 months' ||
+				haveSubscribeItems[0].subscriptionPeriod === 'every month'
+					? 'month'
+					: 'week',
+			billing_interval:
+				haveSubscribeItems[0].subscriptionPeriod === 'every 2 months'
+					? 2
+					: haveSubscribeItems[0].subscriptionPeriod === 'every month'
+						? 1
+						: 2,
+			start_date: formatDate(new Date()),
+			next_payment_date: addTimeToDate(
+				new Date(),
+				haveSubscribeItems[0].subscriptionPeriod || 'every month'
+			),
+			payment_method: 'authnet',
+			payment_method_title: 'Credit Card',
+			billing: {
+				first_name: getValues('firstName'),
+				last_name: getValues('lastName'),
+				address_1: autocompleteRef.current ? autocompleteRef.current.value : '',
+				address_2: '',
+				city: getValues('cityTown'),
+				state: getValues('stateCountry'),
+				postcode: getValues('zipCode'),
+				country: 'US',
+				email: getValues('email'),
+				phone: getValues('phone') || ''
+			},
+			shipping: {
+				first_name:
+					getValues('firstNameDiff') === ''
+						? getValues('firstName')
+						: getValues('firstNameDiff'),
+				last_name:
+					getValues('lastNameDiff') === ''
+						? getValues('lastName')
+						: getValues('lastNameDiff'),
+				address_1:
+					diffAddress === true && autocompleteRefDiff.current
+						? autocompleteRefDiff.current.value
+						: autocompleteRef.current
+							? autocompleteRef.current.value
+							: '',
+				address_2: '',
+				city:
+					getValues('cityTownDiff') === ''
+						? getValues('cityTown')
+						: getValues('cityTownDiff'),
+				state:
+					getValues('stateCountryDiff') === ''
+						? getValues('stateCountry')
+						: getValues('stateCountryDiff'),
+				postcode:
+					getValues('zipCodeDiff') === ''
+						? getValues('zipCode')
+						: getValues('zipCodeDiff'),
+				country: 'US'
+			},
+			line_items: haveSubscribeItems.map(item => ({
+				product_id: +item.id,
+				quantity: +item.count
+			})),
+			shipping_lines: [
+				{
+					method_id:
+						selectShipping === 'Free shipping'
+							? 'free'
+							: selectedShippingMethod?.id || '',
+					method_title:
+						selectShipping === 'Free shipping'
+							? 'Free shipping'
+							: selectedShippingMethod?.label || '',
+					total:
+						selectShipping === 'Free shipping'
+							? '0.00'
+							: selectedShippingMethod?.cost || '0.00'
+				}
+			]
+		}
+
+		const requestSaveMetaDataBody: SetCustomerAuthorizeMetaData = {
+			metadata: {
+				id: 513990,
+				key: '_authnet_customer_id'
+			}
+		}
+		const requestData: AuthSubRequestData = {
+			amount: String(
+				itemListCount.reduce((acc, item) => {
+					if (item.paymentType === 'subscription') {
+						return acc + +item.price * +item.count
+					}
+					return acc // всегда возвращаем аккумулятор
+				}, 0)
+			),
+			cardNumber: getValues('cardNumber'),
+			expirationDate: formatExpiryDate(getValues('expiry')),
+			cardCode: getValues('cardCode'),
+			firstName: getValues('firstName'),
+			lastName: getValues('lastName'),
+			startDate: new Date().toISOString().slice(0, 10),
+			interval:
+				haveSubscribeItems[0].subscriptionPeriod === 'every 2 months'
+					? '2'
+					: haveSubscribeItems[0].subscriptionPeriod === 'every month'
+						? '1'
+						: '14',
+			unit:
+				haveSubscribeItems[0].subscriptionPeriod === 'every 2 months'
+					? 'months'
+					: haveSubscribeItems[0].subscriptionPeriod === 'every month'
+						? 'months'
+						: 'days'
+		}
+
+		console.log(requestData)
+
+		const response = await handleCheckout(
+			orderData,
+			cardData,
+			shippingData,
+			haveSubscribeItems,
+			user,
+			subscribeData,
+			authorize,
+			customer,
+			requestData,
+			requestSaveMetaDataBody
+		)
+
+		if (response?.success) {
+			console.log(response)
 			setSendPayment(false)
-		} else {
-			console.log('Order response:', order)
+			setPaymentCheck(true)
+			setPaymentDetails(response.order)
+		}
+		if (response?.error) {
+			console.log(response)
 			setSendPayment(false)
 			setSendError(true)
-			setSendErrorMessage(order?.transactionResponse.transactionResponse.errors)
+			setSendErrorMessage(response.error)
 		}
 	}
-
-	console.log(sendErrorMessage, sendError)
 
 	const discountTotal = () => {
 		// Вычисляем общую стоимость товаров
@@ -395,8 +611,6 @@ const CheckoutForms: FC<{
 		return totalAfterDiscount.toFixed(2)
 	}
 
-	console.log(getValues('discountCode'))
-
 	const watchCard = watch('cardNumber')
 
 	const cardTypeCheck = () => {
@@ -409,13 +623,28 @@ const CheckoutForms: FC<{
 		cardTypeCheck()
 	}, [watchCard])
 
+	const subscribeTotal = () => {
+		let total = 0
+		itemListCount.forEach(item => {
+			if (item.paymentType === 'subscription') {
+				total += +item.price
+			}
+		})
+		shipping?.forEach(item => {
+			if (item.label === selectShipping) {
+				total += Number(item.cost)
+			}
+		})
+
+		return total
+	}
+
 	if (!isLoaded) return <div>Loading...</div>
 
 	if (paymentCheck) {
 		return <CheckScreen data={paymentDetails} />
 	}
 
-	console.log(errors)
 	return (
 		<>
 			{sendError && sendErrorMessage && (
@@ -644,6 +873,52 @@ const CheckoutForms: FC<{
 									<input type='text' />
 								</label>
 							</div>
+						)}
+						{account && (
+							<>
+								<label className={styles.req}>
+									<Description title={'Account login'} />
+									<input
+										type='text'
+										{...register('accountLogin', {
+											required: {
+												value: account,
+												message: 'Account login is required'
+											},
+											minLength: {
+												value: 6,
+												message: 'Account login must be at least 6 characters'
+											},
+											maxLength: {
+												value: 40,
+												message: 'Account login must be at most 40 characters'
+											}
+										})}
+									/>
+								</label>
+								<label className={styles.req}>
+									<Description title={'Account password'} />
+									<input
+										type='text'
+										{...register('accountPassword', {
+											required: {
+												value: account,
+												message: 'Account password is required'
+											},
+											minLength: {
+												value: 6,
+												message:
+													'Account password must be at least 6 characters'
+											},
+											maxLength: {
+												value: 40,
+												message:
+													'Account password must be at most 40 characters'
+											}
+										})}
+									/>
+								</label>
+							</>
 						)}
 						<h3
 							className={styles.h3}
@@ -1109,11 +1384,32 @@ const CheckoutForms: FC<{
 							</div>
 						</div>
 					</div>
-					{!!itemListCount.some(
-						item => item.paymentType === 'subscription'
-					) && <div>Remove subscribe item</div>}
-					{itemListCount.some(item => item.paymentType === 'subscription') ===
-						false && (
+					{itemListCount.some(item => item.paymentType === 'subscription') && (
+						<div>
+							{itemListCount.map(item => {
+								if (item.paymentType === 'subscription') {
+									return (
+										<SmallHeading
+											className={styles.recurring}
+											key={item.id + 1000}
+											title={`Recurring totals Subtotal $${Number(item.price).toFixed(2)} / ${item.subscriptionPeriod} Shipping`}
+										/>
+									)
+								}
+							})}
+						</div>
+					)}
+
+					<SmallHeading
+						className={styles.recurring}
+						title={`Recurring total $${subscribeTotal().toFixed(2)} / month`}
+					/>
+					<Description
+						className={styles.recurring}
+						title={`First renewal: ${calculateNextRenewal(itemListCount?.find(item => item.paymentType === 'subscription')?.subscriptionPeriod as 'every month' | 'every 2 weeks' | 'every 2 months')}`}
+					/>
+
+					{itemListCount && (
 						<div className={styles.btns}>
 							<button
 								className={clsx(styles.btn, {

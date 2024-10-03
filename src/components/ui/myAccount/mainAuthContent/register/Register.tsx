@@ -35,7 +35,6 @@ const Register: FC = () => {
 		if (!response.success) {
 			// Обработка ошибки
 			setErrorRegister(response?.error?.code)
-			console.log(errorRegister)
 		} else {
 			// Успешное создание клиента
 			reset()
@@ -43,10 +42,8 @@ const Register: FC = () => {
 				login: data.email,
 				password: data.password
 			})
-			console.log('auth', loginUser)
 			if (loginUser.success) {
 				const userData: ValidUser = await validateToken(loginUser.data.jwt)
-				console.log(userData)
 				if (userData.user) {
 					const userDataWithJwt = {
 						user: userData.user,
@@ -54,11 +51,9 @@ const Register: FC = () => {
 					}
 					setUser(userDataWithJwt)
 				} else {
-					console.error('User data is missing in the token validation response')
 					setErrorRegister('Failed to validate user token')
 				}
 			} else {
-				console.error('Login was unsuccessful')
 				setErrorRegister('Login after registration failed')
 			}
 		}

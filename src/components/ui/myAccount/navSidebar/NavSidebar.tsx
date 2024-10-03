@@ -35,7 +35,10 @@ const NavSidebar: FC = () => {
 					<li>
 						<Link
 							className={clsx(
-								pathname === '/my-account/orders' ? styles.active : ''
+								pathname === '/my-account/orders' ||
+									pathname === '/my-account/view-order/20686'
+									? styles.active
+									: ''
 							)}
 							href='/my-account/orders'
 						>
@@ -74,6 +77,22 @@ const NavSidebar: FC = () => {
 							<Image
 								src={'/addresses.svg'}
 								alt='addresses'
+								width={20}
+								height={20}
+							/>{' '}
+						</Link>
+					</li>
+					<li>
+						<Link
+							className={clsx(
+								pathname === '/my-account/payment-methods' ? styles.active : ''
+							)}
+							href='/my-account/payment-methods'
+						>
+							Payment methods{' '}
+							<Image
+								src={'/payment-detail.svg'}
+								alt='Payment methods'
 								width={20}
 								height={20}
 							/>{' '}

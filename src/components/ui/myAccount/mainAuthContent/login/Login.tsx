@@ -26,7 +26,7 @@ const Login: FC = () => {
 
 	const [remember, setRemember] = useState(false)
 
-	const [errorLogin, setErrorLogin] = useState()
+	const [errorLogin, setErrorLogin] = useState<string>()
 
 	const { setUser } = useActions()
 
@@ -36,15 +36,12 @@ const Login: FC = () => {
 			login: getValues('login'),
 			password: getValues('password')
 		}
-		console.log(data)
 		try {
 			const response = await authCustomer(data)
-			console.log(response)
 			if (response.status === false) {
-				setErrorLogin(response.data.message)
+				setErrorLogin('An error occurred. Please check login and password')
 			}
 			const userData: ValidUser = await validateToken(response.data.jwt)
-			console.log(userData)
 
 			if (userData.user) {
 				const data = {
@@ -53,10 +50,10 @@ const Login: FC = () => {
 				}
 				setUser(data)
 			} else {
-				setErrorLogin(response.data.message)
+				setErrorLogin('An error occurred. Please check login and password')
 			}
-		} catch (error) {
-			console.error('Login error:', error)
+		} catch (error: any) {
+			setErrorLogin('An error occurred. Please check login and password')
 		}
 	}
 

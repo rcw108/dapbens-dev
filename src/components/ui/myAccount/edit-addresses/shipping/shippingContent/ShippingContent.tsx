@@ -3,6 +3,8 @@
 import { states } from '@/components/ui/checkout/headCheckout/checkoutForms/statesData'
 import Description from '@/components/ui/headings/Description'
 import SubHeading from '@/components/ui/headings/SubHeading'
+import { useGetAuthorizeToken } from '@/hooks/useGetAuthorizeToken'
+import { useGlobalUser } from '@/hooks/useGlobalUser'
 import { useUser } from '@/hooks/useUser'
 import clsx from 'clsx'
 import { FC, useEffect, useState } from 'react'
@@ -69,11 +71,22 @@ const ShippingContent: FC = () => {
 		const fetch = async () => {
 			if (user) {
 				const customer = await getCustomerById(Number(user.ID))
-				setCustomer(customer.data)
+				if (customer.data) {
+					setCustomer(customer.data)
+				}
 			}
 		}
 		fetch()
 	}, [user])
+
+	const { authorize } = useGlobalUser()
+	const { fetchAuthorizeToken } = useGetAuthorizeToken()
+
+	useEffect(() => {
+		if (authorize === null) {
+			fetchAuthorizeToken(Number(user?.ID))
+		}
+	})
 
 	useEffect(() => {
 		if (customer) {

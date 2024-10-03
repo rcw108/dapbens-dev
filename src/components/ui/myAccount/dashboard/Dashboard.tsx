@@ -13,8 +13,6 @@ const Dashboard: FC = () => {
 		return null
 	}
 
-	console.log(user)
-
 	return (
 		<div className='bg-white min-h-96'>
 			<h6 className={styles.title}>

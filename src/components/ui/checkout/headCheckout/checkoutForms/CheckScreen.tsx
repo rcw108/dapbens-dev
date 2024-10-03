@@ -3,8 +3,6 @@ import Link from 'next/link'
 import { FC } from 'react'
 import styles from './CheckoutForms.module.scss'
 const CheckScreen: FC<{ data: any }> = ({ data }) => {
-	console.log(data)
-
 	return (
 		<div>
 			<div className='container'>

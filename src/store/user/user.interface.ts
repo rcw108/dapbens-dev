@@ -13,4 +13,9 @@ export interface IUser {
 export interface InitialUser {
 	user: IUser | null
 	jwt: string
+	authorize?: {
+		key: string
+		id: number
+		value: string
+	} | null
 }

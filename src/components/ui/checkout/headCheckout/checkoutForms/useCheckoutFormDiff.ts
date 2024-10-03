@@ -36,7 +36,6 @@ export const useCheckoutFormDiff = (setValue: UseFormSetValue<FieldValues>) => {
 					},
 					{} as Record<string, string>
 				)
-				console.log(addressComponents)
 
 				// Update form values
 				setValue(
@@ -48,7 +47,6 @@ export const useCheckoutFormDiff = (setValue: UseFormSetValue<FieldValues>) => {
 					'stateCountryDiff',
 					addressComponents['administrative_area_level_1'] || ''
 				)
-				console.log(addressComponents['administrative_area_level_1'])
 				setValue('zipCodeDiff', addressComponents['postal_code'] || '')
 			})
 		}

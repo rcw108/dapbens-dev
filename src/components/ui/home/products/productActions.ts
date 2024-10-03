@@ -91,3 +91,26 @@ export const updateOrderPaymentStatus = async (
 		console.error('Error updating order payment status:', error)
 	}
 }
+
+export const createCustomerSubscribeOrderWo = async (body: SubscribeCreate) => {
+	try {
+		const response = await api.post('subscriptions', body)
+		return response
+	} catch (error) {
+		console.error('Error creating customer subscribe order:', error)
+	}
+}
+
+export const updateSubscribePaymentStatus = async (
+	orderId: string,
+	status: string
+) => {
+	try {
+		const response = await api.put(`subscriptions/${orderId}`, {
+			status
+		})
+		return response
+	} catch (error) {
+		console.error('Error updating order payment status:', error)
+	}
+}

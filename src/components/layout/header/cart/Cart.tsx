@@ -45,8 +45,6 @@ const Cart: FC = () => {
 		setCartCount(totalCart)
 	}, [itemListCount])
 
-	console.log('cart: ', openCart)
-
 	return (
 		<>
 			<div className={stylesHeader.cart} onClick={() => setOpenCart(!openCart)}>

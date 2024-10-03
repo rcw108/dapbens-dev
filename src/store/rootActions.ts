@@ -7,7 +7,7 @@ import {
 
 import { addCartArray, addToCart, toggleCartProduct } from './cart/cart.slice'
 
-import { logout, setUser } from './user/user.slice'
+import { logout, setUser, toggleAuthorize } from './user/user.slice'
 
 export const allActions = {
 	pushAllProducts,
@@ -18,5 +18,6 @@ export const allActions = {
 	addToCart,
 	addCartArray,
 	setUser,
-	logout
+	logout,
+	toggleAuthorize
 }

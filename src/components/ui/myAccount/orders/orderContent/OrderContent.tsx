@@ -1,10 +1,12 @@
 'use client'
 
+import { useGetAuthorizeToken } from '@/hooks/useGetAuthorizeToken'
+import { useGlobalUser } from '@/hooks/useGlobalUser'
 import { useUser } from '@/hooks/useUser'
 import Link from 'next/link'
 import { FC, useEffect, useState } from 'react'
 import { SingleOrder } from '../../customer.interface'
-import { getCustomerOrders } from '../../customersActions'
+import { cancelOrder, getCustomerOrders } from '../../customersActions'
 import styles from './OrderContent.module.scss'
 
 const OrderContent: FC = () => {
@@ -12,6 +14,8 @@ const OrderContent: FC = () => {
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 	const user = useUser()
+	const [activeState, setActiveState] = useState<boolean>()
+	const [actionError, setActionError] = useState<string | null>(null)
 
 	useEffect(() => {
 		const fetchUserOrders = async (id: number) => {
@@ -28,6 +32,15 @@ const OrderContent: FC = () => {
 		if (user) fetchUserOrders(Number(user.ID))
 	}, [user])
 
+	const { authorize } = useGlobalUser()
+	const { fetchAuthorizeToken } = useGetAuthorizeToken()
+
+	useEffect(() => {
+		if (authorize === null) {
+			fetchAuthorizeToken(Number(user?.ID))
+		}
+	})
+
 	if (loading) return <div>Loading...</div>
 	if (error) return <div>Error: {error}</div>
 
@@ -41,6 +54,19 @@ const OrderContent: FC = () => {
 		})
 
 		return totalCount
+	}
+
+	const cancelOrderHandler = async (id: string) => {
+		setActiveState(true)
+		const response = await cancelOrder(id)
+
+		if (response.success) {
+			setActionError(null)
+			setActiveState(false)
+		} else {
+			setActionError('An unexpected error occurred.')
+			setActiveState(false)
+		}
 	}
 
 	return (
@@ -91,18 +117,23 @@ const OrderContent: FC = () => {
 							) : order.status === 'failed' ? (
 								<>
 									<Link
-										href={`/my-account/order-pay/${order.id}`}
+										href={`/checkout/order-pay/${order.id}`}
 										className={styles.view}
 									>
 										Pay
 									</Link>
 									<Link
-										href={`/my-account/view-order/${order.id}`}
+										href={`/my-account/orders/${order.id}`}
 										className={styles.view}
 									>
 										View
 									</Link>
-									<div className={styles.view}>Cancel</div>
+									<div
+										onClick={() => cancelOrderHandler(order.id)}
+										className={styles.view}
+									>
+										Cancel
+									</div>
 								</>
 							) : (
 								<Link

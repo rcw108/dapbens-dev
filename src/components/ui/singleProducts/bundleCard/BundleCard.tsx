@@ -67,6 +67,7 @@ const BundleCard: FC<{
 					: 'every 2 weeks'
 		if (paymentType === 'subscription') {
 			addToCart({
+				id: product.id,
 				name: product.name,
 				price: product.sale_price,
 				type: 'bundle',

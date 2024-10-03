@@ -8,7 +8,8 @@ import { InitialUser } from './user.interface'
 
 const initialState: InitialUser = {
 	user: getUserFromCookie(),
-	jwt: ''
+	jwt: '',
+	authorize: null
 }
 
 export const userSlice = createSlice({
@@ -24,10 +25,17 @@ export const userSlice = createSlice({
 		logout(state) {
 			state.user = null
 			state.jwt = ''
+			state.authorize = null
 			removeUserToCookie()
+		},
+		toggleAuthorize(
+			state,
+			{ payload }: { payload: Pick<InitialUser, 'authorize'> }
+		) {
+			state.authorize = payload.authorize
 		}
 	}
 })
 
-export const { setUser, logout } = userSlice.actions
+export const { setUser, logout, toggleAuthorize } = userSlice.actions
 export const { reducer } = userSlice

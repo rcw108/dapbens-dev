@@ -19,7 +19,9 @@ const config: Config = {
 			fontFamily: {
 				oswald: ['var(--font-oswald)'],
 				'sofia-sans': ['var(--font-sofia-sans)'],
-				mont: ['var(--font-mont)']
+				mont: ['var(--font-mont)'],
+				second: ['var(--font-second)'],
+				rockstar: ['var(--font-rockstar)']
 			}
 		}
 	},

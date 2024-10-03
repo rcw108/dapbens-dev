@@ -1,5 +1,7 @@
 'use client'
 
+import { useGetAuthorizeToken } from '@/hooks/useGetAuthorizeToken'
+import { useGlobalUser } from '@/hooks/useGlobalUser'
 import { useUser } from '@/hooks/useUser'
 import Link from 'next/link'
 import { FC, useEffect, useState } from 'react'
@@ -27,7 +29,14 @@ const SubscriptionsContent: FC = () => {
 		if (user) fetchUserOrders(Number(user.ID))
 	}, [user])
 
-	console.log(userSubs)
+	const { authorize } = useGlobalUser()
+	const { fetchAuthorizeToken } = useGetAuthorizeToken()
+
+	useEffect(() => {
+		if (authorize === null) {
+			fetchAuthorizeToken(Number(user?.ID))
+		}
+	})
 
 	if (loading) return <div>Loading...</div>
 	if (error) return <div>Error</div>

@@ -18,12 +18,29 @@ const BlogPage: FC<{ data: IBLog }> = ({ data }) => {
 						<Link href='/blog'>
 							BLog <span>/</span>
 						</Link>
-						<span className={styles.pageName}>{data.title}</span>
+						<span className={styles.pageName}>
+							{typeof data.title === 'string'
+								? data.title
+								: data.title.rendered}
+						</span>
 					</div>
 					<div className={styles.feature}>
-						<Image fill src={data.featured_image} alt={data.title} />
+						<Image
+							fill
+							src={data.featured_image}
+							alt={
+								typeof data.title === 'string'
+									? data.title
+									: data.title.rendered
+							}
+						/>
 					</div>
-					<Heading className={styles.title} title={data.title} />
+					<Heading
+						className={styles.title}
+						title={
+							typeof data.title === 'string' ? data.title : data.title.rendered
+						}
+					/>
 					<Description
 						className={styles.date}
 						title={new Date(data.date).toLocaleDateString('en-US', {
@@ -32,7 +49,13 @@ const BlogPage: FC<{ data: IBLog }> = ({ data }) => {
 							day: 'numeric'
 						})}
 					/>
-					<div className={styles.content}>{ReactHtmlParser(data.content)}</div>
+					<div className={styles.content}>
+						{ReactHtmlParser(
+							typeof data.content === 'string'
+								? data.content
+								: data.content.rendered
+						)}
+					</div>
 				</div>
 			</section>
 		</main>

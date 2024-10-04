@@ -1,0 +1,25 @@
+.wrap {
+	max-width: 1245px;
+	margin: 0 auto;
+	padding-top: 20px;
+	padding-bottom: 40px;
+	.bred {
+		display: flex;
+		gap: 5px;
+		color: #111;
+		margin-bottom: 40px;
+		font-size: 14px;
+		font-weight: 400;
+		span {
+			font-weight: 300;
+			color: #555;
+		}
+	}
+	.box {
+		max-width: 946px;
+		display: grid;
+		gap: 45px;
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: minmax(auto, auto);
+	}
+}

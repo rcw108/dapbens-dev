@@ -5,10 +5,9 @@ import DifferenceSection from '@/components/ui/home/differenceSection/Difference
 import FaqSection from '@/components/ui/home/faqSection/FaqSection'
 import FlavorsSection from '@/components/ui/home/flavorsSection/FlavorsSection'
 import FormSection from '@/components/ui/home/formSection/FormSection'
-import HeadSection from '@/components/ui/home/headSection/HeadSection'
-import PeekSection from '@/components/ui/home/peekSection/PeekSection'
+import NewHeadSection from '@/components/ui/home/headSection/newHeadSection/NewHeadSection'
+import NewPeekSection from '@/components/ui/home/newPeekSection/NewPeekSection'
 import Puff from '@/components/ui/home/puff/Puff'
-import ReviewsSection from '@/components/ui/home/reviewsSection/ReviewsSection'
 import SaveSection from '@/components/ui/home/saveSection/SaveSection'
 import Steps from '@/components/ui/home/steps/Steps'
 import { useActions } from '@/hooks/useActions'
@@ -35,7 +34,7 @@ const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
 
 	return (
 		<main className={styles.home}>
-			<HeadSection
+			{/* <HeadSection
 				advantages={data.acf.advantages}
 				hero_section_title={data.acf.hero_section_title}
 				background_image={data.acf.background_image}
@@ -47,15 +46,23 @@ const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
 				move_line_content={data.acf.move_line_content}
 				tabFirst={data.acf.tab1_pr}
 				tabSecond={data.acf.tab2_pr}
+			/> */}
+			<NewHeadSection
+				hero_section_img={data.acf.hero_section_img}
+				hero_section_link={data.acf.hero_section_link}
+				move_line_content={data.acf.move_line_content}
 			/>
-			<PeekSection
+
+			<NewPeekSection text_pr={data.acf.text_pr} title_pr={data.acf.title_pr} />
+
+			{/* <PeekSection
 				title={data.acf.title_pr}
 				description={data.acf.text_pr}
 				tabFirst={data.acf.tab1_pr}
 				tabSecond={data.acf.tab2_pr}
 				popularCategories={[data.acf.tab1_pr, data.acf.tab2_pr]}
 				products={products}
-			/>
+			/> */}
 			<Steps
 				link_st={data.acf.link_st}
 				st_bg={data.acf.st_bg}
@@ -98,11 +105,11 @@ const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
 				text_bp={data.acf.text_bp}
 				title_bp={data.acf.title_bp}
 			/>
-			<ReviewsSection
+			{/* <ReviewsSection
 				reviews_r={data.acf.reviews_r}
 				text_r={data.acf.text_r}
 				title_r={data.acf.title_r}
-			/>
+			/> */}
 			<FaqSection
 				bg_f={data.acf.bg_f}
 				faqs_f={data.acf.faqs_f}

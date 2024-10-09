@@ -34,6 +34,10 @@ export interface SingleFaq {
 }
 
 export interface HomeACF {
+	// New
+	hero_section_img: string
+	hero_section_link: PageLink
+
 	hero_section_title: string
 	background_image: boolean | string
 	start_image: boolean | string

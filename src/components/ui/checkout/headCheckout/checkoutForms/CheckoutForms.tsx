@@ -518,10 +518,14 @@ const CheckoutForms: FC<{
 			]
 		}
 
-		const requestSaveMetaDataBody: SetCustomerAuthorizeMetaData = {
-			metadata: {
-				id: 513990,
-				key: '_authnet_customer_id'
+		let requestSaveMetaDataBody: SetCustomerAuthorizeMetaData | undefined
+
+		if (customer) {
+			requestSaveMetaDataBody = {
+				meta_data: [
+					...customer.meta_data,
+					{ id: 513990, key: '_authnet_customer_id' }
+				]
 			}
 		}
 		const requestData: AuthSubRequestData = {
@@ -555,18 +559,24 @@ const CheckoutForms: FC<{
 
 		console.log(requestData)
 
-		const response = await handleCheckout(
-			orderData,
-			cardData,
-			shippingData,
-			haveSubscribeItems,
-			user,
-			subscribeData,
-			authorize,
-			customer,
-			requestData,
-			requestSaveMetaDataBody
-		)
+		const fetchAsyncFn = async () => {
+			const res = await handleCheckout(
+				orderData,
+				cardData,
+				shippingData,
+				haveSubscribeItems,
+				user,
+				subscribeData,
+				authorize,
+				customer,
+				requestData,
+				requestSaveMetaDataBody
+			)
+
+			return res
+		}
+
+		const response = await fetchAsyncFn()
 
 		if (response?.success) {
 			console.log(response)

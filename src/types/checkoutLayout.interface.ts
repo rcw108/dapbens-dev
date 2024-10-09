@@ -284,3 +284,31 @@ export interface AuthSubRequestData {
 	interval: string
 	unit: string
 }
+
+export interface AuthGetProfileRequestData {
+	getCustomerProfileRequest: {
+		merchantAuthentication: {
+			name: string
+			transactionKey: string
+		}
+		customerProfileId: number
+		includeIssuerInfo: string
+	}
+}
+
+export interface CreatePaymentMethod {
+	customerProfileId: string
+	cardNumber: string
+	expirationDate: string
+	cardCode: string
+	billTo: {
+		firstName: string
+		lastName: string
+		address: string
+		city: string
+		state: string
+		zip: string
+		country: string
+		phoneNumber?: string
+	}
+}

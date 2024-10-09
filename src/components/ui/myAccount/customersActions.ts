@@ -227,11 +227,11 @@ export const changePasswordCustom = async (password: string, id: number) => {
 }
 
 export interface SetCustomerAuthorizeMetaData {
-	metadata: {
-		id: 513990
-		key: '_authnet_customer_id'
-		value?: string
-	}
+	meta_data: {
+		id: number
+		key: string
+		value?: any
+	}[]
 }
 
 export const setCustomerAuthorizeMetaData = async (

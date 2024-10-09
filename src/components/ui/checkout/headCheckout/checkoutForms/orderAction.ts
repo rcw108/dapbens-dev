@@ -5,15 +5,14 @@ import {
 	getDiscountCodeAsync,
 	updateOrderPaymentStatus
 } from '@/components/ui/home/products/productActions'
-import { setCustomerAuthorizeMetaData } from '@/components/ui/myAccount/customersActions'
 import {
 	CreateCustomerPaymentProfileBody,
-	CreateCustomerProfileBody,
 	UpdateCustomerProfileByIdDataBody
 } from '@/types/authorize.interface'
 import {
 	AuthNetCreateSubscribe,
 	AuthSubRequestData,
+	CreatePaymentMethod,
 	ICheckoutOrder,
 	ICreateTransactionRequest
 } from '@/types/checkoutLayout.interface'
@@ -186,61 +185,61 @@ export const createCustomerPaymentProfile = async (
 	}
 }
 
-export const createCustomerProfile = async (
-	data: CreateCustomerProfileBody,
-	profileId: number
-) => {
-	try {
-		const requestBody = {
-			createCustomerProfileRequest: {
-				merchantAuthentication: {
-					name: process.env.AUTH_NET_NAME || '',
-					transactionKey: process.env.AUTH_NET_KEY || ''
-				},
-				profile: {
-					merchantCustomerId: data.profile.merchantCustomerId,
-					description: data.profile.description,
-					email: data.profile.email,
-					paymentProfiles: {
-						customerType: data.profile.paymentProfiles.customerType,
-						payment: {
-							creditCard: {
-								cardNumber: data.profile.paymentProfiles.creditCard.cardNumber,
-								expirationDate: data.profile.paymentProfiles.creditCard
-							}
-						}
-					}
-				},
-				validationMode: 'liveMode'
-			}
-		}
+// export const createCustomerProfile = async (
+// 	data: CreateCustomerProfileBody,
+// 	profileId: number
+// ) => {
+// 	try {
+// 		const requestBody = {
+// 			createCustomerProfileRequest: {
+// 				merchantAuthentication: {
+// 					name: process.env.AUTH_NET_NAME || '',
+// 					transactionKey: process.env.AUTH_NET_KEY || ''
+// 				},
+// 				profile: {
+// 					merchantCustomerId: data.profile.merchantCustomerId,
+// 					description: data.profile.description,
+// 					email: data.profile.email,
+// 					paymentProfiles: {
+// 						customerType: data.profile.paymentProfiles.customerType,
+// 						payment: {
+// 							creditCard: {
+// 								cardNumber: data.profile.paymentProfiles.creditCard.cardNumber,
+// 								expirationDate: data.profile.paymentProfiles.creditCard
+// 							}
+// 						}
+// 					}
+// 				},
+// 				validationMode: 'liveMode'
+// 			}
+// 		}
 
-		const response = await axios.post(
-			'https://api2.authorize.net/xml/v1/request.api',
-			requestBody,
-			{
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			}
-		)
+// 		const response = await axios.post(
+// 			'https://api2.authorize.net/xml/v1/request.api',
+// 			requestBody,
+// 			{
+// 				headers: {
+// 					'Content-Type': 'application/json'
+// 				}
+// 			}
+// 		)
 
-		if (response.data.messages.resultCode === 'Ok') {
-			const updateMetaDataCustomerProfile = await setCustomerAuthorizeMetaData(
-				{
-					metadata: {
-						id: 513990,
-						key: '_authnet_customer_id',
-						value: String(response.data.customerProfileId)
-					}
-				},
-				profileId
-			)
-		}
-	} catch (error) {
-		console.error('Error creating customer profile:', error)
-	}
-}
+// 		if (response.data.messages.resultCode === 'Ok') {
+// 			const updateMetaDataCustomerProfile = await setCustomerAuthorizeMetaData(
+// 				{
+// 					meta_data: {
+// 						id: 513990,
+// 						key: '_authnet_customer_id',
+// 						value: String(response.data.customerProfileId)
+// 					}
+// 				},
+// 				profileId
+// 			)
+// 		}
+// 	} catch (error) {
+// 		console.error('Error creating customer profile:', error)
+// 	}
+// }
 
 export const getCustomerProfileById = async (id: number) => {
 	try {
@@ -445,5 +444,89 @@ export const deleteSubscribeCustomer = async (id: string) => {
 		return response.data
 	} catch (error) {
 		console.error('Error deleting subscribe:', error)
+	}
+}
+
+export const createSubscribeAuthNetWithProfile = async (
+	data: AuthSubRequestData,
+	profile: { profileId: string; paymentProfileId: string }
+) => {
+	try {
+		const requestBody = {
+			ARBCreateSubscriptionRequest: {
+				merchantAuthentication: {
+					name: process.env.AUTH_NET_NAME || '',
+					transactionKey: process.env.AUTH_NET_KEY || ''
+				},
+				subscription: {
+					name: 'Sample subscription',
+					paymentSchedule: {
+						interval: {
+							length: data.interval,
+							unit: data.unit
+						},
+						startDate: data.startDate,
+						totalOccurrences: '9999'
+					},
+					amount: data.amount,
+					profile: {
+						customerProfileId: profile.profileId,
+						customerPaymentProfileId: profile.paymentProfileId
+					}
+				}
+			}
+		}
+		const response = await axios.post(
+			'https://api2.authorize.net/xml/v1/request.api',
+			requestBody,
+			{
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}
+		)
+
+		return response.data
+	} catch (error) {
+		console.error('Error creating subscribe with user:', error)
+	}
+}
+
+export const createPaymentMethodAuthNet = async (data: CreatePaymentMethod) => {
+	try {
+		const requestBody = {
+			createCustomerPaymentProfileRequest: {
+				merchantAuthentication: {
+					name: process.env.AUTH_NET_NAME || '',
+					transactionKey: process.env.AUTH_NET_KEY || ''
+				},
+				customerProfileId: data.customerProfileId,
+				paymentProfile: {
+					billTo: data.billTo,
+					payment: {
+						creditCard: {
+							cardNumber: data.cardNumber,
+							expirationDate: data.expirationDate,
+							cardCode: data.cardCode
+						}
+					},
+					defaultPaymentProfile: false
+				},
+				validationMode: 'liveMode'
+			}
+		}
+		const response = await axios.post(
+			'https://api2.authorize.net/xml/v1/request.api',
+			requestBody,
+			{
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}
+		)
+
+		return response.data
+	} catch (error) {
+		console.error('Error creating payment method:', error)
 	}
 }

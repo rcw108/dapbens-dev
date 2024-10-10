@@ -38,6 +38,19 @@ const ReviewsContent: FC = () => {
 
 		fetchNewReview()
 	}, [page])
+	useEffect(() => {
+		setDisabled(true)
+		const fetchNewReview = async () => {
+			const reviews = await getReviews(page)
+
+			if (reviews) {
+				setReviewsContent(reviews)
+			}
+			setDisabled(false)
+		}
+
+		fetchNewReview()
+	}, [])
 
 	const handleClickPagination = (page: number) => {
 		setPage(page)

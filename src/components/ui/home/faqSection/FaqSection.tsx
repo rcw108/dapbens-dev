@@ -18,10 +18,7 @@ const FaqSection: FC<FAQ> = ({ bg_f, faqs_f, text_f, title_f }) => {
 	return (
 		<section className={styles.faq}>
 			<div className='container'>
-				<div
-					className={styles.wrapper}
-					style={{ backgroundImage: `url(${bg_f})` }}
-				>
+				<div className={styles.wrapper}>
 					<SubHeading
 						className={styles.title}
 						title={ReactHtmlParser(title_f)}
@@ -48,17 +45,19 @@ const FaqSection: FC<FAQ> = ({ bg_f, faqs_f, text_f, title_f }) => {
 									<div className={styles.icon}>
 										{currentTab === index ? (
 											<Image
-												src={'/faq-minus.svg'}
+												src={'/arrow.svg'}
 												alt='faq block open/close'
-												width={40}
-												height={40}
+												style={{ transform: 'rotate(-90deg)' }}
+												width={25}
+												height={25}
 											/>
 										) : (
 											<Image
-												src={'/faq-plus.svg'}
+												src={'/arrow.svg'}
 												alt='faq block open/close'
-												width={40}
-												height={40}
+												width={25}
+												style={{ transform: 'rotate(90deg)' }}
+												height={25}
 											/>
 										)}
 									</div>

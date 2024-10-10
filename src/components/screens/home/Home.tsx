@@ -6,7 +6,6 @@ import FaqSection from '@/components/ui/home/faqSection/FaqSection'
 import FlavorsSection from '@/components/ui/home/flavorsSection/FlavorsSection'
 import FormSection from '@/components/ui/home/formSection/FormSection'
 import NewHeadSection from '@/components/ui/home/headSection/newHeadSection/NewHeadSection'
-import NewPeekSection from '@/components/ui/home/newPeekSection/NewPeekSection'
 import Puff from '@/components/ui/home/puff/Puff'
 import SaveSection from '@/components/ui/home/saveSection/SaveSection'
 import Steps from '@/components/ui/home/steps/Steps'
@@ -15,8 +14,16 @@ import { useProducts } from '@/hooks/useProducts'
 import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { IHome } from '@/types/homepage.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
+import dynamic from 'next/dynamic'
 import { FC, useEffect } from 'react'
 import styles from './Home.module.scss'
+
+const DynamicPeekSection = dynamic(
+	() => import('@/components/ui/home/newPeekSection/NewPeekSection'),
+	{
+		ssr: false
+	}
+)
 
 const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
 	data,
@@ -53,7 +60,10 @@ const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
 				move_line_content={data.acf.move_line_content}
 			/>
 
-			<NewPeekSection text_pr={data.acf.text_pr} title_pr={data.acf.title_pr} />
+			<DynamicPeekSection
+				text_pr={data.acf.text_pr}
+				title_pr={data.acf.title_pr}
+			/>
 
 			{/* <PeekSection
 				title={data.acf.title_pr}

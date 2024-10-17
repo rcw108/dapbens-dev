@@ -34,13 +34,13 @@ export const useShopContent = () => {
 		stock: number
 		outOfStock: number
 	}>()
-	const [availabilityTab, setAvailabilityTab] = useState(true)
+	const [availabilityTab, setAvailabilityTab] = useState(false)
 	const [availabilityActive, setAvailabilityActive] = useState<'stock' | 'out'>(
 		'stock'
 	)
-	const [categiriesTab, setCategiriesTab] = useState(true)
+	const [categiriesTab, setCategiriesTab] = useState(false)
 	const [categoriesActive, setCategoriesActive] = useState<string>('')
-	const [tagTab, setTagTab] = useState(true)
+	const [tagTab, setTagTab] = useState(false)
 	const [tagActive, setTagActive] = useState<string>('')
 
 	const pathname = usePathname()

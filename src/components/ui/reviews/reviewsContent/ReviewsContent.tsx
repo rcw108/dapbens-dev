@@ -89,7 +89,7 @@ const ReviewsContent: FC<{
 									))}
 								</div>
 								<SmallHeading
-									className={styles.based}
+									className={clsx(styles.based, classNameText)}
 									title={`Based on ${reviewsContent.total} Reviews`}
 								/>
 							</div>

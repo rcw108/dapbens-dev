@@ -1,16 +1,15 @@
 'use client'
 
 import FormSection from '@/components/ui/home/formSection/FormSection'
-import MarqueeLineSection from '@/components/ui/shop/marqueeLineSection/MarqueeLineSection'
-import ReviewsSectionShop from '@/components/ui/shop/reviewSectionShop/ReviewSectionShop'
+import ReviewsContent from '@/components/ui/reviews/reviewsContent/ReviewsContent'
 import ShopContent from '@/components/ui/shop/shopContent/ShopContent'
-import ShopHead from '@/components/ui/shop/shopHead/ShopHead'
 import { useActions } from '@/hooks/useActions'
 import { useProducts } from '@/hooks/useProducts'
 import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { Category, Tag } from '@/store/products/product.interface'
 import { IShopPage } from '@/types/shopPage.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
+import Image from 'next/image'
 import { FC, Suspense, useEffect } from 'react'
 import styles from './Shop.module.scss'
 
@@ -47,8 +46,8 @@ const Shop: FC<IShop> = ({ data, products, categories, tags }) => {
 	}, [])
 
 	return (
-		<main>
-			<ShopHead
+		<main className='bg-black'>
+			{/* <ShopHead
 				bg_image_head={data.acf.bg_image_head}
 				description_head={data.acf.description_head}
 				marquee_head={data.acf.marquee_head}
@@ -56,7 +55,15 @@ const Shop: FC<IShop> = ({ data, products, categories, tags }) => {
 				rate_star_image={data.acf.rate_star_image}
 				rate_stars_description={data.acf.rate_stars_description}
 				title_head={data.acf.title_head}
-			/>
+			/> */}
+			<div className={styles.newHead}>
+				<Image
+					src={data.acf.image_new_head}
+					alt='shop'
+					fill
+					draggable={false}
+				/>
+			</div>
 			<div className={styles.shop}>
 				<Suspense>
 					<ShopContent
@@ -70,14 +77,20 @@ const Shop: FC<IShop> = ({ data, products, categories, tags }) => {
 					/>
 				</Suspense>
 			</div>
-			<MarqueeLineSection
+			{/* <MarqueeLineSection
 				marquee_line_bg={data.acf.marquee_line_bg}
 				marquee_line_repeater={data.acf.marquee_line_repeater}
-			/>
-			<ReviewsSectionShop
+			/> */}
+			{/* <ReviewsSectionShop
 				title_review={data.acf.title_review}
 				reviews_repeater={data.acf.reviews_repeater}
 				subtitle_review={data.acf.subtitle_review}
+			/> */}
+			<ReviewsContent
+				className='bg-black'
+				classNameText='text-white'
+				classNameTitle={styles.titleContentShop}
+				classNamePag={styles.paginationShop}
 			/>
 			<FormSection
 				background_image_form={data.acf.form_bg}

@@ -2,6 +2,7 @@
 
 import { getReviews } from '@/components/screens/reviews/review.actions'
 import { Stamped } from '@/types/stamped.interface'
+import clsx from 'clsx'
 import Image from 'next/image'
 import { FC, useEffect, useRef, useState } from 'react'
 import ReactHtmlParser from 'react-html-parser'
@@ -11,7 +12,17 @@ import Description from '../../headings/Description'
 import SmallHeading from '../../headings/SmallHeading'
 import styles from './ReviewsContent.module.scss'
 
-const ReviewsContent: FC = () => {
+const ReviewsContent: FC<{
+	className?: string
+	classNameTitle?: string
+	classNamePag?: string
+	classNameText?: string
+}> = ({
+	className = 'bg-white',
+	classNameTitle,
+	classNameText,
+	classNamePag
+}) => {
 	const [reviewsContent, setReviewsContent] = useState<Stamped | null>(null)
 	const [page, setPage] = useState(1)
 	const [disabled, setDisabled] = useState(false)
@@ -58,7 +69,7 @@ const ReviewsContent: FC = () => {
 	}
 
 	return (
-		<section className='bg-white'>
+		<section className={className}>
 			<div className='container'>
 				<div className={styles.wrapper}>
 					{reviewsContent && (
@@ -123,11 +134,12 @@ const ReviewsContent: FC = () => {
 													</div>
 												</div>
 												<SmallHeading
-													className={styles.titleContent}
+													className={clsx(styles.titleContent, classNameTitle)}
 													title={item.review.title}
 												/>
 												<div className={styles.body}>
 													<Description
+														className={classNameText}
 														title={ReactHtmlParser(
 															`&#x201C; ${item.review.body} &#x201D;`
 														)}
@@ -189,7 +201,7 @@ const ReviewsContent: FC = () => {
 									</div>
 								))}
 							</div>
-							<div className={styles.pagination}>
+							<div className={clsx(styles.pagination, classNamePag)}>
 								{page - 1 >= 1 && (
 									<button
 										disabled={disabled}

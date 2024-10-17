@@ -1,3 +1,35 @@
 .shop {
 	min-height: 1000px;
 }
+
+.newHead {
+	position: relative;
+	width: 1500px;
+	margin: 0 auto;
+	height: 448px;
+}
+
+.titleContentShop {
+	color: #fff !important;
+	font-size: 14px;
+	transition: all 0.2s ease-in-out;
+	font-weight: 400;
+	margin-top: 5px;
+	cursor: pointer;
+	&:hover {
+		color: #fff !important;
+	}
+}
+
+.paginationShop {
+	button {
+		color: #fff !important;
+		&:hover {
+			color: #fff !important;
+		}
+		&:disabled {
+			cursor: default;
+			color: #ccc;
+		}
+	}
+}

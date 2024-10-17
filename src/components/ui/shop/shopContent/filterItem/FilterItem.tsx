@@ -1,5 +1,6 @@
 import { Category, Tag } from '@/store/products/product.interface'
 import clsx from 'clsx'
+import Image from 'next/image'
 import { FC } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import styles from '../ShopContent.module.scss'
@@ -30,7 +31,14 @@ const FilterItem: FC<IFilterItem> = ({ active, handler, itemsArray, tab }) => {
 								className={clsx(styles.circle, {
 									[styles.active]: active === category.name
 								})}
-							></div>
+							>
+								<Image
+									src={'/check-shop.svg'}
+									alt='check'
+									width={16}
+									height={18}
+								/>
+							</div>
 							<h5>{ReactHtmlParser(category.name)}</h5>
 						</div>
 					)

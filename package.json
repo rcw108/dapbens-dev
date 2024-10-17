@@ -17,6 +17,7 @@
     "axios": "^1.7.3",
     "clsx": "^2.1.1",
     "credit-card-type": "^10.0.1",
+    "framer-motion": "^11.11.9",
     "js-cookie": "^3.0.5",
     "next": "14.2.5",
     "next-nprogress-bar": "^2.3.13",

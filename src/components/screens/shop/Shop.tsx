@@ -63,6 +63,10 @@ const Shop: FC<IShop> = ({ data, products, categories, tags }) => {
 						categories={categories}
 						tags={tags}
 						products={products}
+						bundle_section_image={data.acf.bundle_section_image}
+						cartridges_section_image={data.acf.cartridges_section_image}
+						disposables_section_image={data.acf.disposables_section_image}
+						gummy_section_image={data.acf.gummy_section_image}
 					/>
 				</Suspense>
 			</div>

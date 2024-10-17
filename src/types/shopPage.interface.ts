@@ -27,6 +27,14 @@ export interface ShopACF {
 	form_title: string
 	form_bg: string
 	form_description: string
+
+	// new
+
+	image_new_head: string
+	bundle_section_image: string
+	gummy_section_image: string
+	cartridges_section_image: string
+	disposables_section_image: string
 }
 
 export interface IShopPage extends BasePageInfo {

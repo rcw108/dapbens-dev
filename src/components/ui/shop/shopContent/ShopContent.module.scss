@@ -55,22 +55,17 @@
 			}
 		}
 		.center {
-			display: flex;
-			justify-content: space-between;
 			.filters {
-				width: 23.35%;
-				margin-right: 3.3%;
+				width: 100%;
 			}
 
 			.content {
 				height: fit-content;
-				width: 73.35%;
-				padding-left: 40px;
-				display: grid;
-				grid-template-columns: repeat(3, 1fr);
-				grid-template-rows: minmax(350px, auto);
-				grid-auto-rows: minmax(350px, auto);
-				gap: 22px;
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				gap: 40px;
+				margin-top: 40px;
 				.skeleton {
 					span {
 						display: grid;
@@ -89,10 +84,10 @@
 	}
 
 	.filters {
-		height: fit-content;
-		border: 1px solid rgb(255 255 255 / 40%);
-		border-radius: 14px;
 		overflow: hidden;
+		display: grid;
+		gap: 30px;
+		grid-template-columns: repeat(3, 1fr);
 		.top {
 			margin-bottom: 0;
 			@apply flex items-center justify-between;
@@ -109,8 +104,11 @@
 		.availability,
 		.categories,
 		.tags {
-			border-bottom: 1px solid rgb(255 255 255 / 40%);
-			padding: 22px 20px;
+			padding: 8px 12px;
+			border: 2px solid #fff;
+			border-radius: 8px;
+			height: max-content;
+			transition: all 0.3s ease-in-out;
 			.availTop {
 				@apply flex items-center justify-between cursor-pointer;
 			}
@@ -140,50 +138,37 @@
 			padding-top: 22px;
 			grid-template-rows: 1fr;
 			max-height: 1000px;
+			transition: all 0.3s ease-in-out;
 		}
 		.item {
 			cursor: pointer;
-			margin-bottom: 3px;
+			margin-bottom: 7px;
+			transition: all 0.3s ease-in-out;
 			@apply flex gap-3 items-center;
 
 			h5 {
-				padding-left: 20px;
-				@apply font-sofia-sans;
-				font-size: 18px;
+				@apply font-oswald;
+				font-size: 16px;
 				font-weight: 300;
 				line-height: 22px;
 				letter-spacing: 0em;
 				text-align: left;
 				color: #fff;
+				text-transform: uppercase;
 			}
 		}
 
 		.circle {
 			position: relative;
-			&:before {
-				content: '';
-				position: absolute;
-				width: 18px;
-				height: 18px;
-				left: 0;
-				top: 50%;
-				border: 1px solid #00e131;
-				border-radius: 50%;
-				transform: translateY(-50%);
-			}
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 24px;
+			height: 24px;
+			border: 2px solid #fff;
+			border-radius: 4px;
 			&.active {
-				&::after {
-					content: '';
-					position: absolute;
-					width: 12px;
-					height: 12px;
-					background-color: #00e131;
-					left: 3px;
-					top: 50%;
-					border: 1px solid #00e131;
-					border-radius: 50%;
-					transform: translateY(-50%);
-				}
+				background-color: #fff;
 			}
 		}
 	}
@@ -247,4 +232,30 @@
 			}
 		}
 	}
+}
+
+.disp,
+.cartrigdes,
+.gummy,
+.bundle {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: minmax(421px, auto);
+	grid-auto-rows: minmax(421px, auto);
+	gap: 15px;
+}
+
+.loadMore {
+	display: inline-block;
+	margin: 0 auto;
+	padding: 12px;
+	width: 184px;
+	background: #88c181;
+	color: white;
+	font-size: 22px;
+	font-weight: bold;
+	@apply font-oswald;
+	padding: 8px 40px;
+	border-radius: 4px;
+	cursor: pointer;
 }

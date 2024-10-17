@@ -74,19 +74,20 @@ const BundleCard: FC<{
 				count: 1,
 				bundleItems: items.map(item => {
 					return {
-						id: item.id,
-						count: item.count,
-						name: item.name
+						id: Number(item.id),
+						count: Number(item.count),
+						name: String(item.name),
+						stock_count: Number(item.stock_count)
 					}
 				}),
 				paymentType,
 				subscriptionPeriod: period,
 				subscriptionPrice:
 					deliver === '15%'
-						? (+product.sale_price * 0.85).toFixed(2)
+						? Number((+product.sale_price * 0.85).toFixed(2))
 						: deliver === '20%'
-							? (+product.sale_price * 0.8).toFixed(2)
-							: (+product.sale_price * 0.75).toFixed(2),
+							? Number((+product.sale_price * 0.8).toFixed(2))
+							: Number((+product.sale_price * 0.75).toFixed(2)),
 				itemImage: product.images[0].src
 			})
 		} else {
@@ -99,7 +100,8 @@ const BundleCard: FC<{
 					return {
 						id: item.id,
 						count: item.count,
-						name: item.name
+						name: item.name,
+						stock_count: item.stock_count
 					}
 				}),
 				type: 'bundle',

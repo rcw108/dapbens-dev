@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import Image from 'next/image'
 import { FC } from 'react'
 
@@ -17,7 +18,13 @@ const FilterHeader: FC<IFilterHeader> = ({
 	return (
 		<div className={className} onClick={() => handler(!handlerValue)}>
 			<h4>{title}</h4>
-			<Image src='/select.svg' alt='select' width={18} height={18} />
+			<Image
+				className={clsx({ ['rotate-180']: handlerValue })}
+				src='/select.svg'
+				alt='select'
+				width={18}
+				height={18}
+			/>
 		</div>
 	)
 }

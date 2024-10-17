@@ -1,26 +1,40 @@
 'use client'
 
 import { Category, Tag } from '@/store/products/product.interface'
+import { ShopACF } from '@/types/shopPage.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
 import clsx from 'clsx'
 import Image from 'next/image'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import SkeletonLoader from '../../SkeletonLoader'
 import FilterHeader from './filterHeader/FilterHeader'
 import FilterItem from './filterItem/FilterItem'
-import PaginationButton from './paginationButton/PaginationButton'
 import styles from './ShopContent.module.scss'
 import SingleProductCard from './singleProductCard/SingleProductCard'
-import { sortData } from './sortBy.data'
 import { useShopContent } from './useShopContent'
 
-interface IShopContent {
+interface IShopContent
+	extends Pick<
+		ShopACF,
+		| 'bundle_section_image'
+		| 'disposables_section_image'
+		| 'cartridges_section_image'
+		| 'gummy_section_image'
+	> {
 	products: WooCommerceSingleProduct[]
 	categories: Category[]
 	tags: Tag[]
 }
 
-const ShopContent: FC<IShopContent> = ({ products, tags, categories }) => {
+const ShopContent: FC<IShopContent> = ({
+	products,
+	tags,
+	categories,
+	bundle_section_image,
+	cartridges_section_image,
+	disposables_section_image,
+	gummy_section_image
+}) => {
 	const {
 		currentPagination,
 		progressPagination,
@@ -46,8 +60,17 @@ const ShopContent: FC<IShopContent> = ({ products, tags, categories }) => {
 		handleTags,
 		totalPagesCount,
 		loading,
-		setLoading
+		setLoading,
+		disposablesProducts,
+		bundleProducts,
+		cartridgesProducts,
+		gummyProducts
 	} = useShopContent()
+
+	const [bundleLoad, setBundleLoad] = useState<number>(7)
+	const [gummyLoad, setGummyLoad] = useState<number>(7)
+	const [cartridgeLoad, setCartridgeLoad] = useState<number>(7)
+	const [disposiblesLoad, setDisposiblesLoad] = useState<number>(7)
 
 	useEffect(() => {
 		setLoading(true)
@@ -67,7 +90,7 @@ const ShopContent: FC<IShopContent> = ({ products, tags, categories }) => {
 		<section className={clsx(styles.shop, { [styles.loading]: loading })}>
 			<div className='container'>
 				<div className={styles.wrapper}>
-					<div className={styles.top}>
+					{/* <div className={styles.top}>
 						<h5>Sort By:</h5>
 						<div className={styles.selectBlock}>
 							<select
@@ -82,67 +105,9 @@ const ShopContent: FC<IShopContent> = ({ products, tags, categories }) => {
 								))}
 							</select>
 						</div>
-					</div>
+					</div> */}
 					<div className={styles.center}>
 						<div className={styles.filters}>
-							<div className={styles.top}>
-								<h4>Filter Products</h4>
-								<Image
-									src='/settings.svg'
-									alt='settings'
-									width={28}
-									height={28}
-								/>
-							</div>
-							<div className={styles.availability}>
-								<FilterHeader
-									title='Availability'
-									className={styles.availTop}
-									handler={setAvailabilityTab}
-									handlerValue={availabilityTab}
-								/>
-
-								<div
-									className={clsx(
-										styles.choice,
-										availabilityTab && styles.active
-									)}
-								>
-									<div style={{ minHeight: 0 }}>
-										{stockStatus && (
-											<div>
-												<div
-													onClick={() => setAvailabilityActive('stock')}
-													className={clsx(styles.item, {
-														[styles.active]: availabilityActive === 'stock'
-													})}
-												>
-													<div
-														className={clsx(styles.circle, {
-															[styles.active]: availabilityActive === 'stock'
-														})}
-													></div>
-													<h5>In Stock ({stockStatus.stock})</h5>
-												</div>
-												<div
-													onClick={() => setAvailabilityActive('out')}
-													className={clsx(styles.item, {
-														[styles.active]: availabilityActive === 'out'
-													})}
-												>
-													<div
-														className={clsx(styles.circle, {
-															[styles.active]: availabilityActive === 'out'
-														})}
-													></div>
-													<h5>Out of Stock ({stockStatus.outOfStock})</h5>
-												</div>
-											</div>
-										)}
-									</div>
-								</div>
-							</div>
-
 							<div className={styles.categories}>
 								<FilterHeader
 									title='Categories'
@@ -171,16 +136,6 @@ const ShopContent: FC<IShopContent> = ({ products, tags, categories }) => {
 									tab={tagTab}
 								/>
 							</div>
-							<div className={styles.reset}>
-								<button
-									className={styles.btn}
-									onClick={() => {
-										handleReset()
-									}}
-								>
-									Reset Filters
-								</button>
-							</div>
 						</div>
 						<div className={styles.content} id='products'>
 							{loading ? (
@@ -188,20 +143,166 @@ const ShopContent: FC<IShopContent> = ({ products, tags, categories }) => {
 									{<SkeletonLoader count={12} width={300} height={300} />}
 								</div>
 							) : sortedProducts.length > 0 ? (
-								filteredProducts()
-									.slice(currentPagination, progressPagination)
-									.map(product => {
-										if (product.status === 'private') return null
-										if (product.catalog_visibility === 'hidden') return null
+								<>
+									{bundleProducts.length > 0 && (
+										<>
+											<div className={styles.bundle}>
+												<div className='relative w-full h-full'>
+													<Image
+														src={bundle_section_image}
+														alt='disposables'
+														fill
+														draggable={false}
+													/>
+												</div>
+												{bundleProducts.slice(0, bundleLoad).map(product => {
+													if (product.status === 'private') return null
+													if (product.catalog_visibility === 'hidden')
+														return null
 
-										return <SingleProductCard key={product.id} {...product} />
-									})
+													return (
+														<SingleProductCard
+															key={product.id * 11}
+															{...product}
+														/>
+													)
+												})}
+											</div>
+											{bundleLoad < bundleProducts.length && (
+												<button
+													className={clsx(styles.loadMore, {
+														[styles.active]: bundleLoad < bundleProducts.length
+													})}
+													onClick={() => setBundleLoad(bundleLoad + 8)}
+												>
+													Load More
+												</button>
+											)}
+										</>
+									)}
+									{gummyProducts.length > 0 && (
+										<>
+											<div className={styles.gummy}>
+												<div className='relative w-full h-full'>
+													<Image
+														src={gummy_section_image}
+														alt='disposables'
+														fill
+														draggable={false}
+													/>
+												</div>
+												{gummyProducts.slice(0, gummyLoad).map(product => {
+													if (product.status === 'private') return null
+													if (product.catalog_visibility === 'hidden')
+														return null
+
+													return (
+														<SingleProductCard
+															key={product.id * 12}
+															{...product}
+														/>
+													)
+												})}
+											</div>
+											{gummyLoad < gummyProducts.length && (
+												<button
+													className={clsx(styles.loadMore, {
+														[styles.active]: gummyLoad < gummyProducts.length
+													})}
+													onClick={() => setGummyLoad(gummyLoad + 8)}
+												>
+													Load More
+												</button>
+											)}
+										</>
+									)}
+									{cartridgesProducts.length > 0 && (
+										<>
+											<div className={styles.cartrigdes}>
+												<div className='relative w-full h-full'>
+													<Image
+														src={cartridges_section_image}
+														alt='disposables'
+														fill
+														draggable={false}
+													/>
+												</div>
+												{cartridgesProducts
+													.slice(0, cartridgeLoad)
+													.map(product => {
+														if (product.status === 'private') return null
+														if (product.catalog_visibility === 'hidden')
+															return null
+
+														return (
+															<SingleProductCard
+																key={product.id * 13}
+																{...product}
+															/>
+														)
+													})}
+											</div>
+											{cartridgeLoad < cartridgesProducts.length && (
+												<button
+													className={clsx(styles.loadMore, {
+														[styles.active]:
+															cartridgeLoad < cartridgesProducts.length
+													})}
+													onClick={() => setCartridgeLoad(cartridgeLoad + 8)}
+												>
+													Load More
+												</button>
+											)}
+										</>
+									)}
+									{disposablesProducts.length > 0 && (
+										<>
+											<div className={styles.disp}>
+												<div className='relative w-full h-full'>
+													<Image
+														src={disposables_section_image}
+														alt='disposables'
+														fill
+														draggable={false}
+													/>
+												</div>
+												{disposablesProducts
+													.slice(0, disposiblesLoad)
+													.map(product => {
+														if (product.status === 'private') return null
+														if (product.catalog_visibility === 'hidden')
+															return null
+
+														return (
+															<SingleProductCard
+																key={product.id * 14}
+																{...product}
+															/>
+														)
+													})}
+											</div>
+											{disposiblesLoad < disposablesProducts.length && (
+												<button
+													className={clsx(styles.loadMore, {
+														[styles.active]:
+															disposiblesLoad < disposablesProducts.length
+													})}
+													onClick={() =>
+														setDisposiblesLoad(disposiblesLoad + 8)
+													}
+												>
+													Load More
+												</button>
+											)}
+										</>
+									)}
+								</>
 							) : (
 								<div>No products</div>
 							)}
 						</div>
 					</div>
-					<div className={styles.bottom}>
+					{/* <div className={styles.bottom}>
 						<div className={styles.pagination}>
 							<PaginationButton
 								filteredProducts={filteredProducts}
@@ -231,7 +332,7 @@ const ShopContent: FC<IShopContent> = ({ products, tags, categories }) => {
 								togglePagination={togglePagination}
 							/>
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</section>

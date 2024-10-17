@@ -242,6 +242,67 @@ export const useShopContent = () => {
 		return Math.ceil(filteredProducts.length / 12)
 	}
 
+	const bundleProductsFn = sortedProducts.filter(product =>
+		product.categories.some(
+			category =>
+				category.name === 'Bundle' &&
+				product.status !== 'private' &&
+				product.catalog_visibility !== 'hidden' &&
+				product.stock_status === 'instock'
+		)
+	)
+
+	const cartridgesProductsFn = sortedProducts.filter(product =>
+		product.categories.some(
+			category =>
+				category.name === 'Cartridge' ||
+				(category.name === '510 Cartridges' &&
+					product.status !== 'private' &&
+					product.catalog_visibility !== 'hidden' &&
+					product.stock_status === 'instock')
+		)
+	)
+
+	const gummyProductsFn = sortedProducts.filter(product =>
+		product.categories.some(
+			category =>
+				category.name === 'Edibles' &&
+				product.status !== 'private' &&
+				product.catalog_visibility !== 'hidden' &&
+				product.stock_status === 'instock'
+		)
+	)
+
+	const disposablesProductsFn = sortedProducts.filter(product =>
+		product.categories.some(
+			category =>
+				category.name === 'Disposables' &&
+				product.status !== 'private' &&
+				product.catalog_visibility !== 'hidden' &&
+				product.stock_status === 'instock'
+		)
+	)
+
+	const [disposablesProducts, setDisposablesProducts] = useState<
+		WooCommerceSingleProduct[]
+	>(disposablesProductsFn)
+
+	const [bundleProducts, setBundleProducts] =
+		useState<WooCommerceSingleProduct[]>(bundleProductsFn)
+
+	const [cartridgesProducts, setCartridgesProducts] =
+		useState<WooCommerceSingleProduct[]>(cartridgesProductsFn)
+
+	const [gummyProducts, setGummyProducts] =
+		useState<WooCommerceSingleProduct[]>(gummyProductsFn)
+
+	useEffect(() => {
+		setDisposablesProducts(disposablesProductsFn)
+		setBundleProducts(bundleProductsFn)
+		setCartridgesProducts(cartridgesProductsFn)
+		setGummyProducts(gummyProductsFn)
+	}, [sortedProducts])
+
 	return {
 		handleSortBy,
 		handleSortAvailability,
@@ -280,6 +341,10 @@ export const useShopContent = () => {
 		handleCategories,
 		handleTags,
 		totalPagesCount,
-		setLoading
+		setLoading,
+		disposablesProducts,
+		bundleProducts,
+		cartridgesProducts,
+		gummyProducts
 	}
 }

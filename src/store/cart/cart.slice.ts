@@ -44,7 +44,7 @@ export const cartSlice = createSlice({
 			saveCartToCookie(state.itemListCount)
 		},
 
-		addToCart: (state, { payload }) => {
+		addToCart: (state, { payload }: { payload: ItemListCount }) => {
 			const itemListCart = state.itemListCount.find(
 				item => item.id === payload.id
 			)

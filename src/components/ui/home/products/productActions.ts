@@ -114,3 +114,13 @@ export const updateSubscribePaymentStatus = async (
 		console.error('Error updating order payment status:', error)
 	}
 }
+
+export const getAllProductsSearch = async (search: string) => {
+	try {
+		const response = await api.get(`products/?search=${search}&per_page=100`)
+		console.log(response.data)
+		return response.data
+	} catch (error) {
+		console.error('Error fetching products:', error)
+	}
+}

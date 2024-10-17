@@ -95,33 +95,33 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 				id: product.id,
 				name: product.name,
 				count,
-				price: variantPriceFn().sale_price,
+				price: String(variantPriceFn().sale_price),
 				type: 'variable',
 				variableItems: {
-					id: indexedVariables().find(item => item.name === variant)?.id,
+					id: indexedVariables().find(item => item.name === variant)?.id || 0,
 					name: variant
 				},
 				paymentType,
 				subscriptionPeriod: period,
 				subscriptionPrice:
 					deliver === '15%'
-						? (+product.sale_price * 0.85).toFixed(2)
+						? Number((+product.sale_price * 0.85).toFixed(2))
 						: deliver === '20%'
-							? (+product.sale_price * 0.8).toFixed(2)
-							: (+product.sale_price * 0.75).toFixed(2),
+							? Number((+product.sale_price * 0.8).toFixed(2))
+							: Number((+product.sale_price * 0.75).toFixed(2)),
 				itemImage: product.images[0].src
 			})
 		} else {
 			addToCart({
 				name: product.name,
 				id: product.id,
-				price: variantPrice.sale_price,
+				price: String(variantPrice.sale_price),
 				count,
 				type: 'variable',
 				paymentType,
 				itemImage: product.images[0].src,
 				variableItems: {
-					id: indexedVariables().find(item => item.name === variant)?.id,
+					id: indexedVariables().find(item => item.name === variant)?.id || 0,
 					name: variant
 				}
 			})

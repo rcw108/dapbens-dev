@@ -52,10 +52,10 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 				subscriptionPeriod: period,
 				subscriptionPrice:
 					deliver === '15%'
-						? (+product.sale_price * 0.85).toFixed(2)
+						? Number((+product.sale_price * 0.85).toFixed(2))
 						: deliver === '20%'
-							? (+product.sale_price * 0.8).toFixed(2)
-							: (+product.sale_price * 0.75).toFixed(2),
+							? Number((+product.sale_price * 0.8).toFixed(2))
+							: Number((+product.sale_price * 0.75).toFixed(2)),
 				itemImage: product.images[0].src
 			})
 		} else {

@@ -267,3 +267,9 @@
 	position: relative;
 	transition: all 0.2s;
 }
+
+@media (max-width: 545px) {
+	.cartBox {
+		right: -150%;
+	}
+}

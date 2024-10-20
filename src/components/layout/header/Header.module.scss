@@ -57,3 +57,9 @@
 	position: relative;
 	overflow: hidden;
 }
+
+@media (max-width: 575px) {
+	.details {
+		gap: 10px;
+	}
+}

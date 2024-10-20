@@ -58,6 +58,7 @@ const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
 				hero_section_img={data.acf.hero_section_img}
 				hero_section_link={data.acf.hero_section_link}
 				move_line_content={data.acf.move_line_content}
+				hero_section_img_mobile={data.acf.hero_section_img_mobile}
 			/>
 
 			<DynamicPeekSection
@@ -134,6 +135,7 @@ const Home: FC<{ data: IHome; products: WooCommerceSingleProduct[] }> = ({
 				sub_title_sv={data.acf.sub_title_sv}
 				text_sv={data.acf.text_sv}
 				title_sv={data.acf.title_sv}
+				bg_img_mobile={data.acf.bg_img_mobile}
 			/>
 			<FormSection
 				background_image_form={data.acf.background_image_form}

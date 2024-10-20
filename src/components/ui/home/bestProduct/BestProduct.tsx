@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import Image from 'next/image'
 import { FC } from 'react'
 import Marquee from 'react-fast-marquee'
@@ -60,7 +61,10 @@ const BestProduct: FC<IBestProduct> = ({
 									height={16}
 									unoptimized
 								/>
-								<Description title={ReactHtmlParser(star_text_bp)} />
+								<Description
+									className={styles.starText}
+									title={ReactHtmlParser(star_text_bp)}
+								/>
 							</div>
 							<SubHeading
 								className={styles.title}
@@ -77,6 +81,40 @@ const BestProduct: FC<IBestProduct> = ({
 									text={link_bp.title}
 								/>
 							</div>
+						</div>
+					</div>
+
+					<div className={clsx(styles.wrapper, styles.wrapperMobile)}>
+						<div className={styles.rate}>
+							<Image
+								src={star_img_bp}
+								alt={star_text_bp}
+								width={88}
+								height={16}
+								unoptimized
+							/>
+							<Description
+								className={styles.starText}
+								title={ReactHtmlParser(star_text_bp)}
+							/>
+						</div>
+						<SubHeading
+							className={styles.title}
+							title={ReactHtmlParser(title_bp)}
+						/>
+						<div className={styles.img}>
+							<Image src={img_bp} alt={title_bp} fill draggable={false} />
+						</div>
+						<Description
+							className={styles.descr}
+							title={ReactHtmlParser(text_bp)}
+						/>
+						<div className={styles.btns}>
+							<Button
+								link={link_bp.url}
+								target={link_bp.target}
+								text={link_bp.title}
+							/>
 						</div>
 					</div>
 				</div>

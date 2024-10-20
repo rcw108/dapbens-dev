@@ -72,3 +72,44 @@
 		}
 	}
 }
+
+@media (max-width: 768px) {
+	.faq {
+		.wrapper {
+			padding-top: 0;
+			padding-bottom: 0;
+			.box {
+				.item {
+					.top {
+						.tabTitle {
+							font-size: 18px;
+							line-height: 1.2;
+						}
+					}
+					.bottom {
+						.text {
+							font-size: 14px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 575px) {
+	.faq {
+		.wrapper {
+			padding: 0;
+			.icon {
+				min-width: 25px;
+			}
+			.box {
+				.item {
+					padding: 10px;
+					border-radius: 10px;
+				}
+			}
+		}
+	}
+}

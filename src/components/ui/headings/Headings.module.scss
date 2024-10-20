@@ -23,3 +23,42 @@
 	color: #0d0d0d;
 	@apply font-oswald;
 }
+
+@media (max-width: 1300px) {
+	.h1 {
+		font-size: 40px;
+	}
+	.h2 {
+		font-size: 32px;
+	}
+	.h3 {
+		font-size: 26px;
+	}
+}
+
+@media (max-width: 1024px) {
+	.h1 {
+		font-size: 36px;
+	}
+	.h2 {
+		font-size: 30px;
+	}
+	.h3 {
+		font-size: 24px;
+	}
+}
+
+@media (max-width: 575px) {
+	.h1 {
+		font-size: 30px;
+	}
+	.h2 {
+		font-size: 26px;
+	}
+	.h3 {
+		font-size: 20px;
+	}
+	.p {
+		font-size: 16px;
+	}
+}

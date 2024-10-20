@@ -30,3 +30,16 @@
 		justify-content: center;
 	}
 }
+
+@media (max-width: 769px) {
+	.steps {
+		.box {
+			padding: 18px 20px 24px 20px;
+		}
+
+		.info {
+			grid-template-columns: 1fr;
+			row-gap: 20px;
+		}
+	}
+}

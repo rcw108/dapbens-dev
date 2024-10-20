@@ -36,6 +36,7 @@ export interface SingleFaq {
 export interface HomeACF {
 	// New
 	hero_section_img: string
+	hero_section_img_mobile: string
 	hero_section_link: PageLink
 
 	hero_section_title: string
@@ -92,6 +93,7 @@ export interface HomeACF {
 	faqs_f: SingleFaq[]
 	bg_img_left_sv: string
 	bg_img_right_sv: string
+	bg_img_mobile: string
 	star_img_sv: string
 	star_text_sv: string
 	sub_title_sv: string

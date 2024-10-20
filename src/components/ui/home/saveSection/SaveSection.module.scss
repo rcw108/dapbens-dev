@@ -1,7 +1,6 @@
 .save {
 	margin-top: 77px;
 	margin-bottom: 78px;
-
 	.box {
 		display: flex;
 		justify-content: space-between;
@@ -39,6 +38,74 @@
 			.descr {
 				max-width: 655px;
 				@apply text-center;
+			}
+		}
+	}
+	.boxMobile {
+		display: none;
+	}
+}
+
+@media (max-width: 1024px) {
+	.save {
+		.box {
+			.leftImg,
+			.rightImg {
+				width: 19% !important;
+				height: 304px;
+			}
+			.center {
+				.title {
+					font-size: 30px;
+				}
+				.subtitle {
+					margin-bottom: 0px;
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.save {
+		.box {
+			display: none;
+		}
+		.boxMobile {
+			display: block;
+			.center {
+				width: 100%;
+			}
+		}
+	}
+}
+
+@media (max-width: 575px) {
+	.save {
+		.boxMobile {
+			.rate {
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
+				text-align: center;
+				flex-direction: column;
+				.rateTitle {
+					font-size: 13px;
+				}
+			}
+			.center {
+				.subtitle {
+					font-size: 18px;
+				}
+				.title {
+					font-size: 26px;
+				}
+				.descr {
+					font-weight: 300;
+					margin-top: 20px;
+					font-size: 16px;
+					padding: 0 20px;
+				}
 			}
 		}
 	}

@@ -1,4 +1,6 @@
+import clsx from 'clsx'
 import { FC, JSXElementConstructor, ReactElement } from 'react'
+import styles from './Headings.module.scss'
 
 interface IDescription {
 	title: string | ReactElement<any, string | JSXElementConstructor<any>>[]
@@ -7,9 +9,9 @@ interface IDescription {
 
 const Description: FC<IDescription> = ({ title, className }) => {
 	if (typeof title === 'string') {
-		return <p className={className}>{title}</p>
+		return <p className={clsx(styles.p, className)}>{title}</p>
 	} else {
-		return <div className={className}>{title}</div>
+		return <div className={clsx(styles.p, className)}>{title}</div>
 	}
 }
 

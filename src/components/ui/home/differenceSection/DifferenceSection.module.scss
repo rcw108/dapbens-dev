@@ -22,3 +22,21 @@
 		@apply flex justify-center;
 	}
 }
+
+@media (max-width: 1024px) {
+	.difference {
+		.box {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 20px;
+		}
+	}
+}
+
+@media (max-width: 769px) {
+	.difference {
+		.box {
+			grid-template-columns: repeat(1, 1fr);
+			gap: 20px;
+		}
+	}
+}

@@ -1,4 +1,5 @@
 import { HomeACF } from '@/types/homepage.interface'
+import clsx from 'clsx'
 import Image from 'next/image'
 import { FC } from 'react'
 import ReactHtmlParser from 'react-html-parser'
@@ -33,7 +34,10 @@ const Puff: FC<IPuff> = ({
 									height={16}
 								/>
 							)}
-							<Description title={ReactHtmlParser(star_text_)} />
+							<Description
+								className={styles.starText}
+								title={ReactHtmlParser(star_text_)}
+							/>
 						</div>
 						<SubHeading
 							className={styles.title}
@@ -55,6 +59,40 @@ const Puff: FC<IPuff> = ({
 							/>
 						</div>
 					</div>
+				</div>
+
+				<div className={clsx(styles.box, styles.mobileBox)}>
+					<div className={styles.rate}>
+						{star_img_hf && typeof star_img_hf === 'string' && (
+							<Image
+								src={star_img_hf}
+								alt={star_text_}
+								width={88}
+								height={16}
+							/>
+						)}
+						<Description
+							className={styles.starText}
+							title={ReactHtmlParser(star_text_)}
+						/>
+					</div>
+					<SubHeading
+						className={styles.title}
+						title={ReactHtmlParser(title_hf)}
+					/>
+					<div className={styles.img}>
+						<Image
+							src={img_hf}
+							alt={title_hf}
+							fill
+							draggable={false}
+							unoptimized
+						/>
+					</div>
+					<Description
+						className={styles.descr}
+						title={ReactHtmlParser(text_hf)}
+					/>
 				</div>
 			</div>
 		</section>

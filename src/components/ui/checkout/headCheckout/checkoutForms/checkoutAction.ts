@@ -4,7 +4,10 @@ import {
 	createCustomerSubscribeOrderWo,
 	updateSubscribePaymentStatus
 } from '@/components/ui/home/products/productActions'
-import { SingleCustomer } from '@/components/ui/myAccount/customer.interface'
+import {
+	RegistrationCustomer,
+	SingleCustomer
+} from '@/components/ui/myAccount/customer.interface'
 import {
 	setCustomerAuthorizeMetaData,
 	SetCustomerAuthorizeMetaData
@@ -57,7 +60,8 @@ export async function handleCheckout(
 	authorize: IAuthorize | null | undefined,
 	customer: SingleCustomer | null,
 	requestData: AuthSubRequestData,
-	requestSaveMetaDataBody: SetCustomerAuthorizeMetaData | undefined
+	requestSaveMetaDataBody: SetCustomerAuthorizeMetaData | undefined,
+	registerUserData?: Partial<RegistrationCustomer>
 ) {
 	'use server'
 	try {
@@ -380,12 +384,13 @@ export async function handleCheckout(
 						error: 'Error Create customer subscribe order'
 					}
 				}
-			} else {
-				return {
-					success: true,
-					message: 'Order created without subscription',
-					order
-				}
+			} else if (
+				haveSubscribeItems.length > 0 &&
+				!user &&
+				!requestSaveMetaDataBody &&
+				registerUserData
+			) {
+				console.log('TO DO')
 			}
 		} else {
 			return {

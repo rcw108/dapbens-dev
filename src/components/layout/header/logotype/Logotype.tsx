@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FC } from 'react'
 import { useTopBar } from '../topbar/useTopBar'
+import styles from './Logotype.module.scss'
 
 const Logotype: FC = () => {
 	const { data, isLoading } = useTopBar()
@@ -14,7 +15,13 @@ const Logotype: FC = () => {
 			) : data ? (
 				<div className='logo'>
 					<Link href='/'>
-						<Image src={data.header_logo} alt='logo' width={224} height={35} />
+						<Image
+							className={styles.logo}
+							src={data.header_logo}
+							alt='logo'
+							width={224}
+							height={35}
+						/>
 					</Link>
 				</div>
 			) : null}

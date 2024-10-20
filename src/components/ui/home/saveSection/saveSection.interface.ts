@@ -10,4 +10,5 @@ export interface SaveSectionProps
 		| 'sub_title_sv'
 		| 'title_sv'
 		| 'text_sv'
+		| 'bg_img_mobile'
 	> {}

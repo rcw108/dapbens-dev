@@ -5,7 +5,6 @@
 	.wrapper {
 		background-repeat: no-repeat;
 		background-size: cover;
-		border-radius: 30px;
 		overflow: hidden;
 		padding: 67px 30px 68px 30px;
 
@@ -76,6 +75,7 @@
 @media (max-width: 768px) {
 	.faq {
 		.wrapper {
+			border-radius: 0px;
 			padding-top: 0;
 			padding-bottom: 0;
 			.box {

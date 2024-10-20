@@ -9,9 +9,6 @@
 		background-repeat: no-repeat;
 		background-size: cover;
 		background-position: center;
-		.wrapperMobile {
-			display: none;
-		}
 		.wrapper {
 			padding: 65px 0 75px 70px;
 			@apply flex justify-between;
@@ -54,6 +51,9 @@
 					}
 				}
 			}
+		}
+		.wrapperMobile {
+			display: none;
 		}
 
 		.marquee {
@@ -196,7 +196,7 @@
 		.box {
 			border-radius: 15px;
 			.marquee {
-				border-radius: 15px 15px 0 15px;
+				border-radius: 15px 15px 0 0;
 				background-position: center;
 				background-size: cover;
 				background-repeat: no-repeat;

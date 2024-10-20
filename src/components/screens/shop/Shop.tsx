@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import FormSection from '@/components/ui/home/formSection/FormSection'
@@ -9,8 +10,8 @@ import { usePushCookieUserCart } from '@/hooks/usePushCookieUserCart'
 import { Category, Tag } from '@/store/products/product.interface'
 import { IShopPage } from '@/types/shopPage.interface'
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
-import Image from 'next/image'
 import { FC, Suspense, useEffect } from 'react'
+import ReactHtmlParser from 'react-html-parser'
 import styles from './Shop.module.scss'
 
 interface IShop {
@@ -57,12 +58,21 @@ const Shop: FC<IShop> = ({ data, products, categories, tags }) => {
 				title_head={data.acf.title_head}
 			/> */}
 			<div className={styles.newHead}>
-				<Image
+				<img
+					className={styles.desk}
 					src={data.acf.image_new_head}
 					alt='shop'
-					fill
 					draggable={false}
 				/>
+				<img
+					className={styles.mob}
+					src={data.acf.image_new_head_mobile}
+					alt='shop'
+					draggable={false}
+				/>
+			</div>
+			<div className={styles.contentBlock}>
+				{ReactHtmlParser(data.content.rendered)}
 			</div>
 			<div className={styles.shop}>
 				<Suspense>

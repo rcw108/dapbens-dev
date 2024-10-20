@@ -557,8 +557,6 @@ const CheckoutForms: FC<{
 						: 'days'
 		}
 
-		console.log(requestData)
-
 		const fetchAsyncFn = async () => {
 			const res = await handleCheckout(
 				orderData,
@@ -579,13 +577,11 @@ const CheckoutForms: FC<{
 		const response = await fetchAsyncFn()
 
 		if (response?.success) {
-			console.log(response)
 			setSendPayment(false)
 			setPaymentCheck(true)
 			setPaymentDetails(response.order)
 		}
 		if (response?.error) {
-			console.log(response)
 			setSendPayment(false)
 			setSendError(true)
 			setSendErrorMessage(response.error)

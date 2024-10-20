@@ -117,3 +117,60 @@
 	font-weight: 600;
 	display: inline-block;
 }
+@media (max-width: 676px) {
+	.card {
+		.content {
+			.priceSave {
+				.price {
+					font-size: 13px;
+					span {
+						font-size: 13px;
+					}
+				}
+			}
+		}
+	}
+	.save {
+		font-size: 13px;
+		p {
+			font-size: 13px;
+		}
+	}
+}
+
+@media (max-width: 565px) {
+	.card {
+		.img {
+			width: 125px;
+			height: 125px;
+			margin: 0 auto;
+		}
+		padding: 8px;
+		.content {
+			.title {
+				font-size: 14px;
+			}
+			.priceSave {
+				margin-top: 10px;
+				flex-wrap: wrap;
+				.price {
+					font-size: 13px;
+					span {
+						font-size: 13px;
+					}
+				}
+			}
+		}
+		.btn {
+			margin-top: 10px;
+			font-size: 12px;
+			padding: 6px;
+		}
+	}
+	.save {
+		font-size: 13px;
+		p {
+			font-size: 13px;
+		}
+	}
+}

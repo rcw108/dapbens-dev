@@ -8,7 +8,6 @@ import { FC } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import styles from './BlogCard.module.scss'
 const BlogCard: FC<{ data: IBLog }> = ({ data }) => {
-	console.log(data)
 	return (
 		<div className={styles.item}>
 			<div className={styles.img}>

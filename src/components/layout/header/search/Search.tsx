@@ -21,8 +21,6 @@ const Search: FC<ISearch> = ({ isOpen, setIsOpen }) => {
 
 	const { products } = useProducts()
 
-	console.log(products)
-
 	const recentlyAddedProducts = [...(products || [])]
 		.sort((a, b) => {
 			return (
@@ -75,7 +73,7 @@ const Search: FC<ISearch> = ({ isOpen, setIsOpen }) => {
 				<div className={styles.box}>
 					{recentlyAddedProducts
 						? recentlyAddedProducts.map(item => (
-								<SearchRecent key={item.id + 12} product={item} />
+								<SearchRecent key={item.id * Math.random()} product={item} />
 							))
 						: null}
 				</div>

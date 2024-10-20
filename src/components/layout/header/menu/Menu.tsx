@@ -52,7 +52,11 @@ const Menu: FC = () => {
 						<SkeletonLoader count={6} width={60} height={28} />
 					) : headerMenu ? (
 						headerMenu[0].fields.map(item => (
-							<li className={styles.menuItem} key={item.title}>
+							<li
+								className={styles.menuItem}
+								onClick={() => setOpenMenu(false)}
+								key={item.title}
+							>
 								<Link href={item.url}>{item.title}</Link>
 							</li>
 						))

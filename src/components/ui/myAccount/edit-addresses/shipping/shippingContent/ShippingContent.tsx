@@ -58,13 +58,10 @@ const ShippingContent: FC = () => {
 			country: 'US'
 		}
 
-		console.log(shippingData)
-
 		const response = await updateCustomerBillingAddress(
 			{ shipping: shippingData },
 			Number(user!.ID)
 		)
-		console.log(response)
 	}
 
 	useEffect(() => {

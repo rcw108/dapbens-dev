@@ -76,7 +76,13 @@ const SaveSection: FC<SaveSectionProps> = ({
 						className={styles.title}
 						title={ReactHtmlParser(title_sv)}
 					/>
-					<Image src={bg_img_mobile} alt='image' width={310} height={211} />
+					<Image
+						src={bg_img_mobile}
+						alt='image'
+						width={310}
+						height={211}
+						unoptimized
+					/>
 					<Description
 						className={styles.descr}
 						title={ReactHtmlParser(text_sv)}

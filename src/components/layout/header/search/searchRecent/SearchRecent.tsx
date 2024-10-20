@@ -50,7 +50,7 @@ const SearchRecent: FC<{ product: WooCommerceSingleProduct }> = ({
 						<>
 							<SmallHeading
 								className={styles.catItem}
-								key={index}
+								key={index + category.name + category.id + Math.random()}
 								title={category.name}
 							/>
 							{index !== product.categories.length - 1 && <span>, </span>}

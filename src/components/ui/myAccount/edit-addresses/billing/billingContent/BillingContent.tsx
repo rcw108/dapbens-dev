@@ -62,13 +62,10 @@ const BillingContent: FC = () => {
 			country: 'US'
 		}
 
-		console.log(billingData)
-
 		const response = await updateCustomerBillingAddress(
 			{ billing: billingData },
 			Number(user!.ID)
 		)
-		console.log(response)
 	}
 
 	const { authorize } = useGlobalUser()

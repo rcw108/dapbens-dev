@@ -36,29 +36,17 @@ const ShopContent: FC<IShopContent> = ({
 	gummy_section_image
 }) => {
 	const {
-		currentPagination,
-		progressPagination,
-		handleSortBy,
 		sortedProducts,
-		sortBy,
 		setProducts,
 		setSortedProducts,
-		stockStatus,
-		handleReset,
-		availabilityActive,
-		availabilityTab,
 		categiriesTab,
 		categoriesActive,
-		setAvailabilityActive,
-		setAvailabilityTab,
 		setCategiriesTab,
 		setTagTab,
 		tagActive,
 		tagTab,
-		togglePagination,
 		handleCategories,
 		handleTags,
-		totalPagesCount,
 		loading,
 		setLoading,
 		disposablesProducts,
@@ -79,33 +67,58 @@ const ShopContent: FC<IShopContent> = ({
 		setLoading(false)
 	}, [products, setProducts])
 
-	const filteredProducts = () => {
-		return sortedProducts.filter(
-			product =>
-				product.status !== 'private' && product.catalog_visibility !== 'hidden'
-		)
+	useEffect(() => {
+		const handleResize = () => {
+			const width = window.innerWidth
+			if (width < 768) {
+				setBundleLoad(3)
+				setGummyLoad(3)
+				setCartridgeLoad(5)
+				setDisposiblesLoad(3)
+			} else if (width < 1200) {
+				setBundleLoad(5)
+				setGummyLoad(5)
+				setCartridgeLoad(7)
+				setDisposiblesLoad(5)
+			} else {
+				setBundleLoad(7)
+				setGummyLoad(7)
+				setCartridgeLoad(9)
+				setDisposiblesLoad(7)
+			}
+		}
+
+		handleResize()
+
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+
+	const handleLoadMore = (
+		setLoad: React.Dispatch<React.SetStateAction<number>>,
+		currentLoad: number
+	) => {
+		const width = window.innerWidth
+		let resizeAdditionLoadProductNumber = 0
+
+		if (width < 1200) {
+			resizeAdditionLoadProductNumber = 6
+		} else if (width < 768) {
+			resizeAdditionLoadProductNumber = 4
+		} else {
+			resizeAdditionLoadProductNumber = 8
+		}
+
+		setLoad(currentLoad + resizeAdditionLoadProductNumber)
 	}
 
 	return (
 		<section className={clsx(styles.shop, { [styles.loading]: loading })}>
 			<div className='container'>
 				<div className={styles.wrapper}>
-					{/* <div className={styles.top}>
-						<h5>Sort By:</h5>
-						<div className={styles.selectBlock}>
-							<select
-								className={styles.select}
-								value={sortBy}
-								onChange={e => handleSortBy(e.target.value)}
-							>
-								{sortData.map(item => (
-									<option key={item.id} value={item.name}>
-										{item.name}
-									</option>
-								))}
-							</select>
-						</div>
-					</div> */}
 					<div className={styles.center}>
 						<div className={styles.filters}>
 							<div className={styles.categories}>
@@ -173,7 +186,9 @@ const ShopContent: FC<IShopContent> = ({
 													className={clsx(styles.loadMore, {
 														[styles.active]: bundleLoad < bundleProducts.length
 													})}
-													onClick={() => setBundleLoad(bundleLoad + 8)}
+													onClick={() =>
+														handleLoadMore(setBundleLoad, bundleLoad)
+													}
 												>
 													Load More
 												</button>
@@ -209,7 +224,9 @@ const ShopContent: FC<IShopContent> = ({
 													className={clsx(styles.loadMore, {
 														[styles.active]: gummyLoad < gummyProducts.length
 													})}
-													onClick={() => setGummyLoad(gummyLoad + 8)}
+													onClick={() =>
+														handleLoadMore(setGummyLoad, gummyLoad)
+													}
 												>
 													Load More
 												</button>
@@ -248,7 +265,9 @@ const ShopContent: FC<IShopContent> = ({
 														[styles.active]:
 															cartridgeLoad < cartridgesProducts.length
 													})}
-													onClick={() => setCartridgeLoad(cartridgeLoad + 8)}
+													onClick={() =>
+														handleLoadMore(setCartridgeLoad, cartridgeLoad)
+													}
 												>
 													Load More
 												</button>
@@ -288,7 +307,7 @@ const ShopContent: FC<IShopContent> = ({
 															disposiblesLoad < disposablesProducts.length
 													})}
 													onClick={() =>
-														setDisposiblesLoad(disposiblesLoad + 8)
+														handleLoadMore(setDisposiblesLoad, disposiblesLoad)
 													}
 												>
 													Load More
@@ -302,37 +321,6 @@ const ShopContent: FC<IShopContent> = ({
 							)}
 						</div>
 					</div>
-					{/* <div className={styles.bottom}>
-						<div className={styles.pagination}>
-							<PaginationButton
-								filteredProducts={filteredProducts}
-								progressPagination={progressPagination}
-								variant='prev'
-								currentPagination={currentPagination}
-								togglePagination={togglePagination}
-							/>
-							{[...Array(totalPagesCount())].map((_, index) => (
-								<button
-									className={clsx(styles.paginationBtn, {
-										[styles.activePagination]:
-											index * 12 === currentPagination ||
-											index === currentPagination
-									})}
-									onClick={() => togglePagination(index)}
-									key={index}
-								>
-									{index + 1}
-								</button>
-							))}
-							<PaginationButton
-								filteredProducts={filteredProducts}
-								progressPagination={progressPagination}
-								variant='next'
-								currentPagination={currentPagination}
-								togglePagination={togglePagination}
-							/>
-						</div>
-					</div> */}
 				</div>
 			</div>
 		</section>

@@ -12,7 +12,6 @@ export const useSearch = () => {
 		queryKey: ['search debounce key', debouncedSearch],
 		queryFn: async () => await getAllProductsSearch(debouncedSearch),
 		select: data => {
-			console.log(data)
 			return data
 		},
 		enabled: !!debouncedSearch

@@ -259,3 +259,52 @@
 	border-radius: 4px;
 	cursor: pointer;
 }
+
+@media (max-width: 1200px) {
+	.disp,
+	.cartrigdes,
+	.gummy,
+	.bundle {
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: minmax(433px, auto);
+		grid-auto-rows: minmax(433px, auto);
+	}
+}
+
+@media (max-width: 767px) {
+	.disp,
+	.cartrigdes,
+	.gummy,
+	.bundle {
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: minmax(433px, auto);
+		grid-auto-rows: minmax(433px, auto);
+	}
+}
+
+@media (max-width: 676px) {
+	.shop {
+		.filters {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
+	}
+	.disp,
+	.cartrigdes,
+	.gummy,
+	.bundle {
+		grid-template-rows: minmax(358px, auto);
+		grid-auto-rows: minmax(358px, auto);
+	}
+}
+
+@media (max-width: 565px) {
+	.disp,
+	.cartrigdes,
+	.gummy,
+	.bundle {
+		grid-template-rows: minmax(258px, auto);
+		grid-auto-rows: minmax(258px, auto);
+	}
+}

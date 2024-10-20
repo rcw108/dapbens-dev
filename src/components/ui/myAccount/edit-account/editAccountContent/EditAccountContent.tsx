@@ -81,7 +81,6 @@ const EditAccountContent: FC = () => {
 			const res = customer.meta_data.find(
 				meta => meta.key === '_authnet_customer_id'
 			)
-			console.log(res)
 		}
 	}
 
@@ -106,7 +105,6 @@ const EditAccountContent: FC = () => {
 				setValue('display_name', response.data.username)
 				setValue('email', response.data.email)
 			} else {
-				console.log(response.error)
 				setMainInfoError('An unexpected error occurred. Please try again.')
 			}
 		}

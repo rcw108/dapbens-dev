@@ -31,6 +31,7 @@ export interface ShopACF {
 	// new
 
 	image_new_head: string
+	image_new_head_mobile: string
 	bundle_section_image: string
 	gummy_section_image: string
 	cartridges_section_image: string

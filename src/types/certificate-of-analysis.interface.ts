@@ -15,6 +15,7 @@ export interface Certification {
 export interface CertificateOfAnalysisACF {
 	m_title_ser_p: string
 	banner_image_sp: string
+	banner_image_sp_mobile: string
 	certifications_sp: Certification[]
 	info_line_sp: { list: string }[]
 	form_title: string

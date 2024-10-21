@@ -23,6 +23,7 @@ const CertificateOfAnalysisPage: FC<{ data: ICertificateOfAnalysis }> = ({
 			<TitleAccountSection
 				background_image={data.acf.banner_image_sp}
 				title={data.acf.m_title_ser_p}
+				background_image_mobile={data.acf.banner_image_sp_mobile}
 				className={styles.title}
 			/>
 			<div className={styles.textContent}>

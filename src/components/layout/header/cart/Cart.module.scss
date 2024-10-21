@@ -273,3 +273,17 @@
 		right: -150%;
 	}
 }
+
+@media (max-width: 1024px) {
+	.cartBox {
+		&.open {
+			right: 0;
+		}
+	}
+}
+
+@media (max-width: 545px) {
+	.cartBox {
+		width: 100%;
+	}
+}

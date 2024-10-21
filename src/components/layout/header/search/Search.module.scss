@@ -97,3 +97,26 @@
 		}
 	}
 }
+
+@media (max-width: 1024px) {
+	.search {
+		width: 95%;
+		top: 25%;
+		overflow: visible;
+		min-height: auto;
+		padding: 0;
+		.recent {
+			display: none;
+		}
+		.close {
+			display: none;
+		}
+		label {
+			margin-bottom: 0;
+		}
+		.results,
+		.noResults {
+			margin-top: 0;
+		}
+	}
+}

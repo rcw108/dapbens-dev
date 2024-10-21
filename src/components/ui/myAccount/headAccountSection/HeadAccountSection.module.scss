@@ -15,4 +15,19 @@
 			}
 		}
 	}
+	.wrapperMobile {
+		display: none;
+	}
+}
+
+@media (max-width: 1024px) {
+	.headAC {
+		padding: 20px 40px;
+		.wrapper {
+			display: none;
+		}
+		.wrapperMobile {
+			display: block;
+		}
+	}
 }

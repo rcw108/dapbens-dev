@@ -337,4 +337,20 @@ ul.swiper-pagination-bullet li {
 	.rfm-marquee-container {
 		border-radius: 0px;
 	}
+	.headAccountSectionSlider {
+		.slick-prev {
+			&:before {
+				display: block;
+				transform: rotate(180deg) scale(0.75);
+				content: url('/arrow.svg');
+			}
+		}
+		.slick-next {
+			&:before {
+				transform: scale(0.75);
+				display: block;
+				content: url('/arrow.svg');
+			}
+		}
+	}
 }

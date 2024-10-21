@@ -21,7 +21,9 @@ const Reviews: FC<{ layout: IReviews }> = ({ layout }) => {
 			/>
 			<TitleAccountSection
 				background_image={layout.acf.banner_rp}
+				background_image_mobile={layout.acf.banner_rp_mobile}
 				title={layout.acf.title_rp}
+				content={layout.content.rendered}
 				className={styles.title}
 			/>
 

@@ -5,6 +5,7 @@ export interface MyAccountLayoutACF {
 	}[]
 	title: string
 	background_image: string
+	background_image_mobile: string
 	background_image_form: string
 	form_description: string
 	form_title: string

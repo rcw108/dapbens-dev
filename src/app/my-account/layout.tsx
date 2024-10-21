@@ -18,6 +18,7 @@ const MyAccountLayout: FC<PropsWithChildren> = async ({ children }) => {
 			<HeadAccountSection contentLines={data.acf.content_line} />
 			<TitleAccountSection
 				background_image={data.acf.background_image}
+				background_image_mobile={data.acf.background_image_mobile}
 				title={data.acf.title}
 			/>
 			{children}

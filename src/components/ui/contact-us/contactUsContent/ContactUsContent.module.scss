@@ -48,3 +48,21 @@
 		}
 	}
 }
+
+@media (max-width: 1024px) {
+	.content {
+		.box {
+			padding: 20px;
+			h2 {
+				font-size: 25px;
+			}
+			h1 {
+				font-size: 18px;
+			}
+
+			p {
+				font-size: 16px;
+			}
+		}
+	}
+}

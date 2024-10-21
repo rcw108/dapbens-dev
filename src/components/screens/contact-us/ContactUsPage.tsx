@@ -22,6 +22,7 @@ const ContactUsPage: FC<{ data: IContactUs }> = ({ data }) => {
 				background_image={data.acf.banner_cp}
 				title={data.acf.title_cp}
 				className={styles.title}
+				background_image_mobile={data.acf.banner_cp_mobile}
 			/>
 
 			<ContactUsContent content={data.content} />

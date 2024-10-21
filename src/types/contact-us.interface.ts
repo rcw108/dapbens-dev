@@ -1,6 +1,7 @@
 export interface ContactUsACF {
 	title_cp: string
 	banner_cp: string
+	banner_cp_mobile: string
 	list_cp: {
 		list: string
 	}[]

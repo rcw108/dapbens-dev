@@ -16,6 +16,7 @@ export interface FAQAcf {
 	info_line: InfoLine[]
 	titlep_f: string
 	image_mf: string
+	image_mf_mobile: string
 	faqs_fp: SingleFaqFP[]
 	background_image_form: string
 	form_title: string

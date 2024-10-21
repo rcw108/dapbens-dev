@@ -22,6 +22,7 @@ const Faq: FC<{ data: FAQPage }> = ({ data }) => {
 			/>
 			<TitleAccountSection
 				background_image={data.acf.image_mf}
+				background_image_mobile={data.acf.image_mf_mobile}
 				title={data.acf.titlep_f}
 			/>
 			<FaqInfoSection faqs_fp={data.acf.faqs_fp} />

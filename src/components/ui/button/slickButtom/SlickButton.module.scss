@@ -25,3 +25,11 @@
 .right {
 	right: 83px;
 }
+
+@media (max-width: 768px) {
+	.btn {
+		top: 98%;
+		width: 21px;
+		height: 21px;
+	}
+}

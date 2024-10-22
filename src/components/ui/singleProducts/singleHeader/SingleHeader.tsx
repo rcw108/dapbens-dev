@@ -30,7 +30,13 @@ const SingleHeader: FC<PropsWithChildren<IHeadSingle>> = ({
 						{acf.move_line_content && (
 							<Marquee speed={50}>
 								{acf.move_line_content.map((item, index) => {
-									return <MarqueeItem key={index} {...item} />
+									return (
+										<MarqueeItem
+											classNameText={styles.marqTextTop}
+											key={index}
+											{...item}
+										/>
+									)
 								})}
 							</Marquee>
 						)}

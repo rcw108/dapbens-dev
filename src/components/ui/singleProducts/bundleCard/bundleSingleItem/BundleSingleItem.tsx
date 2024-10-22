@@ -80,7 +80,13 @@ const BundleSingleItem: FC<BundleSingleItemProps> = ({
 			)}
 			<div className={styles.wrap}>
 				<div className={styles.left}>
-					<Image src={image.src} alt={name} width={65} height={65} />
+					<Image
+						src={image.src}
+						className={styles.leftImage}
+						alt={name}
+						width={65}
+						height={65}
+					/>
 				</div>
 				<div className={styles.right}>
 					<div className={styles.top}>

@@ -40,3 +40,17 @@
 		@apply text-text-black text-center mt-3;
 	}
 }
+
+@media (max-width: 567px) {
+	.review {
+		padding: 46px 10px 10px 10px;
+		.rate {
+			flex-wrap: wrap;
+		}
+	}
+	.text {
+		p {
+			width: 100% !important;
+		}
+	}
+}

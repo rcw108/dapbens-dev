@@ -74,3 +74,33 @@
 		display: inline-block;
 	}
 }
+
+@media (max-width: 768px) {
+	.item {
+		.wrap {
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			.top {
+				h5 {
+					text-align: center;
+				}
+			}
+			.right {
+				padding-left: 0;
+			}
+			.left {
+				width: 100%;
+				height: 55px;
+				display: flex;
+				justify-content: center;
+				.leftImage {
+					width: 55px;
+					height: 55px;
+					display: block;
+				}
+			}
+		}
+	}
+}

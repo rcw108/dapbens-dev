@@ -128,6 +128,12 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 		}
 	}
 
+	useEffect(() => {
+		if (count < 0) {
+			setCount(1)
+		}
+	}, [count])
+
 	return (
 		<div className={clsx(styles.item, 'productCard')}>
 			<div className={styles.left}>
@@ -258,7 +264,11 @@ const VariableCard: FC<{ product: WooCommerceSingleProduct }> = ({
 								<div className={clsx(styles.count, stylesVar.countVar)}>
 									<div
 										className={styles.minus}
-										onClick={() => setCount(count - 1)}
+										onClick={() => {
+											if (count > 1) {
+												setCount(count - 1)
+											}
+										}}
 									>
 										-
 									</div>

@@ -271,7 +271,54 @@
 			width: 100%;
 		}
 		.right {
+			margin-top: 40px;
 			width: 100%;
+			.descrProd {
+				margin-bottom: 20px;
+				p {
+					margin-bottom: 20px !important;
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.item {
+		.btns {
+			button {
+				height: 50px;
+				font-size: 18px;
+			}
+			img {
+				width: 20px;
+			}
+		}
+		.right {
+			.rate {
+				flex-wrap: wrap;
+			}
+			.buy {
+				.paymentType {
+					padding: 20px;
+					.oneTime {
+						.payTitle {
+							font-size: 18px;
+						}
+					}
+					.subscribe {
+						.payTitle {
+							font-size: 16px;
+						}
+					}
+				}
+				.paymentTitle {
+					font-size: 24px;
+				}
+			}
+			.title {
+				font-size: 26px;
+			}
 		}
 	}
 }

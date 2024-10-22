@@ -41,3 +41,33 @@
 		}
 	}
 }
+
+@media (max-width: 768px) {
+	.vibe {
+		.box {
+			.wrap {
+				flex-wrap: wrap;
+				row-gap: 40px;
+				justify-content: center;
+				.item {
+					&:nth-child(1),
+					&:nth-child(2),
+					&:nth-child(3) {
+						width: 33%;
+					}
+					&:nth-child(4),
+					&:nth-child(5) {
+						width: 50%;
+					}
+					img {
+						width: 60px;
+						height: 60px;
+					}
+					.text {
+						font-size: 15px;
+					}
+				}
+			}
+		}
+	}
+}

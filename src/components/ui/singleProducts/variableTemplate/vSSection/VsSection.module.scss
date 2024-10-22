@@ -143,3 +143,35 @@
 		}
 	}
 }
+
+@media (max-width: 768px) {
+	.vs {
+		.box {
+			.table {
+				.firstRow {
+					.firstCol {
+						.firstBox {
+							.tableTitle {
+								font-size: 12px;
+							}
+						}
+					}
+					.thCol {
+						.space {
+							font-size: 20px;
+							margin-bottom: 43px;
+						}
+					}
+					.secCol {
+						.space {
+							margin-bottom: 43px;
+							img {
+								width: 75px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

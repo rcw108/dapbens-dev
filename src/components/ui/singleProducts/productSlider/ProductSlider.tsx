@@ -15,16 +15,25 @@ import styles from './ProductSlider.module.scss'
 
 const ProductSlider: FC<{ images: WooImages[] }> = ({ images }) => {
 	const [thumbsSwiper, setThumbsSwiper] = useState<any>(null)
+	const [thumbsSwiperMobile, setThumbsSwiperMobile] = useState<any>(null)
 
 	if (images.length <= 1)
 		return (
-			<div className={styles.image}>
-				<InnerImageZoom
-					src={images[0].src}
-					zoomSrc={images[0].src}
-					zoomType='hover'
-				/>
-			</div>
+			<>
+				<div className={styles.image}>
+					<InnerImageZoom
+						src={images[0].src}
+						zoomSrc={images[0].src}
+						zoomType='hover'
+					/>
+				</div>
+
+				<div className={clsx(styles.image, styles.imageMobile)}>
+					<div className={styles.imgBox}>
+						<Image src={images[0].src} alt={images[0].alt} fill />
+					</div>
+				</div>
+			</>
 		)
 
 	return (
@@ -69,9 +78,8 @@ const ProductSlider: FC<{ images: WooImages[] }> = ({ images }) => {
 				<div className={styles.slid}>
 					<Swiper
 						className='productFirstSlider'
-						navigation={true}
-						modules={[FreeMode, Navigation, Thumbs]}
-						thumbs={{ swiper: thumbsSwiper }}
+						modules={[FreeMode, Thumbs]}
+						thumbs={{ swiper: thumbsSwiperMobile }}
 					>
 						{images.map(image => (
 							<SwiperSlide key={image.id + 's'}>
@@ -84,9 +92,19 @@ const ProductSlider: FC<{ images: WooImages[] }> = ({ images }) => {
 				</div>
 				<Swiper
 					className='thumb'
-					onSwiper={setThumbsSwiper}
+					onSwiper={setThumbsSwiperMobile}
 					spaceBetween={5}
 					slidesPerView={3}
+					breakpoints={{
+						320: {
+							slidesPerView: 2,
+							spaceBetween: 30
+						},
+						768: {
+							slidesPerView: 4,
+							spaceBetween: 5
+						}
+					}}
 					freeMode={true}
 					watchSlidesProgress={true}
 					modules={[FreeMode, Navigation, Thumbs]}

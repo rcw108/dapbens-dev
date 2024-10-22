@@ -60,3 +60,12 @@
 		}
 	}
 }
+
+@media (max-width: 768px) {
+	.bundleInfoStatus {
+		h5,
+		h6 {
+			font-size: 16px;
+		}
+	}
+}

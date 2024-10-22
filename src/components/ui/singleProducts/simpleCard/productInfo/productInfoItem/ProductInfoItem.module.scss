@@ -46,3 +46,13 @@
 		}
 	}
 }
+
+@media (max-width: 768px) {
+	.item {
+		.top {
+			.title {
+				font-size: 18px;
+			}
+		}
+	}
+}

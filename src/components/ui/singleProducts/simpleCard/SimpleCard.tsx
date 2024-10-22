@@ -130,7 +130,10 @@ const SimpleCard: FC<{ product: WooCommerceSingleProduct }> = ({ product }) => {
 						)}
 					</div>
 				</div>
-				<Description title={ReactHtmlParser(product.description)} />
+				<Description
+					className={styles.descrProd}
+					title={ReactHtmlParser(product.description)}
+				/>
 				{product.stock_status === 'instock' ? (
 					<div className={styles.buy}>
 						<div className={styles.paymentType}>

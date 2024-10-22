@@ -29,3 +29,19 @@
 		}
 	}
 }
+
+@media (max-width: 768px) {
+	.imageMobile {
+		.imgBox {
+			height: 400px;
+		}
+	}
+}
+
+@media (max-width: 575px) {
+	.imageMobile {
+		.imgBox {
+			height: 320px;
+		}
+	}
+}

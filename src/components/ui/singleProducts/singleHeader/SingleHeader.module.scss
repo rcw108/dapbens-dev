@@ -39,9 +39,30 @@
 
 @media (max-width: 1024px) {
 	.head {
+		margin-bottom: 40px;
+		border-radius: 10px;
 		.box {
 			.content {
 				padding: 20px;
+			}
+			.bottomMarquee {
+				border-radius: 0px 0px 10px 10px;
+			}
+			.headMarquee {
+				border-radius: 10px 10px 0px 0px;
+			}
+		}
+
+		.bottomMarquee,
+		headMarquee {
+			.marqTextTop {
+				font-size: 18px;
+				p {
+					font-size: 18px !important;
+				}
+			}
+			.marqText {
+				font-size: 18px;
 			}
 		}
 	}

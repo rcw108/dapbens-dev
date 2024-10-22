@@ -1,5 +1,5 @@
 import { WooCommerceSingleProduct } from '@/types/wooCommerce.interface'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SliderButton from '../../button/sliderButton/SliderButton'
@@ -10,6 +10,14 @@ interface SliderComponentProps {
 }
 
 const SliderComponent: FC<SliderComponentProps> = ({ list }) => {
+	const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth)
+
+	useEffect(() => {
+		const handleResize = () => setWindowWidth(window.innerWidth)
+		window.addEventListener('resize', handleResize)
+		return () => window.removeEventListener('resize', handleResize)
+	}, [])
+
 	return (
 		<>
 			<Swiper
@@ -21,8 +29,24 @@ const SliderComponent: FC<SliderComponentProps> = ({ list }) => {
 				initialSlide={2}
 				loop
 				spaceBetween={32}
+				breakpoints={{
+					320: {
+						slidesPerView: 1,
+						spaceBetween: 0
+					},
+					585: {
+						slidesPerView: 2
+					},
+					768: {
+						slidesPerView: 3
+					},
+					1024: {
+						slidesPerView: 4,
+						spaceBetween: 32
+					}
+				}}
 			>
-				<SliderButton variant='left' />
+				{windowWidth >= 1024 && <SliderButton variant='left' />}
 				{list
 					.filter(product => product.catalog_visibility !== 'hidden')
 					.slice(0, 6)
@@ -40,7 +64,7 @@ const SliderComponent: FC<SliderComponentProps> = ({ list }) => {
 							</SwiperSlide>
 						)
 					})}
-				<SliderButton variant='right' />
+				{windowWidth >= 1024 && <SliderButton variant='right' />}
 			</Swiper>
 		</>
 	)

@@ -50,3 +50,24 @@
 		}
 	}
 }
+
+@media (max-width: 768px) {
+	.how {
+		.box {
+			.wrap {
+				flex-wrap: wrap;
+				row-gap: 40px;
+				column-gap: 20px;
+				justify-content: center;
+				margin-bottom: 20px;
+				.item {
+					padding: 0;
+					width: 47%;
+					.itemTitle {
+						font-size: 15px;
+					}
+				}
+			}
+		}
+	}
+}

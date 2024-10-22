@@ -3,6 +3,7 @@
 	background-repeat: no-repeat;
 	border-radius: 30px;
 	background-size: cover;
+	background-position: center;
 
 	.title {
 		color: #010101;
@@ -22,6 +23,25 @@
 		@apply flex justify-center;
 		a {
 			padding: 16px 90px 13px 90px;
+		}
+	}
+}
+
+@media (max-width: 1024px) {
+	.box {
+		padding: 20px;
+	}
+}
+
+@media (max-width: 768px) {
+	.box {
+		.title {
+			font-size: 26px;
+		}
+		.btns {
+			a {
+				padding: 16px 60px 13px 60px;
+			}
 		}
 	}
 }

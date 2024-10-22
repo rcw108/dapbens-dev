@@ -10,8 +10,6 @@
 		text-align: center;
 		margin-bottom: 1em;
 	}
-	.item {
-	}
 	.faq {
 		&-0 {
 			> div {
@@ -21,9 +19,21 @@
 				margin-bottom: 100px;
 			}
 		}
-		&-1 {
-		}
 	}
-	.wrapper-0 {
+}
+
+@media (max-width: 1024px) {
+	.faqSection {
+		padding: 50px 0px 50px;
+		h2 {
+			font-size: 26px;
+		}
+		.faq {
+			&-0 {
+				> div {
+					grid-template-columns: 1fr;
+				}
+			}
+		}
 	}
 }

@@ -1,7 +1,7 @@
 .auth {
 	padding: 30px;
 	padding-bottom: 100px;
-	background-color: #fff;
+	background-color: #000;
 	margin-bottom: 50px;
 	.wrapper {
 		display: flex;
@@ -11,7 +11,7 @@
 	}
 
 	.submit {
-		background-color: #3bb54a;
+		background-color: #f77214;
 		color: #fff;
 		padding: 0.6180469716em 1.41575em;
 		text-shadow: none;
@@ -24,9 +24,6 @@
 		font-size: 15px;
 		margin-bottom: 20px;
 		transition: all 0.3s ease-in-out;
-		&:hover {
-			background-color: #009245;
-		}
 	}
 
 	.login {
@@ -45,7 +42,7 @@
 			align-items: center;
 			gap: 10px;
 			span {
-				color: #111;
+				color: #fff;
 				font-size: 14px;
 				font-weight: 600;
 			}
@@ -58,7 +55,7 @@
 
 		.policy {
 			font-size: 15px;
-			color: #000000;
+			color: #fff;
 			font-weight: 400;
 			a {
 				color: #1e68c4;
@@ -74,7 +71,7 @@
 		letter-spacing: -0.5px;
 		text-transform: none;
 		line-height: 1.25;
-		color: #222;
+		color: #fff;
 	}
 }
 
@@ -87,7 +84,7 @@
 	}
 	.title {
 		margin-bottom: 5px;
-		color: #111;
+		color: #fff;
 		font-size: 14px;
 		font-weight: 600;
 		position: relative;
@@ -133,4 +130,26 @@
 .error {
 	font-size: 14px;
 	color: #df0202;
+}
+
+@media (max-width: 768px) {
+	.auth {
+		padding: 0;
+		.wrapper {
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			.login,
+			.register {
+				width: 100%;
+				text-align: center;
+			}
+			.login {
+				margin-bottom: 40px;
+				.checkbox {
+					justify-content: center;
+				}
+			}
+		}
+	}
 }

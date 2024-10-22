@@ -112,11 +112,42 @@
 	}
 }
 
+.titlePreloader {
+	text-align: center;
+}
+
+.contentPreloader {
+	margin-top: 40px;
+	> span {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 20px;
+	}
+}
+
 @media (max-width: 768px) {
 	.wrapper {
 		.content {
 			grid-template-columns: 1fr;
 			gap: 20px;
+		}
+	}
+
+	.titlePreloader {
+		span {
+			width: 100% !important;
+		}
+	}
+
+	.contentPreloader {
+		> span {
+			flex-direction: column;
+			gap: 20px;
+			span {
+				width: 100% !important;
+			}
 		}
 	}
 }

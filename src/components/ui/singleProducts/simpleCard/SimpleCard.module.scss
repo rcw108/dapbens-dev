@@ -262,3 +262,16 @@
 		-moz-appearance: textfield;
 	}
 }
+
+@media (max-width: 1024px) {
+	.item {
+		flex-direction: column;
+		.left {
+			padding: 0;
+			width: 100%;
+		}
+		.right {
+			width: 100%;
+		}
+	}
+}

@@ -10,6 +10,7 @@ import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 import Description from '../../headings/Description'
 import SmallHeading from '../../headings/SmallHeading'
+import SkeletonLoader from '../../SkeletonLoader'
 import styles from './ReviewsContent.module.scss'
 
 const ReviewsContent: FC<{
@@ -72,7 +73,7 @@ const ReviewsContent: FC<{
 		<section className={className}>
 			<div className='container'>
 				<div className={styles.wrapper}>
-					{reviewsContent && (
+					{reviewsContent ? (
 						<>
 							<div className={styles.titleTop}>
 								<div className='flex gap-1'>
@@ -255,6 +256,15 @@ const ReviewsContent: FC<{
 										{'>'}
 									</button>
 								)}
+							</div>
+						</>
+					) : (
+						<>
+							<div className={styles.titlePreloader}>
+								<SkeletonLoader count={1} height={'40px'} width={'25%'} />
+							</div>
+							<div className={styles.contentPreloader}>
+								<SkeletonLoader count={20} height={'200px'} width={'47%'} />
 							</div>
 						</>
 					)}

@@ -122,3 +122,35 @@
 		}
 	}
 }
+
+@media (max-width: 1024px) {
+	.blog {
+		.singleBlog {
+			max-width: 100%;
+			.feature,
+			.content {
+				max-width: 100%;
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.blog {
+		.singleBlog {
+			.feature {
+				height: 320px;
+			}
+		}
+	}
+}
+
+@media (max-width: 575px) {
+	.blog {
+		.singleBlog {
+			.feature {
+				height: 280px;
+			}
+		}
+	}
+}

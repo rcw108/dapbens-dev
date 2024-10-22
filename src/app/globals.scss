@@ -334,6 +334,15 @@ ul.swiper-pagination-bullet li {
 }
 
 @media (max-width: 1024px) {
+	.productFirstSlider {
+		.swiper-slide {
+			max-width: 100%;
+			img {
+				object-fit: contain;
+			}
+		}
+	}
+
 	.rfm-marquee-container {
 		border-radius: 0px;
 	}

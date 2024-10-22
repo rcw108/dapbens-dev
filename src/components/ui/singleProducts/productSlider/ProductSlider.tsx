@@ -1,6 +1,7 @@
 'use client'
 
 import { Image as WooImages } from '@/types/wooCommerce.interface'
+import clsx from 'clsx'
 import Image from 'next/image'
 import { FC, useState } from 'react'
 import InnerImageZoom from 'react-inner-image-zoom'
@@ -27,41 +28,77 @@ const ProductSlider: FC<{ images: WooImages[] }> = ({ images }) => {
 		)
 
 	return (
-		<div className={styles.image}>
-			<div className={styles.slid}>
+		<>
+			<div className={styles.image}>
+				<div className={styles.slid}>
+					<Swiper
+						className='productFirstSlider'
+						navigation={true}
+						modules={[FreeMode, Navigation, Thumbs]}
+						thumbs={{ swiper: thumbsSwiper }}
+					>
+						{images.map(image => (
+							<SwiperSlide key={image.id}>
+								<InnerImageZoom
+									src={image.src}
+									zoomSrc={image.src}
+									zoomType='hover'
+								/>
+							</SwiperSlide>
+						))}
+					</Swiper>
+				</div>
 				<Swiper
-					className='productFirstSlider'
-					navigation={true}
+					className='thumb'
+					onSwiper={setThumbsSwiper}
+					spaceBetween={5}
+					slidesPerView={4}
+					freeMode={true}
+					watchSlidesProgress={true}
 					modules={[FreeMode, Navigation, Thumbs]}
-					thumbs={{ swiper: thumbsSwiper }}
 				>
 					{images.map(image => (
 						<SwiperSlide key={image.id}>
-							<InnerImageZoom
-								src={image.src}
-								zoomSrc={image.src}
-								zoomType='hover'
-							/>
+							<Image src={image.src} alt='image' width={100} height={100} />
 						</SwiperSlide>
 					))}
 				</Swiper>
 			</div>
-			<Swiper
-				className='thumb'
-				onSwiper={setThumbsSwiper}
-				spaceBetween={5}
-				slidesPerView={4}
-				freeMode={true}
-				watchSlidesProgress={true}
-				modules={[FreeMode, Navigation, Thumbs]}
-			>
-				{images.map(image => (
-					<SwiperSlide key={image.id}>
-						<Image src={image.src} alt='image' width={100} height={100} />
-					</SwiperSlide>
-				))}
-			</Swiper>
-		</div>
+
+			<div className={clsx(styles.image, styles.imageMobile)}>
+				<div className={styles.slid}>
+					<Swiper
+						className='productFirstSlider'
+						navigation={true}
+						modules={[FreeMode, Navigation, Thumbs]}
+						thumbs={{ swiper: thumbsSwiper }}
+					>
+						{images.map(image => (
+							<SwiperSlide key={image.id + 's'}>
+								<div className={styles.imgBox}>
+									<Image src={image.src} alt={image.alt} fill />
+								</div>
+							</SwiperSlide>
+						))}
+					</Swiper>
+				</div>
+				<Swiper
+					className='thumb'
+					onSwiper={setThumbsSwiper}
+					spaceBetween={5}
+					slidesPerView={3}
+					freeMode={true}
+					watchSlidesProgress={true}
+					modules={[FreeMode, Navigation, Thumbs]}
+				>
+					{images.map(image => (
+						<SwiperSlide key={image.id + 's'}>
+							<Image src={image.src} alt='image' width={100} height={100} />
+						</SwiperSlide>
+					))}
+				</Swiper>
+			</div>
+		</>
 	)
 }
 

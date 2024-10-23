@@ -873,36 +873,30 @@ const CheckoutForms: FC<{
 							Create an account?
 						</h3>
 						{account && (
-							<div>
-								<label className={styles.req}>
+							<div className={styles.createAccount}>
+								<label className={clsx(styles.req, styles.acUser)}>
 									<Description title={'Account username'} />
-									<input type='text' />
-								</label>
-							</div>
-						)}
-						{account && (
-							<>
-								<label className={styles.req}>
-									<Description title={'Account login'} />
 									<input
 										type='text'
 										{...register('accountLogin', {
 											required: {
 												value: account,
-												message: 'Account login is required'
+												message: 'Account username is required'
 											},
 											minLength: {
 												value: 6,
-												message: 'Account login must be at least 6 characters'
+												message:
+													'Account username must be at least 6 characters'
 											},
 											maxLength: {
 												value: 40,
-												message: 'Account login must be at most 40 characters'
+												message:
+													'Account username must be at most 40 characters'
 											}
 										})}
 									/>
 								</label>
-								<label className={styles.req}>
+								<label className={clsx(styles.req, styles.acPass)}>
 									<Description title={'Account password'} />
 									<input
 										type='text'
@@ -924,7 +918,7 @@ const CheckoutForms: FC<{
 										})}
 									/>
 								</label>
-							</>
+							</div>
 						)}
 						<h3
 							className={styles.h3}
@@ -1162,7 +1156,10 @@ const CheckoutForms: FC<{
 									<div className={styles.checked}></div>
 									Credit Card
 								</h3>
-								<Description title='Pay securely using your credit card.' />
+								<Description
+									className={styles.payDescr}
+									title='Pay securely using your credit card.'
+								/>
 								<div className={styles.cards}>
 									{credit_card_image &&
 										credit_card_image.map((card, index) => (
@@ -1276,6 +1273,30 @@ const CheckoutForms: FC<{
 								</div>
 							</div>
 						</div>
+						<div className={styles.mobileBtn}>
+							{itemListCount && (
+								<div className={styles.btns}>
+									<button
+										className={clsx(styles.btn, {
+											[styles.disabledBtn]: sendPayment
+										})}
+									>
+										PLACE ORDER
+									</button>
+								</div>
+							)}
+						</div>
+					</div>
+					<div className={clsx(styles.orderAdv, styles.orderAdvMobile)}>
+						{order_advantages.map((item, index) => (
+							<div key={item.text} className='flex gap-2'>
+								<Image src={item.icon} alt={item.text} width={24} height={24} />
+								<Description
+									className={styles.textAd}
+									title={ReactHtmlParser(item.text)}
+								/>
+							</div>
+						))}
 					</div>
 				</div>
 				<div className={styles.right}>
@@ -1415,17 +1436,19 @@ const CheckoutForms: FC<{
 						title={`First renewal: ${calculateNextRenewal(itemListCount?.find(item => item.paymentType === 'subscription')?.subscriptionPeriod as 'every month' | 'every 2 weeks' | 'every 2 months')}`}
 					/>
 
-					{itemListCount && (
-						<div className={styles.btns}>
-							<button
-								className={clsx(styles.btn, {
-									[styles.disabledBtn]: sendPayment
-								})}
-							>
-								PLACE ORDER
-							</button>
-						</div>
-					)}
+					<div className={styles.deskBtn}>
+						{itemListCount && (
+							<div className={styles.btns}>
+								<button
+									className={clsx(styles.btn, {
+										[styles.disabledBtn]: sendPayment
+									})}
+								>
+									PLACE ORDER
+								</button>
+							</div>
+						)}
+					</div>
 					<div className={styles.orderAdv}>
 						{order_advantages.map((item, index) => (
 							<div key={item.text} className='flex gap-2'>

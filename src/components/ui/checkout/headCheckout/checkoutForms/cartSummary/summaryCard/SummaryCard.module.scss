@@ -93,3 +93,34 @@
 		}
 	}
 }
+
+@media (max-width: 1550px) {
+	.item {
+		.right {
+			justify-content: flex-end;
+			flex-wrap: wrap;
+		}
+	}
+}
+
+@media (max-width: 578px) {
+	.item {
+		.wrap {
+			flex-direction: column;
+			flex-wrap: wrap;
+			justify-content: center;
+			.left {
+				justify-content: center;
+				width: 100%;
+			}
+			.right {
+				justify-content: center;
+				width: 100%;
+			}
+		}
+	}
+	.bundles {
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+}

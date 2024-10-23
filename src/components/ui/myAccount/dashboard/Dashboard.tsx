@@ -14,7 +14,7 @@ const Dashboard: FC = () => {
 	}
 
 	return (
-		<div className='bg-white min-h-96'>
+		<div className='bg-[#0D0D0D] min-h-96'>
 			<h6 className={styles.title}>
 				Hello <span className={styles.userName}>{user.display_name}</span> (not{' '}
 				<span className={styles.userName}>{user.display_name}</span>?{' '}

@@ -1,3 +1,6 @@
+'use client'
+
+import { useUser } from '@/hooks/useUser'
 import { CheckoutACF } from '@/types/checkoutLayout.interface'
 import Image from 'next/image'
 import { FC } from 'react'
@@ -7,6 +10,7 @@ import Description from '../../headings/Description'
 import MarqueeItem from '../../home/headSection/marqueeItem/MarqueeItem'
 import CheckoutForms from './checkoutForms/CheckoutForms'
 import styles from './HeadCheckout.module.scss'
+import LoginCheckout from './loginCheckout/LoginCheckout'
 import Timer from './timer/Timer'
 
 interface IHeadCheckout
@@ -30,6 +34,8 @@ const HeadCheckout: FC<IHeadCheckout> = ({
 	credit_card_image,
 	order_advantages
 }) => {
+	const user = useUser()
+
 	return (
 		<section className={styles.head}>
 			<div className={styles.top}>
@@ -51,6 +57,7 @@ const HeadCheckout: FC<IHeadCheckout> = ({
 				checkout_after_timer_text={checkout_after_timer_text}
 				checkout_timer={checkout_timer}
 			/>
+			{!user && <LoginCheckout />}
 			<div className={styles.wrapper}>
 				<CheckoutForms
 					credit_card_image={credit_card_image}

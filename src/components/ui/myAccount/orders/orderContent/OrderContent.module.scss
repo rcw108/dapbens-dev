@@ -3,7 +3,7 @@
 	.tableBodyItem {
 		display: flex;
 		align-items: center;
-		color: #000;
+		color: #fff;
 		font-weight: 400;
 		border-bottom: 1px solid #eee;
 		padding-bottom: 15px;
@@ -36,7 +36,7 @@
 			transition: all 0.3s ease-in-out;
 			cursor: pointer;
 			&:hover {
-				color: #111;
+				color: #fff;
 			}
 		}
 		.action {
@@ -55,6 +55,34 @@
 				&:hover {
 					background-color: #000;
 				}
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.table {
+		.tableHead {
+			display: none;
+		}
+		.tableBodyItem {
+			flex-direction: column;
+			border: none;
+			.order,
+			.date,
+			.status,
+			.total,
+			.action {
+				width: 100%;
+				padding-bottom: 10px;
+				border-bottom: 1px solid #fff;
+			}
+			.action {
+				margin-top: 10px;
+				padding: 0;
+				margin-bottom: 10px;
+				justify-content: flex-start;
+				border: none;
 			}
 		}
 	}

@@ -22,3 +22,15 @@
 		}
 	}
 }
+
+@media (max-width: 768px) {
+	.wrap {
+		padding: 0 10px;
+		padding-top: 40px;
+		.profileWrapper {
+			grid-template-columns: 1fr;
+			column-gap: 0;
+			row-gap: 40px;
+		}
+	}
+}

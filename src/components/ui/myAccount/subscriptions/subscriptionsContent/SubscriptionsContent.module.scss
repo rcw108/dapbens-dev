@@ -26,7 +26,7 @@
 	.subBody {
 		display: flex;
 		align-items: center;
-		color: #000;
+		color: #fff;
 		font-weight: 400;
 		border-bottom: 1px solid #eee;
 		padding-bottom: 15px;
@@ -59,7 +59,7 @@
 			transition: all 0.3s ease-in-out;
 			cursor: pointer;
 			&:hover {
-				color: #111;
+				color: #fff;
 			}
 		}
 		.status {
@@ -81,6 +81,51 @@
 				&:hover {
 					background-color: #000;
 				}
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.subs {
+		.subHead {
+			display: none;
+		}
+		.subBody {
+			flex-direction: column;
+			border: none;
+			padding: 15px 0;
+			.order,
+			.date,
+			.status,
+			.total {
+				border-bottom: 1px solid #fff;
+				padding-top: 5px;
+			}
+			.order {
+				width: 100%;
+				padding-bottom: 15px;
+			}
+			.date {
+				width: 100%;
+				padding-bottom: 15px;
+			}
+			.status {
+				width: 100%;
+				padding-bottom: 15px;
+			}
+			.total {
+				width: 100%;
+				padding-bottom: 15px;
+			}
+			.action {
+				width: 100%;
+				padding-bottom: 15px;
+			}
+
+			.action {
+				justify-content: flex-start;
+				margin-top: 10px;
 			}
 		}
 	}

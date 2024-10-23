@@ -11,6 +11,7 @@ import { useGlobalUser } from '@/hooks/useGlobalUser'
 import { useProducts } from '@/hooks/useProducts'
 import { useUser } from '@/hooks/useUser'
 import { CheckoutService } from '@/services/checkout.service'
+import { setUser } from '@/store/user/user.slice'
 import {
 	AuthSubRequestData,
 	Discount,
@@ -119,6 +120,12 @@ const CheckoutForms: FC<{
 	const totalPrice = itemListCount.reduce((acc, item) => {
 		return acc + +item.price * +item.count
 	}, 0)
+
+	useEffect(() => {
+		if (itemListCount.some(item => item.paymentType === 'subscription')) {
+			setAccount(false)
+		}
+	}, [user, account, itemListCount])
 
 	useEffect(() => {
 		if (totalPrice > 50) {
@@ -557,6 +564,12 @@ const CheckoutForms: FC<{
 						: 'days'
 		}
 
+		const registerUserData = {
+			email: getValues('email'),
+			username: getValues('accountLogin'),
+			password: getValues('accountPassword')
+		}
+
 		const fetchAsyncFn = async () => {
 			const res = await handleCheckout(
 				orderData,
@@ -568,7 +581,8 @@ const CheckoutForms: FC<{
 				authorize,
 				customer,
 				requestData,
-				requestSaveMetaDataBody
+				requestSaveMetaDataBody,
+				registerUserData
 			)
 
 			return res
@@ -580,6 +594,12 @@ const CheckoutForms: FC<{
 			setSendPayment(false)
 			setPaymentCheck(true)
 			setPaymentDetails(response.order)
+			if (response.newUser.user && response.jwt) {
+				setUser({
+					user: response.newUser.user,
+					jwt: response.jwt
+				})
+			}
 		}
 		if (response?.error) {
 			setSendPayment(false)

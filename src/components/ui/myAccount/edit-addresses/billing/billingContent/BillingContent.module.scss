@@ -7,7 +7,7 @@
 		letter-spacing: 0px;
 		text-transform: none;
 		line-height: 1.45;
-		color: #222;
+		color: #fff;
 		margin-bottom: 10px;
 	}
 	.billing {
@@ -24,7 +24,7 @@
 				letter-spacing: 0em;
 				text-align: left;
 				margin: 0 0 11px;
-				color: #111;
+				color: #fff;
 			}
 			.us {
 				font-size: 16px;
@@ -86,4 +86,13 @@
 	color: red;
 	font-size: 13px;
 	font-weight: 300;
+}
+
+@media (max-width: 768px) {
+	.formBilling {
+		.billing {
+			display: flex;
+			flex-direction: column;
+		}
+	}
 }
